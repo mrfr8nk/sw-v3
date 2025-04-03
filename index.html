@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>St. Mary's High School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #003366; /* School theme color */
+      --secondary: #FFD700; /* Accent color */
+      --button-blue: #87CEEB; /* Sky blue for buttons */
+      --text-color: #333;
+      --bg-light: #f9f9f9;
+      --bg-dark: #1a1a1a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-color);
+      overflow-x: hidden;
+      transition: background 0.6s ease, color 0.6s ease;
+    }
+
+    body.dark-mode {
+      --text-color: #f9f9f9;
+      --bg-light: #1a1a1a;
+      --bg-dark: #333;
+    }
+
+    /* Header and Navigation */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--secondary);
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+      position: relative;
+    }
+    .dropdown > a {
+      cursor: pointer;
+    }
+    .dropdown .dropdown-content {
+      display: none;
+      position: absolute;
+      background: var(--primary);
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      border-radius: 5px;
+      flex-direction: column;
+    }
+    .dropdown .dropdown-content a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background 0.3s ease;
+    }
+    .dropdown .dropdown-content a:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .dropdown.active .dropdown-content {
+      display: flex;
+    }
+
+    /* Animated Hamburger Icon */
+    .menu-btn {
+      display: none; /* Visible on mobile only */
+      position: relative;
+      width: 35px;
+      height: 30px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .menu-btn__burger {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: white;
+      border-radius: 5px;
+      transform: translateY(-50%);
+      transition: all 0.3s ease-in-out;
+    }
+    .menu-btn__burger::before,
+    .menu-btn__burger::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 4px;
+      background-color: white;
+      border-radius: 5px;
+      transition: all 0.3s ease-in-out;
+    }
+    .menu-btn__burger::before {
+      top: -10px;
+    }
+    .menu-btn__burger::after {
+      top: 10px;
+    }
+    .menu-btn.active .menu-btn__burger {
+      background: transparent;
+    }
+    .menu-btn.active .menu-btn__burger::before {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .menu-btn.active .menu-btn__burger::after {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .hero .slideshow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .hero .slideshow img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .hero .slideshow img.active {
+      opacity: 1;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      z-index: 2;
+      animation: fadeIn 2s ease;
+    }
+
+    /* School Motto & Hero Buttons */
+    #school-motto {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      z-index: 2;
+      animation: fadeIn 2s ease;
+    }
+    .hero-buttons {
+      margin-top: 1.5rem;
+      z-index: 2;
+      animation: fadeIn 2s ease;
+    }
+    .hero-buttons .btn {
+      display: inline-block;
+      background: transparent;
+      border: 2px solid var(--button-blue);
+      color: var(--button-blue);
+      padding: 0.75rem 1.5rem;
+      margin: 0 0.5rem;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .hero-buttons .btn:hover {
+      background: var(--button-blue);
+      color: var(--bg-light);
+    }
+
+    /* About Section */
+    .about {
+      padding: 4rem 5%;
+      background: var(--bg-light);
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .about h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .about p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Faculty Section */
+    .faculty {
+      padding: 4rem 5%;
+      background: white;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .faculty h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--primary);
+    }
+
+    .faculty-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .faculty-card {
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .faculty-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .faculty-card i {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .faculty-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    /* Gallery Section */
+    .gallery {
+      padding: 4rem 5%;
+      background: var(--bg-light);
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .gallery h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--primary);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .gallery-grid img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Staff Section */
+    .staff {
+      padding: 4rem 5%;
+      background: white;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .staff h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--primary);
+    }
+
+    .staff-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .staff-card {
+      background: var(--bg-light);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .staff-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .staff-card img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+
+    .staff-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    .staff-card p {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    /* Contact Section */
+    .contact {
+      padding: 4rem 5%;
+      background: var(--bg-light);
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--primary);
+    }
+
+    .contact p {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: white;
+      padding: 2rem 5%;
+      text-align: center;
+    }
+
+    .social-icons {
+      margin-bottom: 1rem;
+    }
+
+    .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      margin: 0 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: var(--secondary);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scroll Animations */
+    .scroll-animate {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .scroll-animate.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .menu-btn {
+        display: block;
+      }
+
+      nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        background: var(--primary);
+        width: 100%;
+        padding: 1rem;
+      }
+
+      nav.active {
+        display: flex;
+      }
+
+      .dropdown .dropdown-content {
+        position: static;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .dropdown .dropdown-content a {
+        padding: 10px 0;
+      }
+    }
+
+    /* Light/Dark Mode Toggle */
+    .theme-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .theme-toggle i {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo" />
+      St. Mary's
+    </div>
+    <!-- Animated Hamburger Icon -->
+    <div class="menu-btn" id="menu-btn">
+      <div class="menu-btn__burger"></div>
+    </div>
+    <nav>
+      <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+      <a href="/faculty"><i class="fas fa-users"></i> Faculty</a>
+      <a href="/gallery"><i class="fas fa-images"></i> Gallery</a>
+      <a href="/staff"><i class="fas fa-chalkboard-teacher"></i> Staff</a>
+      <a href="/contact"><i class="fas fa-envelope"></i> Contact</a>
+      <div class="dropdown">
+        <a href="#"><i class="fas fa-user-graduate"></i> Student Portal <i class="fas fa-caret-down"></i></a>
+        <div class="dropdown-content">
+          <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+          <a href="/signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="#"><i class="fas fa-user-shield"></i> Admin Portal <i class="fas fa-caret-down"></i></a>
+        <div class="dropdown-content">
+          <a href="/teacherslogin"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </div>
+      </div>
+      <!-- New Developer Info Link -->
+      <a href="/credits"><i class="fas fa-code"></i> Developer Info</a>
+      <a href="/apply" class="btn btn-primary"><i class="fas fa-file-download"></i> Apply Now</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="slideshow">
+      <img src="https://i.postimg.cc/43kYnRpV/IMG-20250227-WA0007.jpg" alt="School Photo 1" class="active" />
+      <img src="https://i.postimg.cc/kXH63b4j/IMG-20250227-WA0009.jpg" alt="School Photo 2" />
+      <img src="https://i.postimg.cc/RhFF2Sz5/IMG-20250227-WA0005.jpg" alt="School Photo 3" />
+    </div>
+    <h1 id="hero-text">Welcome to St. Mary's High School</h1>
+    <p id="school-motto">We think we can and indeed we can.</p>
+    <div class="hero-buttons">
+      <a href="/download-application" class="btn download-btn"><i class="fas fa-download"></i> Download Application Form</a>
+      <a href="/signup" class="btn signup-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about scroll-animate">
+    <h2>About Us</h2>
+    <p>
+      St. Mary's High School is a premier institution dedicated to academic excellence, character development, and holistic education. Founded in 1950, we have been nurturing young minds to become leaders of tomorrow.
+    </p>
+  </section>
+
+  <!-- Faculty Section -->
+  <section id="faculty" class="faculty scroll-animate">
+    <h2>Our Faculty</h2>
+    <div class="faculty-cards">
+      <div class="faculty-card">
+        <i class="fas fa-flask"></i>
+        <h3>Sciences</h3>
+        <p>We offer a robust science program with state-of-the-art labs and experienced faculty.</p>
+      </div>
+      <div class="faculty-card">
+        <i class="fas fa-paint-brush"></i>
+        <h3>Arts</h3>
+        <p>Our arts program encourages creativity and self-expression through various mediums.</p>
+      </div>
+      <div class="faculty-card">
+        <i class="fas fa-chart-line"></i>
+        <h3>Commercials</h3>
+        <p>Prepare for the business world with our comprehensive commercial studies program.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="gallery scroll-animate">
+    <h2>Gallery</h2>
+    <div class="gallery-grid">
+      <img class="scroll-animate" src="https://i.postimg.cc/wvWxXCRW/toastmasters-saintmaryhigh-20250208-0004.jpg" alt="Gallery Photo 1" />
+      <img class="scroll-animate" src="https://i.postimg.cc/DyS0gwg1/IMG-20250227-WA0001.jpg" alt="Gallery Photo 2" />
+      <img class="scroll-animate" src="https://i.postimg.cc/RhFF2Sz5/IMG-20250227-WA0005.jpg" alt="Gallery Photo 3" />
+      <img class="scroll-animate" src="https://i.postimg.cc/sX319P62/IMG-20250227-WA0006.jpg" alt="Gallery Photo 4" />
+      <img class="scroll-animate" src="https://i.postimg.cc/wxf3Lmh6/IMG-20250227-WA0004.jpg" alt="Gallery Photo 5" />
+      <img class="scroll-animate" src="https://i.postimg.cc/6pRQkbF3/IMG-20250227-WA0000.jpg" alt="Gallery Photo 6" />
+      <img class="scroll-animate" src="https://i.postimg.cc/DyS0gwg1/IMG-20250227-WA0001.jpg" alt="Gallery Photo 7" />
+      <img class="scroll-animate" src="https://i.postimg.cc/VNWk6rfP/IMG-20250227-WA0003.jpg" alt="Gallery Photo 8" />
+      <img class="scroll-animate" src="https://i.postimg.cc/kXH63b4j/IMG-20250227-WA0009.jpg" alt="Gallery Photo 9" />
+      <img class="scroll-animate" src="https://i.postimg.cc/k5m5qFdy/stmarys-high-school-20250208-0004.jpg" alt="Gallery Photo 9" />
+ 
+      
+    </div>
+  </section>
+
+  <!-- Staff Section -->
+  <section id="staff" class="staff scroll-animate">
+    <h2>Our Staff</h2>
+    <div class="staff-cards">
+      <div class="staff-card">
+        <img src="https://i.postimg.cc/VNWk6rfP/IMG-20250227-WA0003.jpg" alt="Head Teacher" />
+        <h3>Mr. Nyabako</h3>
+        <p>Head Master</p>
+      </div>
+      <div class="staff-card">
+        <img src="https://i.postimg.cc/SxB9NwG9/20250129-113912.avif" alt="Deputy Head" />
+        <h3>Deputy Head</h3>
+        <p>Mr Gocha</p>
+      </div>
+      <div class="staff-card">
+        <img src="https://i.postimg.cc/WpwwYbwH/tygaalphaleos-20250208-0002.jpg" alt="Senior Teacher" />
+        <h3>Seniour Lady</h3>
+        <p>Mrs Chiweshe</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact scroll-animate">
+    <h2>Contact Us</h2>
+    <p>Address: Zengeza 1, Mubvumira Road, Chitungwiza, Zimbabwe</p>
+    <p>Phone: +123 456 7890</p>
+    <p>Email: info@stmaryshigh.com</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-tiktok"></i></a>
+    </div>
+    <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
+    <p>Made With Love By <a href="https://wa.me/263719647303?text=hi%20darrell%20i%20would%20want%20you%20to%20create%20me%20a%20site%20like%20that%20of%20st%20marys.%20It%20wonderful" target="_blank" style="color: var(--secondary); text-decoration: none;">Darrell Mucheri</a></p>
+  </footer>
+
+  <!-- Light/Dark Mode Toggle -->
+  <div class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+  </div>
+
+  <script>
+    // Slideshow Animation using a simple fade
+    const slides = document.querySelectorAll('.slideshow img');
+    const heroText = document.getElementById('hero-text');
+    const texts = [
+      "Welcome to St. Mary's High School",
+      "The Best School in Harare",
+      "Where True Potential is Discovered"
+    ];
+    let currentSlide = 0;
+    const updateHeroText = () => {
+      heroText.textContent = texts[currentSlide];
+    };
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+      updateHeroText();
+    }, 5000);
+
+    // Scroll Animations for sections and gallery images
+    const scrollElements = document.querySelectorAll('.scroll-animate');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    scrollElements.forEach(el => observer.observe(el));
+
+    // Hamburger Menu Toggle with Animated Icon
+    const menuBtn = document.getElementById('menu-btn');
+    const nav = document.querySelector('nav');
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menuBtn.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
+        nav.classList.remove('active');
+        menuBtn.classList.remove('active');
+      }
+    });
+
+    // Dropdown Toggle for Student and Admin Portals
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+      const toggle = dropdown.querySelector('a');
+      toggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Toggle active class on this dropdown
+        dropdown.classList.toggle('active');
+      });
+    });
+
+    // Light/Dark Mode Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const isDarkMode = body.classList.contains('dark-mode');
+      themeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+  </script>
+</body>
+</html>
