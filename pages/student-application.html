@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Form - St. Mary's High School</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" />
+  <!-- SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    /* CSS Variables for Dark & Light Themes */
+    :root {
+      /* Dark theme variables */
+      --primary: #003D4D;
+      --secondary: #0083B0;
+      --glass: rgba(255, 255, 255, 0.08);
+      --bg-gradient: linear-gradient(45deg, #003D4D, #005F73);
+      --text-color: #ffffff; /* For dark theme */
+      /* Light theme variables */
+      --light-bg: #f1f1f1;
+      --light-text: #1c1917;
+      --light-glass: rgba(255, 255, 255, 0.9);
+    }
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 100px; /* space for fixed header and progress bar */
+      padding-bottom: 80px; /* space for fixed footer */
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light-theme {
+      background: var(--light-bg);
+      color: var(--light-text);
+    }
+    /* Fixed Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 1rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      z-index: 1000;
+      color: var(--text-color);
+    }
+    /* Light theme header override */
+    body.light-theme header {
+      background: var(--light-glass);
+      border-bottom: 1px solid #ccc;
+      color: var(--light-text);
+    }
+    header .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    header .logo img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
+    /* Fixed Theme Toggle Button */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-color);
+      cursor: pointer;
+      z-index: 1001;
+    }
+    body.light-theme .theme-toggle {
+      color: var(--light-text);
+    }
+    /* Progress Bar */
+    .progress-container {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.1);
+      height: 5px;
+      z-index: 1000;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--secondary);
+      transition: width 0.3s;
+    }
+    /* Container */
+    .container {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 2rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+    body.light-theme .container {
+      background: var(--light-glass);
+      border: 1px solid #ccc;
+    }
+    .logo-form {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .logo-form img {
+      height: 60px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      font-size: 2.5rem;
+    }
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    .input-icon {
+      position: relative;
+    }
+    .input-icon i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+    }
+    /* Inputs, selects, and textareas in dark theme */
+    .input-icon input,
+    .input-icon select,
+    .input-icon textarea {
+      width: 100%;
+      padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 5px;
+      font-size: 1rem;
+      background: var(--glass);
+      color: #ffffff;
+      backdrop-filter: blur(12px);
+      transition: background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    ::placeholder {
+      color: #ffffff;
+    }
+    /* Enhanced focus with glow */
+    .input-icon input:focus,
+    .input-icon select:focus,
+    .input-icon textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 8px var(--primary);
+      outline: none;
+    }
+    /* Inputs, selects, and textareas in light theme */
+    body.light-theme .input-icon input,
+    body.light-theme .input-icon select,
+    body.light-theme .input-icon textarea {
+      background: var(--light-bg);
+      color: var(--light-text);
+      border: 1px solid #ccc;
+    }
+    body.light-theme ::placeholder {
+      color: var(--light-text);
+    }
+    .form-group button {
+      width: 100%;
+      padding: 0.75rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-group button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    /* Download PDF Button (styled as a link) */
+    .download-btn {
+      display: inline-block;
+      padding: 0.75rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+    }
+    .download-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    .message {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .message.success {
+      color: #28a745;
+    }
+    .message.error {
+      color: #dc3545;
+    }
+    /* Gender radio buttons (Other option removed) */
+    .gender-group {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .gender-group label {
+      margin: 0;
+      font-weight: 500;
+      color: var(--primary);
+    }
+    /* Fixed Footer */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 1rem 5%;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
+      color: var(--primary);
+      z-index: 1000;
+    }
+    body.light-theme footer {
+      background: var(--light-glass);
+      color: var(--light-text);
+      border-top: 1px solid #ccc;
+    }
+    footer .social-icons {
+      margin-top: 0.5rem;
+    }
+    footer .social-icons a {
+      color: var(--primary);
+      margin: 0 0.5rem;
+      text-decoration: none;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+    footer .social-icons a:hover {
+      color: var(--secondary);
+    }
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      header, footer {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed Theme Toggle Button -->
+  <button class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <!-- Fixed Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo" />
+      St. Mary's High
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <div class="logo-form">
+      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="St. Mary's Logo" />
+    </div>
+    <h1>Application Form</h1>
+    <!-- Hidden field to store the auto-generated application number -->
+    <input type="hidden" id="applicationNumber" />
+    <form id="applicationForm">
+      <!-- Personal Information -->
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <div class="input-icon">
+          <i class="fa fa-user"></i>
+          <input type="text" id="name" placeholder="Enter your full name" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="idNumber">Birth/ID Number</label>
+        <div class="input-icon">
+          <i class="fa fa-id-card"></i>
+          <!-- Accepting any data type by removing pattern restriction -->
+          <input type="text" id="idNumber" placeholder="Enter your birth/ID number" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="nationality">Nationality</label>
+        <div class="input-icon">
+          <i class="fa fa-flag"></i>
+          <input type="text" id="nationality" placeholder="Enter your nationality" required />
+        </div>
+      </div>
+      <!-- Gender replaced with radio buttons (Other option removed) -->
+      <div class="form-group">
+        <label>Gender</label>
+        <div class="gender-group">
+          <label><input type="radio" name="gender" value="Male" required /> Male</label>
+          <label><input type="radio" name="gender" value="Female" required /> Female</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dob">Date of Birth</label>
+        <div class="input-icon">
+          <i class="fa fa-calendar"></i>
+          <input type="date" id="dob" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email (Optional)</label>
+        <div class="input-icon">
+          <i class="fa fa-envelope"></i>
+          <input type="email" id="email" placeholder="Enter your email" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <div class="input-icon">
+          <i class="fa fa-phone"></i>
+          <input type="text" id="phone" placeholder="Enter your phone number" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="level">Level</label>
+        <div class="input-icon">
+          <i class="fa fa-graduation-cap"></i>
+          <select id="level" required>
+            <option value="">Select Level</option>
+            <option value="O Level">O Level</option>
+            <option value="A Level">A Level</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="form">Form/Place Seeking</label>
+        <div class="input-icon">
+          <i class="fa fa-building"></i>
+          <select id="form" required>
+            <option value="">Select Form/Place</option>
+            <option value="1">Form 1</option>
+            <option value="2">Form 2</option>
+            <option value="3">Form 3</option>
+            <option value="4">Form 4</option>
+            <option value="5">Form 5</option>
+            <option value="6">Form 6</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="previousSchool">Previous School</label>
+        <div class="input-icon">
+          <i class="fa fa-school"></i>
+          <input type="text" id="previousSchool" placeholder="Enter previous school name" required />
+        </div>
+      </div>
+      <!-- Updated Previous Results Section -->
+      <div class="form-group">
+        <label for="previousResults">
+          Previous Results <br>
+          <small style="font-size: 0.8rem; color: var(--primary);">
+            Enter grades (e.g., Maths A, English C) or upload an image of your results.
+          </small>
+        </label>
+        <div class="input-icon">
+          <i class="fa fa-file-alt"></i>
+          <textarea id="previousResults" rows="3" placeholder="Enter previous results (e.g., Maths A, English C)"></textarea>
+        </div>
+        <div class="input-icon" style="margin-top: 1rem;">
+          <label for="previousResultsFile" style="margin-bottom: 0.5rem; display: block; color: var(--primary);">
+            Or Upload Image:
+          </label>
+          <input type="file" id="previousResultsFile" accept="image/*" />
+        </div>
+      </div>
+      <!-- Parent/Guardian Information -->
+      <div class="form-group">
+        <label for="parentName">Parent/Guardian Name</label>
+        <div class="input-icon">
+          <i class="fa fa-user"></i>
+          <input type="text" id="parentName" placeholder="Enter parent/guardian name" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="parentPhone">Parent/Guardian Phone</label>
+        <div class="input-icon">
+          <i class="fa fa-phone"></i>
+          <input type="text" id="parentPhone" placeholder="Enter parent/guardian phone" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="parentEmail">Parent/Guardian Email (Optional)</label>
+        <div class="input-icon">
+          <i class="fa fa-envelope"></i>
+          <input type="email" id="parentEmail" placeholder="Enter parent/guardian email" />
+        </div>
+      </div>
+      <div class="form-group">
+        <button type="submit">Submit Application</button>
+      </div>
+    </form>
+    <!-- PDF Download Button -->
+    <div class="form-group">
+      <a href="application-form.pdf" download class="download-btn">
+        <i class="fas fa-download"></i> Download Application Form (PDF)
+      </a>
+    </div>
+    <div id="message" class="message"></div>
+  </div>
+
+  <!-- Fixed Footer -->
+  <footer>
+    <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
+    <div class="social-icons">
+      <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Firebase SDK and App Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
+      authDomain: "deee-9ab53.firebaseapp.com",
+      projectId: "deee-9ab53",
+      storageBucket: "deee-9ab53.firebasestorage.app",
+      messagingSenderId: "399732664479",
+      appId: "1:399732664479:web:b84ac30e8266cc51761aaa",
+      measurementId: "G-524ZPBX42B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Helper function to convert file to Base64
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    // Auto-generate application number and store in hidden field
+    function generateApplicationNumber() {
+      const appNumber = "APP-" + Date.now();
+      document.getElementById("applicationNumber").value = appNumber;
+      return appNumber;
+    }
+
+    // Progress Indicator Logic
+    const requiredFields = [
+      "name", "idNumber", "nationality", "dob",
+      "phone", "level", "form", "previousSchool",
+      "parentName", "parentPhone"
+    ];
+    function updateProgress() {
+      let filled = 0;
+      requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field && field.value.trim() !== "") {
+          filled++;
+        }
+      });
+      const genderSelected = document.querySelector('input[name="gender"]:checked') ? 1 : 0;
+      const total = requiredFields.length + 1;
+      const progressPercent = ((filled + genderSelected) / total) * 100;
+      document.getElementById("progressBar").style.width = progressPercent + "%";
+    }
+
+    document.querySelectorAll("input, select, textarea").forEach(el => {
+      el.addEventListener("input", updateProgress);
+      el.addEventListener("change", updateProgress);
+    });
+
+    document.getElementById("applicationForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const applicationNumber = generateApplicationNumber();
+      const name = document.getElementById("name").value;
+      const idNumber = document.getElementById("idNumber").value;
+      const nationality = document.getElementById("nationality").value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const dob = document.getElementById("dob").value;
+      const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value;
+      const level = document.getElementById("level").value;
+      const formValue = document.getElementById("form").value;
+      const previousSchool = document.getElementById("previousSchool").value;
+      const previousResultsText = document.getElementById("previousResults").value.trim();
+      const previousResultsFileInput = document.getElementById("previousResultsFile");
+      let previousResultsImage = null;
+      
+      if (previousResultsFileInput.files.length > 0) {
+        try {
+          previousResultsImage = await toBase64(previousResultsFileInput.files[0]);
+        } catch (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'File Upload Error',
+            text: 'Error processing file: ' + error.message
+          });
+          return;
+        }
+      }
+      
+      if (!previousResultsText && !previousResultsImage) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation Error',
+          text: 'Please provide previous results either as text or by uploading an image.'
+        });
+        return;
+      }
+      
+      const parentName = document.getElementById("parentName").value;
+      const parentPhone = document.getElementById("parentPhone").value;
+      const parentEmail = document.getElementById("parentEmail").value;
+
+      try {
+        await addDoc(collection(db, "applications"), {
+          applicationNumber,
+          name,
+          idNumber,
+          nationality,
+          gender,
+          dob,
+          email,
+          phone,
+          level,
+          form: formValue,
+          previousSchool,
+          previousResultsText,
+          previousResultsImage,
+          parentName,
+          parentPhone,
+          parentEmail,
+          status: "pending",
+          timestamp: new Date()
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'Application Submitted',
+          text: 'Your application (' + applicationNumber + ') has been submitted successfully!'
+        });
+        document.getElementById("applicationForm").reset();
+        updateProgress();
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Submission Failed',
+          text: 'Error submitting application: ' + error.message
+        });
+      }
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+      const toggleIcon = document.getElementById("themeToggle").querySelector("i");
+      if (document.body.classList.contains("light-theme")) {
+        toggleIcon.classList.remove("fa-moon");
+        toggleIcon.classList.add("fa-sun");
+      } else {
+        toggleIcon.classList.remove("fa-sun");
+        toggleIcon.classList.add("fa-moon");
+      }
+    });
+  </script>
+</body>
+</html>

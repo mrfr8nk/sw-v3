@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - St. Mary's High School</title>
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    type="image/png"
+    href="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg"
+  />
+  <!-- jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* Blue UI & Glassmorphism Styles */
+    :root {
+      --primary: #003D4D;
+      --secondary: #005F73;
+      --glass: rgba(255, 255, 255, 0.08);
+      --bg-gradient: linear-gradient(45deg, #003D4D, #005F73);
+      --text-color: #ffffff;
+      --overlay: rgba(0, 0, 0, 0.4);
+    }
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      font-family: "Poppins", sans-serif;
+    }
+    /* Header */
+    header {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 1rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    header .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+    header .logo img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
+    /* Controls Section */
+    .controls {
+      margin-top: 90px; /* leave space for fixed header */
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .filter-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .filter-buttons button i {
+      margin-right: 5px;
+    }
+    .filter-buttons button:hover,
+    .filter-buttons button.active {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    .action-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .action-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 50px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .action-buttons button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    /* Applications List */
+    .applications-list {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .application-card {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 1.5rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .application-card h3 {
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+    .application-card p {
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+    /* Display additional fields */
+    .application-card p.field {
+      font-size: 0.9rem;
+    }
+    /* Date/Time display */
+    .application-card p.timestamp {
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+    .application-card .actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.75rem;
+    }
+    .application-card button.accept,
+    .application-card button.decline,
+    .application-card button.delete {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .application-card button.accept {
+      background: #28a745;
+      color: #fff;
+    }
+    .application-card button.decline {
+      background: #dc3545;
+      color: #fff;
+    }
+    .application-card button.delete {
+      background: #ff4d4d;
+      color: #fff;
+    }
+    .application-card button:hover {
+      transform: scale(1.05);
+    }
+    /* Footer */
+    footer {
+      margin-top: 2rem;
+      padding: 1rem;
+      text-align: center;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    footer .social-icons {
+      margin-top: 0.5rem;
+    }
+    footer .social-icons a {
+      color: #1e90ff;
+      margin: 0 0.5rem;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+    footer .social-icons a:hover {
+      color: var(--primary);
+    }
+    /* Light Theme Override (if toggled) */
+    .light-theme {
+      --primary: #003D4D;
+      --secondary: #005F73;
+      --glass: rgba(255, 255, 255, 0.9);
+      --bg-gradient: linear-gradient(45deg, #E0F7FA, #B2EBF2);
+      --text-color: #1c1917;
+      --overlay: rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo" />
+      St. Mary's High
+    </div>
+    <button class="hamburger" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Controls Section -->
+  <div class="controls">
+    <div class="filter-buttons">
+      <button data-status="all"><i class="fas fa-list"></i> All</button>
+      <button data-status="pending" class="active"><i class="fas fa-clock"></i> Pending</button>
+      <button data-status="accepted"><i class="fas fa-check"></i> Accepted</button>
+      <button data-status="declined"><i class="fas fa-times"></i> Declined</button>
+    </div>
+    <div class="action-buttons">
+      <button id="downloadPDF"><i class="fas fa-file-pdf"></i> Download PDF</button>
+      <button id="themeToggle"><i class="fas fa-adjust"></i> Toggle Light/Dark</button>
+    </div>
+  </div>
+
+  <!-- Applications List -->
+  <div class="applications-list" id="applicationsList">
+    <p>Loading applications...</p>
+  </div>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
+    <div class="social-icons">
+      <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </footer>
+
+  <!-- Firebase SDK and Application Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      query,
+      where,
+      getDocs,
+      doc,
+      updateDoc,
+      deleteDoc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
+      authDomain: "deee-9ab53.firebaseapp.com",
+      projectId: "deee-9ab53",
+      storageBucket: "deee-9ab53.firebasestorage.app",
+      messagingSenderId: "399732664479",
+      appId: "1:399732664479:web:b84ac30e8266cc51761aaa",
+      measurementId: "G-524ZPBX42B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let currentFilter = "pending";
+
+    // Load applications based on status filter (or all if "all" is selected)
+    const loadApplications = async (statusFilter = currentFilter) => {
+      const applicationsList = document.getElementById("applicationsList");
+      applicationsList.innerHTML = "<p>Loading applications...</p>";
+
+      let q;
+      if (statusFilter === "all") {
+        q = query(collection(db, "applications"));
+      } else {
+        q = query(collection(db, "applications"), where("status", "==", statusFilter));
+      }
+
+      try {
+        const querySnapshot = await getDocs(q);
+        let html = "";
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          // Format timestamp if it exists (assumes Firestore Timestamp)
+          const submittedOn = data.timestamp ? data.timestamp.toDate().toLocaleString() : "N/A";
+          
+          // Build the Previous Results display: text and/or image
+          let previousResultsHtml = "";
+          if (data.previousResultsText) {
+            previousResultsHtml += `<p class="field">Previous Results: ${data.previousResultsText}</p>`;
+          } else {
+            previousResultsHtml += `<p class="field">Previous Results: N/A</p>`;
+          }
+          if (data.previousResultsImage) {
+            previousResultsHtml += `<img src="${data.previousResultsImage}" alt="Previous Results Image" style="max-width:100%; height:auto; display:block; margin-top:5px;">`;
+          }
+
+          html += `
+            <div class="application-card">
+              <h3>${data.name || "No Name"}</h3>
+              <p class="field">Application Number: ${data.applicationNumber || "N/A"}</p>
+              <p class="field">Email: ${data.email || "N/A"}</p>
+              <p class="field">Phone: ${data.phone || "N/A"}</p>
+              <p class="field">DOB: ${data.dob || "N/A"}</p>
+              <p class="field">ID/Birth Number: ${data.idNumber || "N/A"}</p>
+              <p class="field">Nationality: ${data.nationality || "N/A"}</p>
+              <p class="field">Gender: ${data.gender || "N/A"}</p>
+              <p class="field">Level: ${data.level || "N/A"}</p>
+              <p class="field">Form: ${data.form || "N/A"}</p>
+              <p class="field">Previous School: ${data.previousSchool || "N/A"}</p>
+              ${previousResultsHtml}
+              <p class="field">Parent Name: ${data.parentName || "N/A"}</p>
+              <p class="field">Parent Phone: ${data.parentPhone || "N/A"}</p>
+              <p class="field">Parent Email: ${data.parentEmail || "N/A"}</p>
+              <p class="timestamp">Submitted on: ${submittedOn}</p>
+              <p class="field">Status: <strong>${data.status ? data.status.charAt(0).toUpperCase() + data.status.slice(1) : "N/A"}</strong></p>
+              <div class="actions">
+                <button class="accept" onclick="updateStatus('${docSnap.id}', 'accepted')"><i class="fas fa-check"></i> Accept</button>
+                <button class="decline" onclick="updateStatus('${docSnap.id}', 'declined')"><i class="fas fa-times"></i> Decline</button>
+                <button class="delete" onclick="deleteApplication('${docSnap.id}')"><i class="fas fa-trash"></i> Delete</button>
+              </div>
+            </div>
+          `;
+        });
+        applicationsList.innerHTML = html || "<p>No applications found.</p>";
+      } catch (error) {
+        console.error("Error loading applications:", error);
+        applicationsList.innerHTML = "<p>Error loading applications.</p>";
+      }
+    };
+
+    // Update application status
+    window.updateStatus = async (id, newStatus) => {
+      try {
+        await updateDoc(doc(db, "applications", id), { status: newStatus });
+        loadApplications(currentFilter);
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
+    };
+
+    // Delete application
+    window.deleteApplication = async (id) => {
+      if (confirm("Are you sure you want to permanently delete this application? This action cannot be undone.")) {
+        try {
+          await deleteDoc(doc(db, "applications", id));
+          loadApplications(currentFilter);
+        } catch (error) {
+          console.error("Error deleting application:", error);
+        }
+      }
+    };
+
+    // Filter buttons event listeners
+    const filterButtons = document.querySelectorAll(".filter-buttons button");
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+        currentFilter = button.getAttribute("data-status");
+        loadApplications(currentFilter);
+      });
+    });
+
+    // Download PDF functionality
+    document.getElementById("downloadPDF").addEventListener("click", async () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text("Applications Report", 20, 20);
+      const applicationsText = document.getElementById("applicationsList").innerText;
+      const lines = applicationsText.split("\n");
+      let y = 30;
+      lines.forEach((line) => {
+        doc.text(line, 20, y);
+        y += 10;
+      });
+      doc.save("applications_report.pdf");
+    });
+
+    // Theme toggle functionality
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+    });
+
+    // Initially load pending applications
+    loadApplications(currentFilter);
+  </script>
+</body>
+</html>
