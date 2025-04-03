@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Teacher Account - St. Mary's High School</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="icon" href="https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png" type="image/png" />
+  <style>
+    :root {
+      /* Default Icy Blue Mode Variables */
+      --primary: #00d4ff; /* Icy Blue */
+      --secondary: #00aaff; 
+      --text-color: #e0f7ff; /* Light frosty text */
+      --bg-dark: #0a192f; /* Deep midnight blue */
+      --glass-bg: rgba(0, 212, 255, 0.1);
+    }
+    
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Default Icy Blue Background */
+    body {
+      background: linear-gradient(135deg, #0a192f, #112240);
+      color: var(--text-color);
+      overflow-x: hidden;
+      transition: background 0.6s ease, color 0.6s ease;
+    }
+    
+    /* SKY BLUE MODE: Light mode with a sky blue gradient that darkens as you go down */
+    body.skyblue-mode {
+      background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+      --text-color: #1a1a1a; /* Dark text for contrast */
+    }
+    
+    /* Override header, footer & toggle backgrounds in sky blue mode */
+    body.skyblue-mode header,
+    body.skyblue-mode footer,
+    body.skyblue-mode .theme-toggle {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* HEADER */
+    header {
+      background: rgba(0, 212, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      color: var(--text-color);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: inherit;
+    }
+    
+    .logo img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      border-radius: 50%;
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3),
+                  -4px -4px 10px rgba(255, 255, 255, 0.05);
+    }
+    
+    nav {
+      display: flex;
+      align-items: center;
+    }
+    
+    nav a {
+      color: inherit;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    nav a:hover {
+      color: var(--primary);
+    }
+    
+    .menu-btn {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: inherit;
+    }
+    
+    /* MAIN CONTENT */
+    main {
+      padding-top: 100px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .glass-card {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 30px rgba(0, 212, 255, 0.1);
+      max-width: 600px;
+      margin: 2rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      animation: fadeIn 2s ease-in-out;
+    }
+    
+    p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      animation: fadeIn 2.5s ease-in-out;
+    }
+    
+    .developer-profile {
+      margin: 2rem 0;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Enhanced Photo Styling */
+    .developer-profile img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 5px solid var(--primary);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .developer-profile img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* 3D Blue and Black/White Contact Button */
+    .whatsapp-button {
+      background: linear-gradient(145deg, #1e90ff, #00d4ff);
+      border: 2px solid #000;
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 1px 1px 2px #000;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4), -5px -5px 10px rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: fadeIn 3s ease-in-out;
+    }
+    
+    .whatsapp-button:active {
+      transform: translateY(4px);
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.1);
+    }
+    
+    .whatsapp-button i {
+      font-size: 1.5rem;
+    }
+    
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* FOOTER with Star Effect */
+    footer {
+      background: rgba(0, 212, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      color: inherit;
+      padding: 2rem 5%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    footer::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1px, transparent 1px);
+      background-size: 2px 2px, 3px 3px, 5px 5px;
+      background-position: 0 0, 50px 50px, 100px 100px;
+      animation: stars 50s linear infinite;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    
+    @keyframes stars {
+      from { background-position: 0 0, 50px 50px, 100px 100px; }
+      to { background-position: 100px 100px, 150px 150px, 200px 200px; }
+    }
+    
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .social-icons a {
+      color: inherit;
+      font-size: 1.5rem;
+      margin: 0 0.5rem;
+      transition: color 0.3s ease;
+    }
+    
+    .social-icons a:hover {
+      color: var(--primary);
+    }
+    
+    .footer-links a {
+      color: inherit;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: 500;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+    
+    .footer-links .btn {
+      background: var(--secondary);
+      color: #0a192f;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .footer-links .btn:hover {
+      background: #0088cc;
+    }
+    
+    /* THEME TOGGLE BUTTON */
+    .theme-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0, 212, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2),
+                  -8px -8px 15px rgba(255, 255, 255, 0.05);
+      z-index: 1000;
+    }
+    
+    .theme-toggle i {
+      font-size: 1.5rem;
+    }
+    
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .menu-btn {
+        display: block;
+      }
+    
+      nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        background: rgba(0, 212, 255, 0.15);
+        backdrop-filter: blur(10px);
+        width: 100%;
+        padding: 1rem;
+      }
+    
+      nav.active {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo">
+      St. Mary's High
+    </div>
+    <button class="menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav>
+      <a href="/"><i class="fas fa-home"></i> Home</a>
+      <a href="/about"><i class="fas fa-info-circle"></i> About</a>
+      <a href="/gallery"><i class="fas fa-images"></i> Gallery</a>
+      <a href="/contact"><i class="fas fa-envelope"></i> Contact</a>
+      <a href="/staff" class="btn"><i class="fas fa-chalkboard-teacher"></i> Staff</a>
+    </nav>
+  </header>
+  
+  <!-- Main Content -->
+  <main>
+    <div class="glass-card">
+      <h1>Create Teacher Account</h1>
+      <p>
+        To create a teacher account, please contact the developer on WhatsApp by tapping the button below.
+      </p>
+      <div class="developer-profile">
+        <img src="https://i.ibb.co/Mk70FGWb/subzero-bot.jpg" alt="Developer Profile">
+      </div>
+      <a href="https://wa.me/263719647303?text=Hi+Darrell+I+Need+Admin+Account+!" class="whatsapp-button">
+        <i class="fab fa-whatsapp"></i> Contact Developer
+      </a>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+      </div>
+      <div class="footer-links">
+        <a href="/" class="btn"><i class="fas fa-home"></i> Go Home</a>
+      </div>
+    </div>
+    <p style="position: relative; z-index: 1;">&copy; 2025 St. Mary's High School. All rights reserved.</p>
+  </footer>
+  
+  <!-- Theme Toggle Button -->
+  <div class="theme-toggle" id="themeToggle">
+    <!-- Default icon indicates the default (icy) mode; clicking toggles to sky blue mode -->
+    <i class="fas fa-sun"></i>
+  </div>
+  
+  <script>
+    // Theme Toggle: Switch between default icy blue mode and sky blue gradient mode.
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('skyblue-mode');
+      const isSkyblueMode = body.classList.contains('skyblue-mode');
+      // If in sky blue mode, show moon icon (indicating you can revert to default/dark mode)
+      themeToggle.innerHTML = isSkyblueMode ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+      localStorage.setItem('theme', isSkyblueMode ? 'skyblue' : 'icy');
+    });
+    
+    // Load saved theme from localStorage.
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'skyblue') {
+      body.classList.add('skyblue-mode');
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    } else {
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+    
+    // Hamburger Menu Toggle
+    const menuBtn = document.querySelector('.menu-btn');
+    const nav = document.querySelector('nav');
+    
+    menuBtn.addEventListener('click', () => {
+      nav.classList.toggle('active');
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
+        nav.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>

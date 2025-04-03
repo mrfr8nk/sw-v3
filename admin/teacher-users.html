@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Teachers - St. Mary's High School</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" />
+  <style>
+    /* Basic Responsive & Themed Styles */
+    :root {
+      --primary: #00B4DB;
+      --secondary: #0083B0;
+      --glass: rgba(255, 255, 255, 0.08);
+      --bg-gradient: linear-gradient(45deg, #003D4D, #005F73);
+      --text-color: #ffffff;
+      --overlay: rgba(0, 0, 0, 0.4);
+    }
+    [data-theme="light"] {
+      --primary: #00B4DB;
+      --secondary: #0083B0;
+      --glass: rgba(0, 0, 0, 0.05);
+      --bg-gradient: linear-gradient(45deg, #E0F7FA, #B2EBF2);
+      --text-color: #1c1917;
+      --overlay: rgba(255, 255, 255, 0.4);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      padding-top: 80px; /* to avoid header overlap */
+      padding-bottom: 80px; /* to avoid footer overlap */
+    }
+    /* Header */
+    header {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 1.2rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+    .logo img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
+    .hamburger {
+      font-size: 1.5rem;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      padding: 10px;
+    }
+    /* Side Menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      padding: 2rem;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 2000;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .side-menu.active {
+      right: 0;
+    }
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .close-btn {
+      font-size: 1.8rem;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+    }
+    .menu-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .menu-links a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 1.1rem;
+      padding: 10px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .menu-links a:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    /* Admin List Container */
+    .admin-list-container {
+      width: 90%;
+      max-width: 900px;
+      margin: 30px auto;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .admin-list-container h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .total-count {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .table-responsive {
+      overflow-x: auto;
+      width: 100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    th {
+      background: var(--primary);
+      color: #fff;
+    }
+    /* Profile Picture Column */
+    .profile-pic {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    /* Action Buttons */
+    .action-buttons button {
+      padding: 5px 10px;
+      background: #f44336;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      margin-right: 5px;
+      transition: background 0.3s ease;
+    }
+    .action-buttons button.edit-btn {
+      background: #4caf50;
+    }
+    .action-buttons button:hover {
+      opacity: 0.9;
+    }
+    /* Footer */
+    footer {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 1.5rem 5%;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .social-icons a {
+      color: var(--text-color);
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+    .social-icons a:hover {
+      color: var(--primary);
+    }
+    footer p {
+      font-size: 0.9rem;
+      color: var(--text-color);
+    }
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(180deg);
+    }
+    .theme-toggle i {
+      font-size: 1.4rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @media (max-width: 768px) {
+      .side-menu {
+        width: 100%;
+        right: -100%;
+      }
+      .side-menu.active {
+        right: 0;
+      }
+    }
+    /* Edit Admin Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: var(--overlay);
+    }
+    .modal-content {
+      background-color: var(--glass);
+      backdrop-filter: blur(12px);
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid var(--primary);
+      width: 90%;
+      max-width: 500px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .modal-content form div {
+      margin-bottom: 10px;
+    }
+    .modal-content form label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--text-color);
+    }
+    .modal-content form input,
+    .modal-content form select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      background-color: var(--glass);
+      color: var(--text-color);
+    }
+    .modal-content form button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .modal-content form button.primary-btn {
+      background: var(--primary);
+      color: #fff;
+    }
+    .modal-content form button.secondary-btn {
+      background: var(--secondary);
+      color: #fff;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo" />
+      St. Mary's High
+    </div>
+    <button class="hamburger" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Side Menu -->
+  <div class="side-menu">
+    <div class="menu-header">
+      <h3>Menu</h3>
+      <button class="close-btn" onclick="toggleMenu()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="menu-links">
+      <a href="/teachersdashboard"><i class="fas fa-tachometer-alt"></i> Go Back</a>
+      <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+      <a href="/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- Admin List Container -->
+  <div class="admin-list-container">
+    <h2>Admin Teachers</h2>
+    <div class="total-count" id="totalAdminsCount"></div>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Profile</th>
+            <th>First Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Classes</th>
+            <th>Created At</th>
+            <th>Last Login</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminsTableBody">
+          <!-- Admin rows will be appended here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Edit Admin Modal -->
+  <div id="editAdminModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="editAdminModalClose" style="cursor:pointer; float:right; font-size:1.5rem;">&times;</span>
+      <h2>Edit Admin Teacher</h2>
+      <form id="editAdminForm">
+        <input type="hidden" id="editAdminId" />
+        <div>
+          <label for="editAdminFirstName">First Name:</label>
+          <input type="text" id="editAdminFirstName" required />
+        </div>
+        <div>
+          <label for="editAdminSurname">Surname:</label>
+          <input type="text" id="editAdminSurname" required />
+        </div>
+        <div>
+          <label for="editAdminEmail">Email:</label>
+          <input type="email" id="editAdminEmail" required />
+        </div>
+        <div>
+          <label for="editAdminRole">Role:</label>
+          <select id="editAdminRole">
+            <option value="admin">Admin</option>
+            <option value="student">Student</option>
+          </select>
+        </div>
+        <!-- New Fields: Up to 4 Classes -->
+        <div>
+          <label for="editAdminClass1">Class 1:</label>
+          <input type="text" id="editAdminClass1" placeholder="e.g., Form 1 W Maths Teacher" />
+        </div>
+        <div>
+          <label for="editAdminClass2">Class 2:</label>
+          <input type="text" id="editAdminClass2" placeholder="Optional" />
+        </div>
+        <div>
+          <label for="editAdminClass3">Class 3:</label>
+          <input type="text" id="editAdminClass3" placeholder="Optional" />
+        </div>
+        <div>
+          <label for="editAdminClass4">Class 4:</label>
+          <input type="text" id="editAdminClass4" placeholder="Optional" />
+        </div>
+        <button type="submit" class="primary-btn">Save Changes</button>
+        <button type="button" class="secondary-btn" id="cancelEditAdmin">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
+  </footer>
+
+  <!-- Theme Toggle -->
+  <div class="theme-toggle" id="themeToggle">
+    <i class="fas fa-sun"></i>
+  </div>
+
+  <!-- Firebase and JavaScript -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      deleteDoc,
+      doc,
+      updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
+      authDomain: "deee-9ab53.firebaseapp.com",
+      projectId: "deee-9ab53",
+      storageBucket: "deee-9ab53.firebasestorage.app",
+      messagingSenderId: "399732664479",
+      appId: "1:399732664479:web:b84ac30e8266cc51761aaa",
+      measurementId: "G-524ZPBX42B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let adminTeachersData = [];
+
+    // Helper: Format timestamp (handles Firestore Timestamp or string)
+    function formatTimestamp(ts) {
+      if (!ts) return "N/A";
+      if (ts.seconds) {
+        return new Date(ts.seconds * 1000).toLocaleString();
+      }
+      return new Date(ts).toLocaleString();
+    }
+
+    // Load all admin teachers from Firestore
+    async function loadAdminTeachers() {
+      try {
+        const snapshot = await getDocs(collection(db, "users"));
+        const admins = [];
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          data.id = docSnap.id;
+          if (data.role === "admin" || data.role === "student") {
+            admins.push(data);
+          }
+        });
+        adminTeachersData = admins; // store globally for editing
+        renderAdminTeachers(admins);
+      } catch (error) {
+        console.error("Error loading admin teachers:", error);
+      }
+    }
+
+    function renderAdminTeachers(admins) {
+      const adminsTableBody = document.getElementById("adminsTableBody");
+      adminsTableBody.innerHTML = "";
+      document.getElementById("totalAdminsCount").textContent = `Total Admin Teachers: ${admins.length}`;
+      
+      admins.forEach((adminUser, index) => {
+        const createdAt = formatTimestamp(adminUser.createdAt);
+        const lastLogin = formatTimestamp(adminUser.lastLogin);
+        const classesStr = adminUser.classes && adminUser.classes.length 
+          ? adminUser.classes.join(", ") 
+          : "";
+        
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>
+            <img class="profile-pic" src="${adminUser.profilePic || 'https://via.placeholder.com/50'}" alt="Profile" />
+          </td>
+          <td>${adminUser.firstname || ""}</td>
+          <td>${adminUser.surname || ""}</td>
+          <td>${adminUser.email || ""}</td>
+          <td>${adminUser.role || ""}</td>
+          <td>${classesStr}</td>
+          <td>${createdAt}</td>
+          <td>${lastLogin}</td>
+          <td class="action-buttons">
+            <button class="edit-btn" onclick="editAdmin('${adminUser.id}')">Edit</button>
+            <button onclick="deleteAdmin('${adminUser.id}')">Delete</button>
+          </td>
+        `;
+        adminsTableBody.appendChild(tr);
+      });
+    }
+
+    // Delete an admin teacher with confirmation (includes full name)
+    async function deleteAdmin(adminId) {
+      const admin = adminTeachersData.find(a => a.id === adminId);
+      const adminName = admin ? `${admin.firstname || ""} ${admin.surname || ""}`.trim() : "this admin";
+      if (confirm(`Are you sure you want to delete admin ${adminName}?`)) {
+        try {
+          await deleteDoc(doc(db, "users", adminId));
+          alert("Admin deleted successfully.");
+          loadAdminTeachers();
+        } catch (error) {
+          alert("Error deleting admin: " + error.message);
+          console.error("Error deleting admin:", error);
+        }
+      }
+    }
+    window.deleteAdmin = deleteAdmin;
+
+    // Edit Admin Teacher – open modal and pre-fill data
+    function editAdmin(adminId) {
+      const admin = adminTeachersData.find(a => a.id === adminId);
+      if (!admin) return;
+      document.getElementById("editAdminId").value = admin.id;
+      document.getElementById("editAdminFirstName").value = admin.firstname || "";
+      document.getElementById("editAdminSurname").value = admin.surname || "";
+      document.getElementById("editAdminEmail").value = admin.email || "";
+      document.getElementById("editAdminRole").value = admin.role || "admin";
+      // Pre-fill classes if available (up to 4)
+      document.getElementById("editAdminClass1").value = admin.classes && admin.classes[0] ? admin.classes[0] : "";
+      document.getElementById("editAdminClass2").value = admin.classes && admin.classes[1] ? admin.classes[1] : "";
+      document.getElementById("editAdminClass3").value = admin.classes && admin.classes[2] ? admin.classes[2] : "";
+      document.getElementById("editAdminClass4").value = admin.classes && admin.classes[3] ? admin.classes[3] : "";
+      document.getElementById("editAdminModal").style.display = "block";
+    }
+    window.editAdmin = editAdmin;
+
+    // Close Edit Admin Modal
+    document.getElementById("editAdminModalClose").addEventListener("click", () => {
+      document.getElementById("editAdminModal").style.display = "none";
+    });
+    document.getElementById("cancelEditAdmin").addEventListener("click", () => {
+      document.getElementById("editAdminModal").style.display = "none";
+    });
+
+    // Handle Edit Admin Form submission
+    document.getElementById("editAdminForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const adminId = document.getElementById("editAdminId").value;
+      // Collect classes from input fields (only non-empty)
+      const classes = [
+        document.getElementById("editAdminClass1").value,
+        document.getElementById("editAdminClass2").value,
+        document.getElementById("editAdminClass3").value,
+        document.getElementById("editAdminClass4").value,
+      ].filter(val => val.trim() !== "");
+      
+      const updatedData = {
+        firstname: document.getElementById("editAdminFirstName").value,
+        surname: document.getElementById("editAdminSurname").value,
+        email: document.getElementById("editAdminEmail").value,
+        role: document.getElementById("editAdminRole").value,
+        classes: classes
+      };
+      try {
+        await updateDoc(doc(db, "users", adminId), updatedData);
+        alert("Admin updated successfully.");
+        document.getElementById("editAdminModal").style.display = "none";
+        loadAdminTeachers();
+      } catch (error) {
+        alert("Error updating admin: " + error.message);
+        console.error("Error updating admin:", error);
+      }
+    });
+
+    // Theme Toggle – Default to light mode
+    let isDark = false;
+    if (!localStorage.getItem("theme")) {
+      document.body.setAttribute("data-theme", "light");
+      localStorage.setItem("theme", "light");
+    }
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.body.setAttribute("data-theme", savedTheme);
+      isDark = savedTheme === "dark";
+      document.getElementById("themeToggle").innerHTML = isDark 
+        ? '<i class="fas fa-moon"></i>' 
+        : '<i class="fas fa-sun"></i>';
+    }
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      isDark = !isDark;
+      document.body.setAttribute("data-theme", isDark ? "dark" : "light");
+      themeToggle.innerHTML = isDark 
+        ? '<i class="fas fa-moon"></i>' 
+        : '<i class="fas fa-sun"></i>';
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+
+    // Side Menu Toggle
+    function toggleMenu() {
+      const sideMenu = document.querySelector(".side-menu");
+      sideMenu.classList.toggle("active");
+    }
+    window.toggleMenu = toggleMenu;
+
+    // Load admin teachers on page load
+    loadAdminTeachers();
+  </script>
+</body>
+</html>
