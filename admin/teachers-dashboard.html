@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -747,15 +748,15 @@
     /* --------------------- Dashboard Functions --------------------- */
     async function loadTeacherStats() {
       try {
-        // Count students and updates for additional stats
+        // For demonstration, here we count students, updates and also fetch teacher profile info if needed.
         const studentsSnapshot = await getDocs(collection(db, "students"));
         const updatesSnapshot = await getDocs(collection(db, "updates"));
-        // For teacher stats, count users with role "teacher" or "admin" (from admin/teachers page)
+        // For teacher stats, we display total teachers from the "users" collection.
         const usersSnapshot = await getDocs(collection(db, "users"));
         let totalTeachers = 0;
         usersSnapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          if (data.role === "teacher" || data.role === "admin") {
+          if (data.role === "teacher") {
             totalTeachers++;
           }
         });
@@ -1191,6 +1192,7 @@
           if (data.profilePic) {
             document.getElementById("profilePicPreview").src = data.profilePic;
           } else {
+            // Optionally show a notification to update the profile picture
             alert("Please update your profile picture in the Settings section.");
           }
         }
