@@ -13,6 +13,10 @@
       "dest": "/pages/faculty.html"
     },
     {
+      "src": "/ai",
+      "dest": "/pages/ai.html"
+    },
+    {
       "src": "/staff",
       "dest": "/pages/stuff.html"
     },
