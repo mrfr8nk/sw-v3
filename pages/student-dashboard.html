@@ -544,7 +544,7 @@
       #profile-container {
         position: fixed;
         top: 10px;
-        left: 10px;
+        left: 50px; /* Adjusted to align with header text/logo */
         z-index: 1100;
       }
       #profile-container img {
@@ -565,7 +565,6 @@
       <img id="smallProfilePic" src="https://i.postimg.cc/28gm27sy/2993763.png" alt="Profile Icon" />
       <input type="file" id="file-input" accept="image/*" />
     </div>
-
     <!-- Overlay for Side Menu -->
     <div id="menuOverlay"></div>
     <!-- Header -->
@@ -591,6 +590,7 @@
         <a href="#personal-info"><i class="fas fa-user"></i> Personal Info</a>
         <a href="#results"><i class="fas fa-chart-bar"></i> View Results</a>
         <a href="#performance"><i class="fas fa-line-chart"></i> Performance History</a>
+        <a href="#chat"><i class="fas fa-comments"></i> Chat with AI</a>
         <a href="#updates"><i class="fas fa-bell"></i> Current Updates <span id="updateCount"></span></a>
         <a href="/report"><i class="fas fa-share"></i> Send Report</a>
         <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -754,6 +754,14 @@
         <div id="performance-chart"></div>
         <div id="performance-details"></div>
       </section>
+      <!-- Chat with AI Section -->
+      <section id="chat" class="fade-in" style="display: none;">
+        <h2>Chat with AI</h2>
+        <div id="chatContainer">
+          <!-- Chat UI goes here. For now, a simple placeholder message -->
+          <p>Start a conversation with our AI assistant. (This feature is coming soon.)</p>
+        </div>
+      </section>
       <!-- Current Updates Section -->
       <section id="updates" class="fade-in" style="display: none;">
         <h2>
@@ -838,7 +846,9 @@
 
       // Update performance chart (in View Results section)
       function updateChart(marksData) {
-        const ctx = document.getElementById("performanceChart").getContext("2d");
+        const canvas = document.getElementById("performanceChart");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
         const subjects = Object.keys(marksData);
         const marks = subjects.map(subject => marksData[subject].marks);
         if (window.performanceChartInstance) {
@@ -993,6 +1003,51 @@
           const studentSnap = await getDoc(studentRef);
           if (studentSnap.exists()) {
             const studentData = studentSnap.data();
+
+            // Handle fees/results message:
+            if (studentData.feesPaid !== true) {
+              if (studentData.feesBalance && Number(studentData.feesBalance) > 0) {
+                const resultsMessage = document.getElementById("resultsMessage");
+                resultsMessage.innerHTML = `
+                  Dear ${studentData.firstname},<br/><br/>
+                  You cannot view your results as you have a pending fees balance of $<span style="color:red;">${studentData.feesBalance}</span>
+                  for ${studentData.year || "N/A"} ${studentData.term || "N/A"}. Please settle the outstanding amount.<br/><br/>
+                  <span style="color:green;">Yours, Team St Mary's Admin</span>
+                `;
+                resultsMessage.classList.add("show");
+                document.getElementById("reportCardContainer").style.display = "none";
+                return;
+              } else {
+                const resultsMessage = document.getElementById("resultsMessage");
+                resultsMessage.innerHTML = `
+                  Dear ${studentData.firstname},<br/><br/>
+                  Your results will appear here soon. Please check back later for your report card.<br/><br/>
+                  <span style="color:green;">Thank you for your patience!</span>
+                `;
+                resultsMessage.classList.add("show");
+                if (!studentData.marks || Object.keys(studentData.marks).length === 0) {
+                  document.getElementById("reportCardContainer").style.display = "none";
+                } else {
+                  document.getElementById("reportCardContainer").style.display = "block";
+                }
+                return;
+              }
+            } else {
+              document.getElementById("resultsMessage").classList.remove("show");
+              document.getElementById("reportCardContainer").style.display = "block";
+              // If results exist and haven't been marked as viewed, notify student and update DB.
+              if (studentData.marks && Object.keys(studentData.marks).length > 0 && !studentData.resultsViewed) {
+                Swal.fire({
+                  toast: true,
+                  position: 'top-end',
+                  icon: 'info',
+                  title: 'New results are out!',
+                  showConfirmButton: false,
+                  timer: 3000
+                });
+                await updateDoc(studentRef, { resultsViewed: true });
+              }
+            }
 
             // Populate report card.
             document.getElementById("reportName").textContent = `${capitalize(studentData.firstname)} ${capitalize(studentData.surname)}`;
