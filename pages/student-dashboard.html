@@ -1392,6 +1392,13 @@
           window.location.href = "/report";
         });
       }
+ const aiLink = document.querySelector('.menu-links a[href="/ai"]');
+      if (reportLink) {
+        reportLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.location.href = "/ai";
+        });
+      }
 
       // Load Performance History Data
       function loadPerformanceHistory() {
