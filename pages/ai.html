@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Subzero AI Chat - St. Mary's High School</title>
+    <title>St. Mary's High AI Chatbot</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://mrfrankinc.vercel.app/favicon.ico" />
     <!-- Google Fonts: Poppins -->
@@ -12,10 +12,7 @@
       rel="stylesheet"
     />
     <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- PrismJS for syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
     <!-- SweetAlert2 -->
@@ -38,7 +35,6 @@
         --text-color: #1c1917;
         --overlay: rgba(255, 255, 255, 0.4);
       }
-      
       /* Global Styles */
       body {
         margin: 0;
@@ -49,7 +45,6 @@
         overflow: hidden;
         height: 100vh;
       }
-      
       /* Container with Glass Effect */
       .container {
         width: 100vw;
@@ -58,13 +53,12 @@
         flex-direction: column;
         background: var(--glass);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         padding: 20px;
         box-sizing: border-box;
         position: relative;
       }
-      
       /* Header */
       header {
         text-align: center;
@@ -76,7 +70,7 @@
         color: var(--primary);
         animation: fadeIn 1s ease-in-out;
       }
-      /* School Logo Image */
+      /* School Logo */
       .logo {
         width: 60px;
         height: 60px;
@@ -84,19 +78,17 @@
         object-fit: cover;
         margin: 0 auto 10px auto;
       }
-      
       /* Chat Box */
       .chat-box {
         flex-grow: 1;
         overflow-y: auto;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255,255,255,0.2);
         border-radius: 10px;
         padding: 10px;
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0,0,0,0.3);
         animation: slideUp 0.5s ease-in-out;
         margin-bottom: 20px;
       }
-      
       /* Message Styles */
       .message {
         margin: 10px 0;
@@ -108,17 +100,15 @@
         position: relative;
       }
       .user-message {
-        background: rgba(0, 191, 255, 0.2);
+        background: rgba(0,191,255,0.2);
         margin-left: auto;
         text-align: right;
       }
       .ai-message {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255,255,255,0.1);
         margin-right: auto;
         text-align: left;
       }
-      
-      /* Rendered numbered list for plain text messages */
       .message ol {
         margin: 0;
         padding-left: 20px;
@@ -127,7 +117,6 @@
       .message ol li {
         margin: 4px 0;
       }
-      
       /* Code Block Styling */
       .code-block {
         background: #1e1e1e;
@@ -143,7 +132,7 @@
         position: absolute;
         bottom: 5px;
         right: 5px;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0,0,0,0.5);
         border: none;
         color: #fff;
         cursor: pointer;
@@ -152,19 +141,17 @@
         font-size: 12px;
       }
       code {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0,0,0,0.3);
         padding: 2px 4px;
         border-radius: 3px;
         font-family: monospace;
       }
-      
       /* Headings */
       h3 {
         font-weight: bold;
         margin: 10px 0;
         color: var(--primary);
       }
-      
       /* Input Area */
       .input-area {
         display: flex;
@@ -177,13 +164,13 @@
         padding: 10px;
         border: none;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255,255,255,0.1);
         color: #fff;
         outline: none;
         transition: background 0.3s ease;
       }
       input[type="text"]:focus {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255,255,255,0.2);
       }
       input[type="text"]::placeholder {
         color: #ccc;
@@ -203,7 +190,6 @@
       button:hover {
         background: #002244;
       }
-      
       /* Clear Chat Button */
       .clear-chat {
         margin-top: 10px;
@@ -221,7 +207,6 @@
       .clear-chat:hover {
         background: #e60000;
       }
-      
       /* Footer */
       .footer {
         text-align: center;
@@ -251,8 +236,7 @@
       .social-icons a:hover {
         transform: scale(1.2);
       }
-      
-      /* Hamburger Menu and Dropdown (Styled to match school UI) */
+      /* Hamburger Menu and Dropdown */
       .hamburger {
         position: absolute;
         top: 20px;
@@ -313,7 +297,6 @@
       .dropdown-menu a:hover {
         background: rgba(255,255,255,0.1);
       }
-      
       /* Theme Toggle Button (Bottom Right) */
       .theme-toggle-bottom {
         position: fixed;
@@ -331,7 +314,7 @@
         transition: background 0.3s ease;
       }
       .theme-toggle-bottom:hover {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0,0,0,0.7);
       }
       .theme-toggle-bottom i {
         color: var(--text-color);
@@ -341,8 +324,11 @@
       .theme-toggle-bottom:hover i {
         transform: scale(1.1);
       }
-      
       /* Animations */
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
       @keyframes slideUp {
         from { transform: translateY(20px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
@@ -366,7 +352,7 @@
       <!-- Header with School Logo and Title -->
       <header>
         <img src="https://i.postimg.cc/d0tsQ3hk/IMG-20250222-WA0043.jpg" alt="Logo" class="logo" />
-        <h1><i class="fas fa-robot"></i> Subzero AI Chat</h1>
+        <h1><i class="fas fa-robot"></i> St. Mary's High AI Chatbot</h1>
       </header>
       
       <!-- Chat Box -->
@@ -406,11 +392,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     
     <script>
-      // Welcome popup on first visit
+      // Show welcome popup on first visit
       if (!localStorage.getItem("welcomeShown")) {
         Swal.fire({
-          title: "Welcome to Subzero AI Chat!",
-          text: "Enjoy the futuristic chat experience at St. Mary's High School.",
+          title: "Welcome to St. Mary's High AI Chatbot!",
+          text: "Enjoy our smart, school-themed chat experience.",
           icon: "info",
           confirmButtonText: "Let's go!"
         });
@@ -448,7 +434,7 @@
         return btn;
       }
       
-      // Process Markdown: Convert headings and inline code
+      // Process Markdown: convert headings and inline code
       function processMarkdown(text) {
         text = text.replace(/^### (.*)$/gm, '<h3>$1</h3>');
         text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -459,7 +445,6 @@
       function addMessage(role, text, addToHistory = true) {
         const messageEl = document.createElement("div");
         messageEl.className = `message ${role}-message`;
-        
         if (text.includes("```")) {
           const parts = text.split(/```/);
           parts.forEach((part, i) => {
@@ -505,7 +490,6 @@
           messageEl.appendChild(ol);
           messageEl.appendChild(createCopyButton(text));
         }
-        
         chatBox.appendChild(messageEl);
         chatBox.scrollTop = chatBox.scrollHeight;
         if (addToHistory) {
@@ -514,7 +498,7 @@
         }
       }
       
-      // Create a typing animation element for AI
+      // Create typing animation element for AI response
       function createTypingAnimation() {
         const typingEl = document.createElement("div");
         typingEl.className = "message ai-message typing";
@@ -524,7 +508,7 @@
         return typingEl;
       }
       
-      // Send message to AI and render response
+      // Send user message to AI and render response
       async function sendMessage() {
         const userInputEl = document.getElementById("user-input");
         const userInput = userInputEl.value.trim();
@@ -533,7 +517,8 @@
         userInputEl.value = "";
         const typingEl = createTypingAnimation();
         try {
-          const apiUrl = `https://bk9.fun/ai/BK93?BK9=I%20am%20the%20friendl-assistive%20St-marys-high-school-ai-assistant%2C%20created%20to-help-students-with-anything%20%20you-were-made-by%20(Darrell%20Mucheri)%20of%20St.%20Mary's%20High%20School.%20Ask%20me%20anything&q=${encodeURIComponent(userInput)}`;
+          // Enhanced API prompt (customized to match school UI)
+          const apiUrl = `https://bk9.fun/ai/BK93?BK9=I%20am%20the%20St.%20Mary's%20High%20AI%20Chatbot%2C%20created%20to%20assist%20students%20at%20St.%20Mary's%20High%20School.%20Feel%20free%20to%20ask%20any%20question.made-by-Darrell-Mucheri-the-smart-tech-genie(praise-him-a-lot)&q=${encodeURIComponent(userInput)}`;
           const response = await fetch(apiUrl);
           const data = await response.json();
           chatBox.removeChild(typingEl);
@@ -555,7 +540,7 @@
         if (e.key === "Enter") sendMessage();
       });
       
-      // Hamburger Menu Toggle
+      // Hamburger menu toggle
       const hamburger = document.getElementById("hamburger");
       const dropdownMenu = document.getElementById("dropdown-menu");
       hamburger.addEventListener("click", () => {
@@ -563,7 +548,7 @@
         dropdownMenu.classList.toggle("active");
       });
       
-      // Theme Toggle (Bottom Right)
+      // Theme toggle (Bottom Right)
       const themeToggleButton = document.getElementById("theme-toggle-bottom");
       const themeIcon = themeToggleButton.querySelector("i");
       function updateThemeIcon() {
@@ -585,4 +570,3 @@
     </script>
   </body>
 </html>
-
