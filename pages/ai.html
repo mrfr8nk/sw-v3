@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subzero AI Chat - St. Mary's High School</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://mrfrankinc.vercel.app/favicon.ico" />
+    <!-- Google Fonts: Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- PrismJS for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <style>
+      /* School UI Variables */
+      :root {
+        --primary: #003366;
+        --secondary: #ffd700;
+        --glass: rgba(255, 255, 255, 0.08);
+        --bg-gradient: linear-gradient(45deg, #003d4d, #005f73);
+        --text-color: #ffffff;
+        --overlay: rgba(0, 0, 0, 0.4);
+      }
+      [data-theme="light"] {
+        --primary: #00b4db;
+        --secondary: #0083b0;
+        --glass: rgba(255, 255, 255, 0.95);
+        --bg-gradient: linear-gradient(45deg, #e0f7fa, #b2ebf2);
+        --text-color: #1c1917;
+        --overlay: rgba(255, 255, 255, 0.4);
+      }
+      
+      /* Global Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: var(--bg-gradient);
+        color: var(--text-color);
+        overflow: hidden;
+        height: 100vh;
+      }
+      
+      /* Container with Glass Effect */
+      .container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: var(--glass);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative;
+      }
+      
+      /* Header */
+      header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: var(--primary);
+        animation: fadeIn 1s ease-in-out;
+      }
+      /* School Logo Image */
+      .logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 10px auto;
+      }
+      
+      /* Chat Box */
+      .chat-box {
+        flex-grow: 1;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.5s ease-in-out;
+        margin-bottom: 20px;
+      }
+      
+      /* Message Styles */
+      .message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 85%;
+        word-wrap: break-word;
+        animation: fadeIn 0.5s ease-in-out forwards;
+        position: relative;
+      }
+      .user-message {
+        background: rgba(0, 191, 255, 0.2);
+        margin-left: auto;
+        text-align: right;
+      }
+      .ai-message {
+        background: rgba(255, 255, 255, 0.1);
+        margin-right: auto;
+        text-align: left;
+      }
+      
+      /* Rendered numbered list for plain text messages */
+      .message ol {
+        margin: 0;
+        padding-left: 20px;
+        list-style-type: decimal;
+      }
+      .message ol li {
+        margin: 4px 0;
+      }
+      
+      /* Code Block Styling */
+      .code-block {
+        background: #1e1e1e;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 5px 0;
+        overflow-x: auto;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        position: relative;
+      }
+      .copy-btn {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 3px 5px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      code {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+      
+      /* Headings */
+      h3 {
+        font-weight: bold;
+        margin: 10px 0;
+        color: var(--primary);
+      }
+      
+      /* Input Area */
+      .input-area {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        animation: slideUp 0.5s ease-in-out;
+      }
+      input[type="text"] {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        outline: none;
+        transition: background 0.3s ease;
+      }
+      input[type="text"]:focus {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      input[type="text"]::placeholder {
+        color: #ccc;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      button:hover {
+        background: #002244;
+      }
+      
+      /* Clear Chat Button */
+      .clear-chat {
+        margin-top: 10px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 10px;
+        background: #ff4d4d;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .clear-chat:hover {
+        background: #e60000;
+      }
+      
+      /* Footer */
+      .footer {
+        text-align: center;
+        font-size: 12px;
+        color: #ccc;
+        animation: fadeIn 1s ease-in-out;
+      }
+      .footer a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+      .footer a:hover {
+        color: #002244;
+        text-decoration: underline;
+      }
+      .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .social-icons a {
+        color: var(--primary);
+        transition: transform 0.3s ease;
+      }
+      .social-icons a:hover {
+        transform: scale(1.2);
+      }
+      
+      /* Hamburger Menu and Dropdown (Styled to match school UI) */
+      .hamburger {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        z-index: 2;
+        background: var(--glass);
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+      .hamburger div {
+        width: 25px;
+        height: 3px;
+        background: var(--primary);
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+      .hamburger.active div:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .hamburger.active div:nth-child(2) {
+        opacity: 0;
+      }
+      .hamburger.active div:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+      .dropdown-menu {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: var(--glass);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 10px;
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+        z-index: 2;
+      }
+      .dropdown-menu.active {
+        display: flex;
+      }
+      .dropdown-menu a {
+        padding: 10px 15px;
+        color: var(--text-color);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.3s ease;
+      }
+      .dropdown-menu a:last-child {
+        border-bottom: none;
+      }
+      .dropdown-menu a:hover {
+        background: rgba(255,255,255,0.1);
+      }
+      
+      /* Theme Toggle Button (Bottom Right) */
+      .theme-toggle-bottom {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: var(--glass);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 3;
+        transition: background 0.3s ease;
+      }
+      .theme-toggle-bottom:hover {
+        background: rgba(0, 0, 0, 0.7);
+      }
+      .theme-toggle-bottom i {
+        color: var(--text-color);
+        font-size: 20px;
+        transition: transform 0.3s ease;
+      }
+      .theme-toggle-bottom:hover i {
+        transform: scale(1.1);
+      }
+      
+      /* Animations */
+      @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Hamburger Menu and Dropdown -->
+      <div class="hamburger" id="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu">
+        <a href="https://wa.me/263719647303"><i class="fas fa-envelope"></i> Contact Developer</a>
+        <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
+        <a href="https://mrfrankinc.vercel.app"><i class="fas fa-info-circle"></i> About</a>
+      </div>
+      
+      <!-- Header with School Logo and Title -->
+      <header>
+        <img src="https://i.postimg.cc/d0tsQ3hk/IMG-20250222-WA0043.jpg" alt="Logo" class="logo" />
+        <h1><i class="fas fa-robot"></i> Subzero AI Chat</h1>
+      </header>
+      
+      <!-- Chat Box -->
+      <div class="chat-box" id="chat-box">
+        <!-- Chat messages will be rendered here -->
+      </div>
+      
+      <!-- Input Area -->
+      <div class="input-area">
+        <input type="text" id="user-input" placeholder="Ask me anything..." />
+        <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Send</button>
+      </div>
+      
+      <!-- Clear Chat Button -->
+      <button class="clear-chat" onclick="clearChatHistory()"><i class="fas fa-trash-alt"></i> Clear Chat</button>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <p>Powered by <a href="https://mrfrankinc.vercel.app" target="_blank">Darrell Mucheri</a></p>
+        <div class="social-icons">
+          <a href="https://github.com/mrfrank-ofc" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="https://mrfrankinc.vercel.app" target="_blank"><i class="fas fa-globe"></i></a>
+          <a href="https://wa.me/18062212660" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p>© 2025 Mr. Frank</p>
+      </div>
+    </div>
+    
+    <!-- Theme Toggle Button (Bottom Right) -->
+    <div class="theme-toggle-bottom" id="theme-toggle-bottom">
+      <i class="fas fa-sun"></i>
+    </div>
+    
+    <!-- SweetAlert2 and PrismJS Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    
+    <script>
+      // Welcome popup on first visit
+      if (!localStorage.getItem("welcomeShown")) {
+        Swal.fire({
+          title: "Welcome to Subzero AI Chat!",
+          text: "Enjoy the futuristic chat experience at St. Mary's High School.",
+          icon: "info",
+          confirmButtonText: "Let's go!"
+        });
+        localStorage.setItem("welcomeShown", "true");
+      }
+      
+      const chatBox = document.getElementById("chat-box");
+      let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+      
+      // Render saved chat history
+      chatHistory.forEach(msg => addMessage(msg.role, msg.text, false));
+      chatBox.scrollTop = chatBox.scrollHeight;
+      
+      function saveHistory() {
+        localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+      }
+      
+      // Clear chat history
+      function clearChatHistory() {
+        localStorage.removeItem("chatHistory");
+        chatHistory = [];
+        chatBox.innerHTML = "";
+      }
+      
+      // Create a copy button for code/text
+      function createCopyButton(textToCopy) {
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.innerHTML = '<i class="fas fa-copy"></i>';
+        btn.addEventListener("click", () => {
+          navigator.clipboard.writeText(textToCopy);
+          btn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 2000);
+        });
+        return btn;
+      }
+      
+      // Process Markdown: Convert headings and inline code
+      function processMarkdown(text) {
+        text = text.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+        text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+        return text;
+      }
+      
+      // Render a chat message
+      function addMessage(role, text, addToHistory = true) {
+        const messageEl = document.createElement("div");
+        messageEl.className = `message ${role}-message`;
+        
+        if (text.includes("```")) {
+          const parts = text.split(/```/);
+          parts.forEach((part, i) => {
+            if (i % 2 === 0) {
+              if (part.trim()) {
+                const div = document.createElement("div");
+                div.innerHTML = processMarkdown(part);
+                messageEl.appendChild(div);
+              }
+            } else {
+              const firstLineBreak = part.indexOf("\n");
+              let language = "text";
+              let codeContent = part;
+              if (firstLineBreak !== -1) {
+                const firstLine = part.substring(0, firstLineBreak).trim();
+                if (firstLine) {
+                  language = firstLine;
+                  codeContent = part.substring(firstLineBreak + 1);
+                }
+              }
+              const pre = document.createElement("pre");
+              pre.className = "code-block";
+              const codeEl = document.createElement("code");
+              codeEl.className = `language-${language}`;
+              codeEl.textContent = codeContent;
+              pre.appendChild(codeEl);
+              Prism.highlightElement(codeEl);
+              pre.appendChild(createCopyButton(codeContent));
+              messageEl.appendChild(pre);
+            }
+          });
+        } else {
+          const processed = processMarkdown(text);
+          const lines = processed.split(/\n/);
+          const ol = document.createElement("ol");
+          lines.forEach(line => {
+            if (line.trim()) {
+              const li = document.createElement("li");
+              li.innerHTML = line;
+              ol.appendChild(li);
+            }
+          });
+          messageEl.appendChild(ol);
+          messageEl.appendChild(createCopyButton(text));
+        }
+        
+        chatBox.appendChild(messageEl);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        if (addToHistory) {
+          chatHistory.push({ role, text });
+          saveHistory();
+        }
+      }
+      
+      // Create a typing animation element for AI
+      function createTypingAnimation() {
+        const typingEl = document.createElement("div");
+        typingEl.className = "message ai-message typing";
+        typingEl.innerHTML = '<span></span><span></span><span></span>';
+        chatBox.appendChild(typingEl);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return typingEl;
+      }
+      
+      // Send message to AI and render response
+      async function sendMessage() {
+        const userInputEl = document.getElementById("user-input");
+        const userInput = userInputEl.value.trim();
+        if (!userInput) return;
+        addMessage("user", userInput);
+        userInputEl.value = "";
+        const typingEl = createTypingAnimation();
+        try {
+          const apiUrl = `https://bk9.fun/ai/BK93?BK9=I%20am%20the%20friendl-assistive%20St-marys-high-school-ai-assistant%2C%20created%20to-help-students-with-anything%20%20you-were-made-by%20(Darrell%20Mucheri)%20of%20St.%20Mary's%20High%20School.%20Ask%20me%20anything&q=${encodeURIComponent(userInput)}`;
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          chatBox.removeChild(typingEl);
+          if (data.status && data.BK9) {
+            addMessage("ai", data.BK9);
+          } else {
+            throw new Error("No response from AI");
+          }
+        } catch (error) {
+          console.error("Error fetching AI response:", error);
+          if (document.querySelector('.typing')) {
+            chatBox.removeChild(document.querySelector('.typing'));
+          }
+          addMessage("ai", "❌ An error occurred. Please try again.");
+        }
+      }
+      
+      document.getElementById("user-input").addEventListener("keypress", e => {
+        if (e.key === "Enter") sendMessage();
+      });
+      
+      // Hamburger Menu Toggle
+      const hamburger = document.getElementById("hamburger");
+      const dropdownMenu = document.getElementById("dropdown-menu");
+      hamburger.addEventListener("click", () => {
+        hamburger.classList.toggle("active");
+        dropdownMenu.classList.toggle("active");
+      });
+      
+      // Theme Toggle (Bottom Right)
+      const themeToggleButton = document.getElementById("theme-toggle-bottom");
+      const themeIcon = themeToggleButton.querySelector("i");
+      function updateThemeIcon() {
+        themeIcon.className = document.body.classList.contains("dark-theme")
+          ? "fas fa-moon"
+          : "fas fa-sun";
+      }
+      themeToggleButton.addEventListener("click", () => {
+        document.body.classList.toggle("dark-theme");
+        localStorage.setItem("theme", document.body.classList.contains("dark-theme") ? "dark" : "light");
+        updateThemeIcon();
+      });
+      window.addEventListener("load", () => {
+        if (localStorage.getItem("theme") === "dark") {
+          document.body.classList.add("dark-theme");
+        }
+        updateThemeIcon();
+      });
+    </script>
+  </body>
+</html>
+
