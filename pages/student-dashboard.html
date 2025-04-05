@@ -21,7 +21,7 @@
       type="image/png"
       href="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg"
     />
-    <!-- Chart.js -->
+    <!-- Chart.js (for charts) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- jsPDF and AutoTable Plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -65,9 +65,9 @@
         color: var(--text-color);
         min-height: 100vh;
         transition: background 0.6s ease, color 0.6s ease;
-        padding-bottom: 80px;
+        padding-bottom: 80px; /* For fixed footer */
       }
-      /* Header */
+      /* Header styles */
       header {
         background: var(--glass);
         backdrop-filter: blur(12px);
@@ -79,7 +79,7 @@
         width: 100%;
         top: 0;
         z-index: 1000;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
       }
       .header-left {
         display: flex;
@@ -100,6 +100,10 @@
       .header-logo {
         height: 40px;
       }
+      @keyframes logoFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
       .profile-icon {
         width: 40px;
         height: 40px;
@@ -115,11 +119,7 @@
         color: var(--text-color);
         padding: 10px;
       }
-      @keyframes logoFloat {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
-      }
-      /* Side Menu & Overlay */
+      /* Side Menu and Overlay */
       #menuOverlay {
         display: none;
         position: fixed;
@@ -137,7 +137,7 @@
         background: var(--glass);
         backdrop-filter: blur(20px);
         padding: 2rem;
-        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 1px solid rgba(255,255,255,0.1);
         z-index: 9999;
         transform: translateX(100%);
         transition: transform 0.3s ease;
@@ -180,16 +180,12 @@
         padding: 180px 5% 100px;
         margin-top: 80px;
       }
+      /* Section visibility: Only active section is shown */
+      section { display: none; }
+      section.active { display: block; }
       h2 {
         color: var(--primary);
         margin-bottom: 1.5rem;
-      }
-      /* Sections */
-      section {
-        display: none;
-      }
-      section.active {
-        display: block;
       }
       /* Dashboard Cards */
       .dashboard-cards {
@@ -203,26 +199,16 @@
         padding: 1.5rem;
         border-radius: 10px;
         backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255,255,255,0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
       .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
       }
-      .card h3 {
-        color: var(--primary);
-        margin-bottom: 1rem;
-      }
-      .grade-icon {
-        font-size: 1.5rem;
-        color: var(--secondary);
-        margin-right: 5px;
-        vertical-align: middle;
-      }
-      .card p {
-        font-size: 1.2rem;
-      }
+      .card h3 { color: var(--primary); margin-bottom: 1rem; }
+      .grade-icon { font-size: 1.5rem; color: var(--secondary); margin-right: 5px; }
+      .card p { font-size: 1.2rem; }
       /* Personal Info */
       .profile-pic {
         width: 150px;
@@ -232,15 +218,8 @@
         margin-bottom: 1rem;
         border: 3px solid var(--primary);
       }
-      .form-group {
-        margin-bottom: 1rem;
-      }
-      .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-        color: var(--primary);
-      }
+      .form-group { margin-bottom: 1rem; }
+      .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--primary); }
       .form-group input,
       .form-group select,
       .form-group textarea {
@@ -271,24 +250,17 @@
         border-radius: 5px;
         cursor: pointer;
       }
-      .button-container button:hover {
-        background: #002244;
-      }
-      .extra-info {
-        margin-top: 1rem;
-      }
-      .extra-info label {
-        font-weight: 500;
-        color: var(--primary);
-      }
-      /* View Results */
+      .button-container button:hover { background: #002244; }
+      .extra-info { margin-top: 1rem; }
+      .extra-info label { font-weight: 500; color: var(--primary); }
+      /* View Results Section */
       #resultsMessage {
         text-align: center;
         font-size: 1.2rem;
         padding: 1rem;
         border: 1px solid var(--primary);
         border-radius: 8px;
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0,0,0,0.3);
         margin-bottom: 1rem;
       }
       .report-card {
@@ -296,28 +268,20 @@
         padding: 1.5rem;
         border-radius: 10px;
         backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255,255,255,0.1);
         max-width: 800px;
         margin: 0 auto 2rem auto;
       }
-      .report-header p {
-        margin: 0.3rem 0;
-      }
+      .report-header p { margin: 0.3rem 0; }
       .report-card table {
         width: 100%;
         border-collapse: collapse;
       }
       .report-card th,
-      .report-card td {
-        padding: 0.75rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .report-card th {
-        background: var(--primary);
-        color: #fff;
-      }
+      .report-card td { padding: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .report-card th { background: var(--primary); color: #fff; }
       .highlight-comments {
-        background: rgba(0, 255, 0, 0.1);
+        background: rgba(0,255,0,0.1);
         padding: 2px 4px;
         border-radius: 4px;
         font-weight: bold;
@@ -330,27 +294,14 @@
         border: none;
         border-radius: 50px;
         cursor: pointer;
-      }
-      .pdf-btn:hover {
-        transform: scale(1.05);
-      }
-      .chart-container {
-        width: 100%;
-        height: 400px;
         margin-top: 1rem;
       }
+      .chart-container { width: 100%; height: 400px; margin-top: 1rem; }
       /* Performance History */
-      #performanceHistoryContainer > div {
-        margin-bottom: 2rem;
-      }
+      #performanceHistoryContainer > div { margin-bottom: 2rem; }
       /* Updates Section */
-      #updates h2 {
-        color: var(--primary);
-        margin-bottom: 1rem;
-      }
-      #updates h2 i#updatesBell {
-        margin-right: 10px;
-      }
+      #updates h2 { color: var(--primary); margin-bottom: 1rem; }
+      #updates h2 i#updatesBell { margin-right: 10px; }
       #updateCount {
         background: red;
         color: white;
@@ -359,7 +310,6 @@
         font-size: 1rem;
         margin-left: 5px;
         display: inline-block;
-        text-align: center;
         animation: pulse 1s infinite;
       }
       @keyframes pulse {
@@ -372,28 +322,20 @@
         padding: 1rem;
         border-radius: 8px;
         margin-bottom: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255,255,255,0.1);
         animation: slideIn 0.5s forwards;
       }
-      @keyframes slideIn {
-        to { opacity: 1; transform: translateY(0); }
-      }
+      @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
       .notice-home {
         display: flex;
         align-items: flex-start;
         gap: 10px;
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0,0,0,0.2);
         padding: 10px;
         border-radius: 8px;
       }
-      .notice-icon i {
-        font-size: 1.5rem;
-        color: var(--secondary);
-      }
-      .notice-content h4 {
-        font-size: 1.2rem;
-        color: var(--primary);
-      }
+      .notice-icon i { font-size: 1.5rem; color: var(--secondary); }
+      .notice-content h4 { font-size: 1.2rem; color: var(--primary); }
       .notice-posted {
         font-style: italic;
         color: #ccc;
@@ -416,10 +358,9 @@
         color: white;
         font-size: 1.5rem;
         margin: 0 0.5rem;
+        transition: color 0.3s ease;
       }
-      .social-icons a:hover {
-        color: var(--secondary);
-      }
+      .social-icons a:hover { color: var(--secondary); }
       /* Theme Toggle */
       .theme-toggle {
         position: fixed;
@@ -430,7 +371,7 @@
         border-radius: 50%;
         background: var(--glass);
         backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255,255,255,0.1);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -438,9 +379,7 @@
         z-index: 1000;
         transition: transform 0.3s ease;
       }
-      .theme-toggle:hover {
-        transform: scale(1.1) rotate(180deg);
-      }
+      .theme-toggle:hover { transform: scale(1.1) rotate(180deg); }
       .theme-toggle i {
         font-size: 1.4rem;
         background: linear-gradient(45deg, var(--primary), var(--secondary));
@@ -448,15 +387,12 @@
         -webkit-text-fill-color: transparent;
       }
       @media (max-width: 768px) {
-        .side-menu {
-          width: 100%;
-          transform: translateX(100%);
-        }
+        .side-menu { width: 100%; transform: translateX(100%); }
       }
     </style>
   </head>
   <body>
-    <!-- Hidden file input for profile update -->
+    <!-- Hidden file input for profile update via header icon -->
     <input type="file" id="file-input" accept="image/*" style="display:none" />
     <!-- Header -->
     <header>
@@ -515,8 +451,8 @@
           <label for="profile-pic">Profile Picture</label>
           <img src="https://i.postimg.cc/28gm27sy/2993763.png" alt="Profile Picture" class="profile-pic" id="profilePic" />
           <input type="file" id="profilePicInput" accept="image/*" />
-          <div id="uploadProgress" style="display:none; margin-top:5px; background: #ccc; border-radius: 5px;">
-            <div id="progressBar" style="height: 10px; width: 0%; background: green; border-radius: 5px;"></div>
+          <div id="uploadProgress" style="display:none; margin-top:5px; background:#ccc; border-radius:5px;">
+            <div id="progressBar" style="height:10px; width:0%; background:green; border-radius:5px;"></div>
           </div>
           <div id="progressText" style="text-align:center; font-size:0.8rem; margin-top:3px;"></div>
           <p id="studentDisplayName"></p>
@@ -635,7 +571,7 @@
       <section id="performance">
         <h2>Performance History</h2>
         <div id="performanceHistoryContainer">
-          <!-- Dynamic performance history will be loaded here -->
+          <!-- Performance history items will be injected here -->
         </div>
       </section>
       <!-- Chat with AI Section -->
@@ -692,7 +628,7 @@
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
       import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-      // Firebase configuration
+      // Firebase configuration (replace with your own)
       const firebaseConfig = {
         apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
         authDomain: "deee-9ab53.firebaseapp.com",
@@ -708,21 +644,21 @@
       const db = getFirestore(appFirebase);
       const storage = getStorage(appFirebase);
 
-      // Utility: Show message
+      // Utility function to show messages
       function showMessage(message, type) {
-        const messageBox = document.getElementById("messageBox");
-        messageBox.textContent = message;
-        messageBox.className = "";
-        messageBox.classList.add(type);
-        messageBox.style.display = "block";
-        setTimeout(() => { messageBox.style.display = "none"; }, 3000);
+        const msgBox = document.getElementById("messageBox");
+        msgBox.textContent = message;
+        msgBox.className = "";
+        msgBox.classList.add(type);
+        msgBox.style.display = "block";
+        setTimeout(() => { msgBox.style.display = "none"; }, 3000);
       }
       // Utility: Capitalize first letter
       function capitalize(s) {
         return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
       }
 
-      // Update chart in View Results section
+      // Update chart in "View Results" section
       function updateChart(marksData) {
         const canvas = document.getElementById("performanceChart");
         if (!canvas) return;
@@ -748,13 +684,13 @@
         });
       }
 
-      // Fetch student data and update UI
+      // Fetch student data from Firestore and update UI
       async function fetchStudentData(email) {
         try {
           const studentRef = doc(db, "students", email);
-          const docSnap = await getDoc(studentRef);
-          if (docSnap.exists()) {
-            const studentData = docSnap.data();
+          const studentSnap = await getDoc(studentRef);
+          if (studentSnap.exists()) {
+            const studentData = studentSnap.data();
             document.getElementById("email").value = studentData.email || auth.currentUser.email;
             document.getElementById("name").value = studentData.firstname || "";
             document.getElementById("surname").value = studentData.surname || "";
@@ -783,14 +719,12 @@
               showMessage("Your personal info is incomplete. Please update your profile.", "error");
             }
             if (studentData.attendance !== undefined) {
-              const attendanceProgress = document.getElementById("attendanceProgress");
-              if (attendanceProgress) attendanceProgress.style.width = studentData.attendance + "%";
-              const attendanceText = document.getElementById("attendanceText");
-              if (attendanceText) attendanceText.textContent = `Attendance: ${studentData.attendance}%`;
+              // If you have an attendance progress element, update it here.
+              // (Make sure your Firestore contains an "attendance" field if you wish to use it.)
               if (studentData.attendance < 75) {
                 showMessage("Your attendance is below 75%. Please strive for better attendance.", "error");
               }
-          }
+            }
           } else {
             document.getElementById("email").value = auth.currentUser.email;
             const defaultName = auth.currentUser.email.split('@')[0];
@@ -804,12 +738,12 @@
         }
       }
 
-      // Save Student Data function
+      // Save student data (Personal Info)
       async function saveStudentData() {
-        const saveButton = document.getElementById("saveChangesBtn");
+        const saveBtn = document.getElementById("saveChangesBtn");
         try {
-          saveButton.disabled = true;
-          saveButton.textContent = "Saving...";
+          saveBtn.disabled = true;
+          saveBtn.textContent = "Saving...";
           const user = auth.currentUser;
           if (!user) return;
           const studentRef = doc(db, "students", user.email);
@@ -842,8 +776,8 @@
           console.error("Error saving student data:", error);
           showMessage("Error saving student data: " + error.message, "error");
         } finally {
-          saveButton.disabled = false;
-          saveButton.textContent = "Save Changes";
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save Changes";
         }
       }
 
@@ -866,7 +800,7 @@
         }
       }
 
-      // Load Results and update Report Card
+      // Load "View Results" data
       async function loadResults() {
         try {
           const studentEmail = auth.currentUser.email;
@@ -874,6 +808,7 @@
           const studentSnap = await getDoc(studentRef);
           if (studentSnap.exists()) {
             const studentData = studentSnap.data();
+            // Check fees status – if fees are pending, show a message and do not load results.
             if (studentData.feesPaid !== true) {
               if (studentData.feesBalance && Number(studentData.feesBalance) > 0) {
                 document.getElementById("resultsMessage").innerHTML = `
@@ -912,6 +847,7 @@
                 await updateDoc(studentRef, { resultsViewed: true });
               }
             }
+            // Populate report card details
             document.getElementById("reportName").textContent = `${capitalize(studentData.firstname)} ${capitalize(studentData.surname)}`;
             document.getElementById("reportEmail").textContent = studentData.email || auth.currentUser.email;
             document.getElementById("reportYear").textContent = studentData.year || "Not set";
@@ -1027,7 +963,7 @@
         }
       }
 
-      // Load Updates and count unread ones
+      // Load Updates and count unread updates
       async function loadUpdates() {
         try {
           const currentEmail = auth.currentUser.email;
@@ -1069,7 +1005,7 @@
         }
       }
 
-      // Mark a single update as read
+      // Mark individual update as read
       window.markUpdateAsRead = async (updateElem) => {
         const updateId = updateElem.getAttribute("data-id");
         const currentEmail = auth.currentUser.email;
@@ -1083,7 +1019,7 @@
         }
       };
 
-      // "Mark All as Read" button
+      // "Mark All as Read" button functionality
       document.getElementById("markAllReadBtn").addEventListener("click", async () => {
         const currentEmail = auth.currentUser.email;
         const updatesQuery = query(collection(db, "updates"), orderBy("timestamp", "desc"));
@@ -1109,7 +1045,7 @@
         });
       });
 
-      // Profile picture upload in Personal Info section
+      // Profile picture upload from Personal Info section
       document.getElementById("profilePicInput").addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -1146,7 +1082,7 @@
         reader.readAsDataURL(file);
       });
 
-      // Header profile icon click opens hidden file input
+      // When header profile icon is clicked, open hidden file input to update profile pic
       document.getElementById("smallProfilePic").addEventListener("click", function() {
         document.getElementById("file-input").click();
       });
@@ -1166,7 +1102,7 @@
         }
       });
 
-      // Side Menu controls
+      // Side Menu Controls
       const menuBtn = document.getElementById("menuBtn");
       const sideMenu = document.getElementById("sideMenu");
       const menuOverlay = document.getElementById("menuOverlay");
@@ -1190,14 +1126,17 @@
         }
       });
 
-      // Navigation: Show corresponding section when a menu link is clicked
+      // Navigation: When a hamburger menu item is clicked, show the corresponding section
       const menuLinks = document.querySelectorAll(".menu-links a");
       menuLinks.forEach((link) => {
         link.addEventListener("click", (e) => {
           e.preventDefault();
+          // Remove active class from all links
           menuLinks.forEach(l => l.classList.remove("active"));
+          // Add active class to clicked link
           link.classList.add("active");
           const targetId = link.getAttribute("href").substring(1);
+          // Hide all sections then show the selected section
           document.querySelectorAll("section").forEach((sec) => {
             if (sec.id === targetId) {
               sec.classList.add("active");
@@ -1207,19 +1146,14 @@
           });
           sideMenu.classList.remove("active");
           menuOverlay.style.display = "none";
-          if (targetId === "updates") {
-            loadUpdates();
-          }
-          if (targetId === "results") {
-            loadResults();
-          }
-          if (targetId === "performance") {
-            loadPerformanceHistory();
-          }
+          // Trigger data loading for specific sections if needed
+          if (targetId === "updates") { loadUpdates(); }
+          if (targetId === "results") { loadResults(); }
+          if (targetId === "performance") { loadPerformanceHistory(); }
         });
       });
 
-      // Theme toggle
+      // Theme Toggle
       const themeToggle = document.getElementById("themeToggle");
       let isDark = true;
       themeToggle.addEventListener("click", () => {
@@ -1276,8 +1210,8 @@
                       datasets: [{
                         label: "Marks",
                         data: marks,
-                        backgroundColor: "rgba(255, 215, 0, 0.5)",
-                        borderColor: "rgba(255, 215, 0, 1)",
+                        backgroundColor: "rgba(255,215,0,0.5)",
+                        borderColor: "rgba(255,215,0,1)",
                         borderWidth: 1
                       }]
                     },
@@ -1310,7 +1244,7 @@
       document.getElementById("saveChangesBtn").addEventListener("click", saveStudentData);
       document.getElementById("changePasswordBtn").addEventListener("click", resetPassword);
 
-      // Auth state observer to load data on login
+      // Auth state observer: Load data when user logs in
       onAuthStateChanged(auth, (user) => {
         if (user) {
           fetchStudentData(user.email);
