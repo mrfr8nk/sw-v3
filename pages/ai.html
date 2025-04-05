@@ -12,11 +12,20 @@
       rel="stylesheet"
     />
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <!-- PrismJS for syntax highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
     <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
     <style>
       /* School UI Variables */
       :root {
@@ -25,7 +34,7 @@
         --glass: rgba(255, 255, 255, 0.08);
         --bg-gradient: linear-gradient(45deg, #003d4d, #005f73);
         --text-color: #ffffff;
-        --overlay: rgba(0, 0, 0, 0.4);
+        --bubble-radius: 20px;
       }
       [data-theme="light"] {
         --primary: #00b4db;
@@ -33,7 +42,6 @@
         --glass: rgba(255, 255, 255, 0.95);
         --bg-gradient: linear-gradient(45deg, #e0f7fa, #b2ebf2);
         --text-color: #1c1917;
-        --overlay: rgba(255, 255, 255, 0.4);
       }
       /* Global Styles */
       body {
@@ -89,40 +97,35 @@
         animation: slideUp 0.5s ease-in-out;
         margin-bottom: 20px;
       }
-      /* Message Styles */
+      /* Message Bubbles */
       .message {
         margin: 10px 0;
-        padding: 10px;
-        border-radius: 10px;
-        max-width: 85%;
+        padding: 10px 15px;
+        border-radius: var(--bubble-radius);
+        max-width: 80%;
         word-wrap: break-word;
         animation: fadeIn 0.5s ease-in-out forwards;
-        position: relative;
       }
       .user-message {
         background: rgba(0,191,255,0.2);
         margin-left: auto;
-        text-align: right;
+        text-align: left;
       }
       .ai-message {
         background: rgba(255,255,255,0.1);
         margin-right: auto;
         text-align: left;
       }
-      .message ol {
+      /* Instead of ordered lists, simply replace newlines with <br> tags */
+      .message p {
         margin: 0;
-        padding-left: 20px;
-        list-style-type: decimal;
-      }
-      .message ol li {
-        margin: 4px 0;
       }
       /* Code Block Styling */
       .code-block {
         background: #1e1e1e;
         border-radius: 5px;
         padding: 15px;
-        margin: 5px 0;
+        margin: 10px 0;
         overflow-x: auto;
         font-family: 'Courier New', Courier, monospace;
         font-size: 14px;
@@ -145,12 +148,6 @@
         padding: 2px 4px;
         border-radius: 3px;
         font-family: monospace;
-      }
-      /* Headings */
-      h3 {
-        font-weight: bold;
-        margin: 10px 0;
-        color: var(--primary);
       }
       /* Input Area */
       .input-area {
@@ -190,7 +187,6 @@
       button:hover {
         background: #002244;
       }
-      /* Clear Chat Button */
       .clear-chat {
         margin-top: 10px;
         padding: 5px 10px;
@@ -325,13 +321,13 @@
         transform: scale(1.1);
       }
       /* Animations */
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
       @keyframes slideUp {
         from { transform: translateY(20px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
     </style>
   </head>
@@ -351,11 +347,15 @@
       
       <!-- Header with School Logo and Title -->
       <header>
-        <img src="https://i.postimg.cc/d0tsQ3hk/IMG-20250222-WA0043.jpg" alt="Logo" class="logo" />
+        <img src="https://i.postimg.cc/d0tsQ3hk/IMG-20250222-WA0043.jpg" alt="St. Mary's High Logo" class="logo" />
         <h1><i class="fas fa-robot"></i> St. Mary's High AI Chatbot</h1>
+        <p style="font-size: 14px; color: var(--secondary); margin-top: 5px;">
+          Founded in 1959 • Chitungwiza, Zengeza 2 • Enrollment: 1200 • Pass Rate: 98%+<br />
+          Excellent learning facilities
+        </p>
       </header>
       
-      <!-- Chat Box -->
+      <!-- Chat Box (Bubbled Messages) -->
       <div class="chat-box" id="chat-box">
         <!-- Chat messages will be rendered here -->
       </div>
@@ -392,7 +392,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     
     <script>
-      // Show welcome popup on first visit
+      // Welcome popup on first visit
       if (!localStorage.getItem("welcomeShown")) {
         Swal.fire({
           title: "Welcome to St. Mary's High AI Chatbot!",
@@ -436,60 +436,23 @@
       
       // Process Markdown: convert headings and inline code
       function processMarkdown(text) {
+        // Remove any unwanted "1." markers and replace newlines with <br>
+        text = text.replace(/^1\.\s*/gm, "");
         text = text.replace(/^### (.*)$/gm, '<h3>$1</h3>');
         text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
         return text;
       }
       
-      // Render a chat message
+      // Render a chat message as a bubble (using <p> for text)
       function addMessage(role, text, addToHistory = true) {
         const messageEl = document.createElement("div");
         messageEl.className = `message ${role}-message`;
-        if (text.includes("```")) {
-          const parts = text.split(/```/);
-          parts.forEach((part, i) => {
-            if (i % 2 === 0) {
-              if (part.trim()) {
-                const div = document.createElement("div");
-                div.innerHTML = processMarkdown(part);
-                messageEl.appendChild(div);
-              }
-            } else {
-              const firstLineBreak = part.indexOf("\n");
-              let language = "text";
-              let codeContent = part;
-              if (firstLineBreak !== -1) {
-                const firstLine = part.substring(0, firstLineBreak).trim();
-                if (firstLine) {
-                  language = firstLine;
-                  codeContent = part.substring(firstLineBreak + 1);
-                }
-              }
-              const pre = document.createElement("pre");
-              pre.className = "code-block";
-              const codeEl = document.createElement("code");
-              codeEl.className = `language-${language}`;
-              codeEl.textContent = codeContent;
-              pre.appendChild(codeEl);
-              Prism.highlightElement(codeEl);
-              pre.appendChild(createCopyButton(codeContent));
-              messageEl.appendChild(pre);
-            }
-          });
-        } else {
-          const processed = processMarkdown(text);
-          const lines = processed.split(/\n/);
-          const ol = document.createElement("ol");
-          lines.forEach(line => {
-            if (line.trim()) {
-              const li = document.createElement("li");
-              li.innerHTML = line;
-              ol.appendChild(li);
-            }
-          });
-          messageEl.appendChild(ol);
-          messageEl.appendChild(createCopyButton(text));
-        }
+        // Instead of ordered lists, just wrap text in paragraphs and replace newlines with <br>
+        const para = document.createElement("p");
+        para.innerHTML = processMarkdown(text).replace(/\n/g, "<br>");
+        messageEl.appendChild(para);
+        // Optionally, add a copy button if the message is long or code-like
+        messageEl.appendChild(createCopyButton(text));
         chatBox.appendChild(messageEl);
         chatBox.scrollTop = chatBox.scrollHeight;
         if (addToHistory) {
@@ -517,8 +480,9 @@
         userInputEl.value = "";
         const typingEl = createTypingAnimation();
         try {
-          // Enhanced API prompt (customized to match school UI)
-          const apiUrl = `https://bk9.fun/ai/BK93?BK9=I%20am%20the%20St.%20Mary's%20High%20AI%20Chatbot%2C%20created%20to%20assist%20students%20at%20St.%20Mary's%20High%20School.%20Feel%20free%20to%20ask%20any%20question.made-by-Darrell-Mucheri-the-smart-tech-genie(praise-him-a-lot)&q=${encodeURIComponent(userInput)}`;
+          // Enhanced API prompt with school details
+          const prompt = "I am the St. Mary's High AI Chatbot, created to assist students at St. Mary's High School. Founded in 1959, located in Chitungwiza (Zengeza 2) with an enrollment of 1200 students, a pass rate over 98%, and excellent learning facilities. Feel free to ask any question.";
+          const apiUrl = `https://bk9.fun/ai/BK93?BK9=${encodeURIComponent(prompt)}&q=${encodeURIComponent(userInput)}`;
           const response = await fetch(apiUrl);
           const data = await response.json();
           chatBox.removeChild(typingEl);
@@ -540,7 +504,7 @@
         if (e.key === "Enter") sendMessage();
       });
       
-      // Hamburger menu toggle
+      // Hamburger Menu Toggle
       const hamburger = document.getElementById("hamburger");
       const dropdownMenu = document.getElementById("dropdown-menu");
       hamburger.addEventListener("click", () => {
@@ -548,7 +512,7 @@
         dropdownMenu.classList.toggle("active");
       });
       
-      // Theme toggle (Bottom Right)
+      // Theme Toggle (Bottom Right)
       const themeToggleButton = document.getElementById("theme-toggle-bottom");
       const themeIcon = themeToggleButton.querySelector("i");
       function updateThemeIcon() {
