@@ -94,6 +94,12 @@
         z-index: 1000;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
+      /* Header left contains logo and profile icon */
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
       .logo {
         font-size: 1.8rem;
         font-weight: 700;
@@ -106,7 +112,14 @@
       }
       .header-logo {
         height: 40px;
-        margin-right: 10px;
+      }
+      /* Profile Icon in header */
+      .profile-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid var(--primary);
       }
       .menu-btn {
         font-size: 1.5rem;
@@ -540,38 +553,19 @@
           transform: translateX(100%);
         }
       }
-      /* Profile Picture Container (Small Icon on Top Left) */
-      #profile-container {
-        position: fixed;
-        top: 10px;
-        left: 50px; /* Adjusted to align with header text/logo */
-        z-index: 1100;
-      }
-      #profile-container img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid var(--primary);
-      }
-      #file-input {
-        display: none;
-      }
     </style>
   </head>
   <body>
-    <!-- Profile Picture Small Icon Container -->
-    <div id="profile-container">
-      <img id="smallProfilePic" src="https://i.postimg.cc/28gm27sy/2993763.png" alt="Profile Icon" />
-      <input type="file" id="file-input" accept="image/*" />
-    </div>
-    <!-- Overlay for Side Menu -->
-    <div id="menuOverlay"></div>
+    <!-- Hidden file input for updating profile picture -->
+    <input type="file" id="file-input" accept="image/*" style="display:none" />
     <!-- Header -->
     <header>
-      <div class="logo fade-in">
-        <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="Logo" class="header-logo" />
-        St. Mary's High
+      <div class="header-left">
+        <div class="logo fade-in">
+          <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="Logo" class="header-logo" />
+          St. Mary's High
+        </div>
+        <img class="profile-icon" id="smallProfilePic" src="https://i.postimg.cc/28gm27sy/2993763.png" alt="Profile" />
       </div>
       <button class="menu-btn fade-in" id="menuBtn">
         <i class="fas fa-bars"></i>
@@ -612,7 +606,6 @@
           </div>
           <div class="card">
             <h3>Notices</h3>
-            <!-- Home Notice: Structured and styled notice -->
             <div id="notices">Loading notices...</div>
           </div>
         </div>
@@ -645,7 +638,6 @@
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <!-- Email field is editable in the UI but saved from auth -->
           <input type="email" id="email" placeholder="Enter your email" />
         </div>
         <div class="form-group">
@@ -671,7 +663,6 @@
           <label for="address">Address/Location</label>
           <input type="text" id="address" placeholder="Enter your address" />
         </div>
-        <!-- Additional Fields -->
         <div class="form-group extra-info">
           <label for="healthIssues">Health Issues</label>
           <textarea id="healthIssues" placeholder="Enter any health issues..."></textarea>
@@ -680,7 +671,6 @@
           <label for="additionalInfo">Additional Information</label>
           <textarea id="additionalInfo" placeholder="Enter any additional information..."></textarea>
         </div>
-        <!-- Additional Personal Info -->
         <div class="form-group">
           <label for="form">Form</label>
           <select id="form">
@@ -707,7 +697,6 @@
             <option value="Sciences">Sciences</option>
           </select>
         </div>
-        <!-- Button Container for Save and Reset -->
         <div class="button-container">
           <button id="saveChangesBtn">Save Changes</button>
           <button id="changePasswordBtn">Reset Password</button>
@@ -716,9 +705,7 @@
       <!-- View Results Section -->
       <section id="results" class="fade-in" style="display: none;">
         <h2>View Results</h2>
-        <!-- Results/Fees Message -->
         <div id="resultsMessage"></div>
-        <!-- Report Card Container -->
         <div class="report-card" id="reportCardContainer" style="display: none;">
           <div class="report-header">
             <p><strong>Name:</strong> <strong id="reportName"></strong></p>
@@ -751,14 +738,12 @@
       <!-- Performance History Section -->
       <section id="performance" class="fade-in" style="display: none;">
         <h2>Performance History</h2>
-        <div id="performance-chart"></div>
-        <div id="performance-details"></div>
+        <div id="performanceHistoryContainer"></div>
       </section>
       <!-- Chat with AI Section -->
       <section id="chat" class="fade-in" style="display: none;">
         <h2>Chat with AI</h2>
         <div id="chatContainer">
-          <!-- Chat UI goes here. For now, a simple placeholder message -->
           <p>Start a conversation with our AI assistant. (This feature is coming soon.)</p>
         </div>
       </section>
@@ -768,7 +753,6 @@
           <i class="fas fa-bell" id="updatesBell"></i> Current Updates
           <span id="updateCount"></span>
         </h2>
-        <!-- Mark All as Read Button with 3D effect -->
         <button id="markAllReadBtn">Mark all as read</button>
         <div id="updatesList">
           <p>Loading updates...</p>
@@ -813,7 +797,7 @@
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
       import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-      // Replace with your actual Firebase configuration
+      // Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
         authDomain: "deee-9ab53.firebaseapp.com",
@@ -838,13 +822,12 @@
         messageBox.style.display = "block";
         setTimeout(() => { messageBox.style.display = "none"; }, 3000);
       }
-
       // Utility: Capitalize first letter
       function capitalize(s) {
         return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
       }
 
-      // Update performance chart (in View Results section)
+      // Update chart in View Results section
       function updateChart(marksData) {
         const canvas = document.getElementById("performanceChart");
         if (!canvas) return;
@@ -877,7 +860,6 @@
           const docSnap = await getDoc(studentRef);
           if (docSnap.exists()) {
             const studentData = docSnap.data();
-            // Use stored email or fallback to auth email
             document.getElementById("email").value = studentData.email || auth.currentUser.email;
             document.getElementById("name").value = studentData.firstname || "";
             document.getElementById("surname").value = studentData.surname || "";
@@ -907,14 +889,14 @@
             }
             if (studentData.attendance !== undefined) {
               const attendanceProgress = document.getElementById("attendanceProgress");
-              attendanceProgress.style.width = studentData.attendance + "%";
-              document.getElementById("attendanceText").textContent = `Attendance: ${studentData.attendance}%`;
+              if (attendanceProgress) attendanceProgress.style.width = studentData.attendance + "%";
+              const attendanceText = document.getElementById("attendanceText");
+              if (attendanceText) attendanceText.textContent = `Attendance: ${studentData.attendance}%`;
               if (studentData.attendance < 75) {
                 showMessage("Your attendance is below 75%. Please strive for better attendance.", "error");
               }
-            }
+          }
           } else {
-            // If document doesn't exist, prefill email from auth
             document.getElementById("email").value = auth.currentUser.email;
             const defaultName = auth.currentUser.email.split('@')[0];
             document.getElementById("welcomeMessage").textContent = `Hello, ${capitalize(defaultName)} 😊`;
@@ -927,19 +909,16 @@
         }
       }
 
-      // Save Student Data function with UI/UX enhancements
+      // Save Student Data function
       async function saveStudentData() {
         const saveButton = document.getElementById("saveChangesBtn");
         try {
-          // Disable button and show loading state
           saveButton.disabled = true;
           saveButton.textContent = "Saving...";
-
           const user = auth.currentUser;
           if (!user) return;
           const studentRef = doc(db, "students", user.email);
           const studentData = {
-            // Always use the auth email regardless of UI edits.
             email: auth.currentUser.email,
             firstname: document.getElementById("name").value.trim(),
             surname: document.getElementById("surname").value.trim(),
@@ -955,7 +934,6 @@
             stream: document.getElementById("stream").value,
             lastUpdated: new Date()
           };
-          // Using setDoc with merge: true creates the document if it doesn't exist
           await setDoc(studentRef, studentData, { merge: true });
           Swal.fire({
             icon: 'success',
@@ -964,13 +942,11 @@
             timer: 2000,
             showConfirmButton: false
           });
-          // Refresh data after saving
           fetchStudentData(user.email);
         } catch (error) {
           console.error("Error saving student data:", error);
           showMessage("Error saving student data: " + error.message, "error");
         } finally {
-          // Re-enable the button and reset its text
           saveButton.disabled = false;
           saveButton.textContent = "Save Changes";
         }
@@ -1003,8 +979,6 @@
           const studentSnap = await getDoc(studentRef);
           if (studentSnap.exists()) {
             const studentData = studentSnap.data();
-
-            // Handle fees/results message:
             if (studentData.feesPaid !== true) {
               if (studentData.feesBalance && Number(studentData.feesBalance) > 0) {
                 const resultsMessage = document.getElementById("resultsMessage");
@@ -1035,7 +1009,6 @@
             } else {
               document.getElementById("resultsMessage").classList.remove("show");
               document.getElementById("reportCardContainer").style.display = "block";
-              // If results exist and haven't been marked as viewed, notify student and update DB.
               if (studentData.marks && Object.keys(studentData.marks).length > 0 && !studentData.resultsViewed) {
                 Swal.fire({
                   toast: true,
@@ -1048,8 +1021,6 @@
                 await updateDoc(studentRef, { resultsViewed: true });
               }
             }
-
-            // Populate report card.
             document.getElementById("reportName").textContent = `${capitalize(studentData.firstname)} ${capitalize(studentData.surname)}`;
             document.getElementById("reportEmail").textContent = studentData.email || auth.currentUser.email;
             document.getElementById("reportYear").textContent = studentData.year || "Not set";
@@ -1139,7 +1110,7 @@
         doc.save("stmarys_student_report_card.pdf");
       };
 
-      // Load Latest Notice for the Home Page with cool styling
+      // Load Latest Notice for the Home Page
       async function loadNotices() {
         try {
           const updatesQuery = query(
@@ -1214,7 +1185,7 @@
         }
       }
 
-      // Mark Individual Update as Read and update DB (also triggered by tapping the notice-card)
+      // Mark Individual Update as Read
       window.markUpdateAsRead = async (updateElem) => {
         const updateId = updateElem.getAttribute("data-id");
         const currentEmail = auth.currentUser.email;
@@ -1228,7 +1199,7 @@
         }
       };
 
-      // "Mark All as Read" Button Functionality with 3D effect
+      // "Mark All as Read" Button Functionality
       document.getElementById("markAllReadBtn").addEventListener("click", async () => {
         const currentEmail = auth.currentUser.email;
         const updatesQuery = query(collection(db, "updates"), orderBy("timestamp", "desc"));
@@ -1254,7 +1225,7 @@
         });
       });
 
-      // Upload Profile Picture with Progress Indicator for personal info and update small icon
+      // Profile Picture Upload for Personal Info & Header Icon
       document.getElementById("profilePicInput").addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -1291,19 +1262,17 @@
         reader.readAsDataURL(file);
       });
 
-      // Small Profile Icon click: Open file input to change profile picture
-      document.getElementById('smallProfilePic').addEventListener('click', function() {
-        document.getElementById('file-input').click();
+      // When header profile icon is clicked, open hidden file input
+      document.getElementById("smallProfilePic").addEventListener("click", function() {
+        document.getElementById("file-input").click();
       });
-      document.getElementById('file-input').addEventListener('change', function(event) {
+      document.getElementById("file-input").addEventListener("change", function(event) {
         const file = event.target.files[0];
         if (file) {
           const reader = new FileReader();
           reader.onload = function(e) {
-            document.getElementById('smallProfilePic').src = e.target.result;
-            // Optionally, update the main profile picture as well
-            document.getElementById('profilePic').src = e.target.result;
-            // Update in Firestore if needed
+            document.getElementById("smallProfilePic").src = e.target.result;
+            document.getElementById("profilePic").src = e.target.result;
             const user = auth.currentUser;
             if (user) {
               updateDoc(doc(db, "students", user.email), { profilePic: e.target.result });
@@ -1394,27 +1363,67 @@
       }
 
       // Load Performance History Data
-      function loadPerformanceHistory() {
-        // For demonstration, using static data.
-        // Replace with actual fetch logic if available.
-        const performanceData = [
-          { term: 'Term 1', average: 85 },
-          { term: 'Term 2', average: 88 },
-          { term: 'Term 3', average: 90 },
-        ];
-        const performanceChart = document.getElementById('performance-chart');
-        const performanceDetails = document.getElementById('performance-details');
-        performanceChart.innerHTML = "";
-        performanceDetails.innerHTML = "";
-        if (performanceData.length === 0) {
-          performanceChart.textContent = 'Performance data is not available. Please check back later.';
-        } else {
-          performanceData.forEach(record => {
-            const div = document.createElement('div');
-            div.textContent = `${record.term}: ${record.average}%`;
-            performanceChart.appendChild(div);
-          });
-          // Optionally, add more detailed history information in performanceDetails.
+      async function loadPerformanceHistory() {
+        // Fetch the student document to get performanceHistory array.
+        try {
+          const studentEmail = auth.currentUser.email;
+          const studentRef = doc(db, "students", studentEmail);
+          const studentSnap = await getDoc(studentRef);
+          const historyContainer = document.getElementById("performanceHistoryContainer");
+          historyContainer.innerHTML = "";
+          if (studentSnap.exists()) {
+            const studentData = studentSnap.data();
+            const history = studentData.performanceHistory; // Expecting an array of objects with { term, marks, date }
+            if (history && history.length > 0) {
+              history.forEach(termData => {
+                const termDiv = document.createElement("div");
+                termDiv.style.marginBottom = "2rem";
+                termDiv.innerHTML = `<h3>${termData.term} Results (${new Date(termData.date).toLocaleDateString()})</h3>`;
+                if (termData.marks && Object.keys(termData.marks).length > 0) {
+                  const canvas = document.createElement("canvas");
+                  canvas.style.maxWidth = "100%";
+                  termDiv.appendChild(canvas);
+                  const subjects = Object.keys(termData.marks);
+                  const marks = subjects.map(sub => termData.marks[sub].marks);
+                  new Chart(canvas, {
+                    type: "bar",
+                    data: {
+                      labels: subjects,
+                      datasets: [{
+                        label: "Marks",
+                        data: marks,
+                        backgroundColor: "rgba(255, 215, 0, 0.5)",
+                        borderColor: "rgba(255, 215, 0, 1)",
+                        borderWidth: 1
+                      }]
+                    },
+                    options: { scales: { y: { beginAtZero: true } } }
+                  });
+                  // Show additional message based on performance average
+                  const total = marks.reduce((a, b) => a + b, 0);
+                  const avg = (total / marks.length).toFixed(2);
+                  const msg = document.createElement("p");
+                  msg.style.fontStyle = "italic";
+                  if (avg < 50) {
+                    msg.textContent = `Average Marks: ${avg} - Please work hard to improve your performance.`;
+                  } else {
+                    msg.textContent = `Average Marks: ${avg} - Keep up the good work!`;
+                  }
+                  termDiv.appendChild(msg);
+                } else {
+                  termDiv.innerHTML += `<p>No marks data available for ${termData.term}. Please check back later.</p>`;
+                }
+                historyContainer.appendChild(termDiv);
+              });
+            } else {
+              historyContainer.innerHTML = `<p>No performance history available. Please check back later.</p>`;
+            }
+          } else {
+            historyContainer.innerHTML = `<p>No performance history available. Please check back later.</p>`;
+          }
+        } catch (error) {
+          console.error("Error loading performance history:", error);
+          document.getElementById("performanceHistoryContainer").innerHTML = `<p>Error loading performance history.</p>`;
         }
       }
 
@@ -1436,7 +1445,7 @@
       document.getElementById("logoutBtn").addEventListener("click", async () => {
         try {
           await signOut(auth);
-          window.location.href = "/login"; // Redirect to login page after logout.
+          window.location.href = "/login";
         } catch (error) {
           console.error("Error logging out:", error);
           showMessage("Error logging out: " + error.message, "error");
