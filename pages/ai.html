@@ -7,25 +7,13 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://mrfrankinc.vercel.app/favicon.ico" />
     <!-- Google Fonts: Poppins -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- PrismJS for syntax highlighting -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
     <!-- SweetAlert2 -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
     <style>
       /* School UI Variables */
       :root {
@@ -346,13 +334,13 @@
       
       <!-- Header with School Logo and Title -->
       <header>
-        <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="St. Mary's High Logo" class="logo" />
+        <img src="https://i.postimg.cc/d0tsQ3hk/IMG-20250222-WA0043.jpg" alt="St. Mary's High Logo" class="logo" />
         <h1><i class="fas fa-robot"></i> St. Mary's High AI Chatbot</h1>
       </header>
       
       <!-- Chat Box -->
       <div class="chat-box" id="chat-box">
-        <!-- Chat messages will be rendered here as bubbles -->
+        <!-- Chat messages will appear as bubble-style messages -->
       </div>
       
       <!-- Input Area -->
@@ -389,7 +377,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     
     <script>
-      // Show welcome popup on first visit
+      // On first load, show a welcome popup
       if (!localStorage.getItem("welcomeShown")) {
         Swal.fire({
           title: "Welcome to St. Mary's High AI Chatbot!",
@@ -403,7 +391,7 @@
       const chatBox = document.getElementById("chat-box");
       let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
       
-      // Render saved chat history
+      // Render saved chat history (if any)
       chatHistory.forEach(msg => addMessage(msg.role, msg.text, false));
       chatBox.scrollTop = chatBox.scrollHeight;
       
@@ -418,7 +406,7 @@
         chatBox.innerHTML = "";
       }
       
-      // Create a copy button for code/text
+      // Create a copy button for code or text
       function createCopyButton(textToCopy) {
         const btn = document.createElement("button");
         btn.className = "copy-btn";
@@ -431,7 +419,7 @@
         return btn;
       }
       
-      // Process Markdown: convert headings and inline code; remove any unwanted "1." markers
+      // Process Markdown: Remove unwanted numbering, convert headings and inline code
       function processMarkdown(text) {
         text = text.replace(/^1\.\s*/gm, "");
         text = text.replace(/^### (.*)$/gm, '<h3>$1</h3>');
@@ -443,7 +431,6 @@
       function addMessage(role, text, addToHistory = true) {
         const messageEl = document.createElement("div");
         messageEl.className = `message ${role}-message`;
-        // Render text in a paragraph and replace newlines with <br>
         const para = document.createElement("p");
         para.innerHTML = processMarkdown(text).replace(/\n/g, "<br>");
         messageEl.appendChild(para);
@@ -456,18 +443,28 @@
         }
       }
       
-      // Create a typing animation element for AI response with visible effect
+      // Create a typing animation element for the AI with animated dots
       function createTypingAnimation() {
         const typingEl = document.createElement("div");
         typingEl.className = "message ai-message typing";
-        typingEl.innerHTML =
-          '<p>AI is typing<span class="dots"><span>.</span><span>.</span><span>.</span></span></p>';
+        typingEl.innerHTML = '<p>How can I assist you?<span class="dots"><span>.</span><span>.</span><span>.</span></span></p>';
         chatBox.appendChild(typingEl);
         chatBox.scrollTop = chatBox.scrollHeight;
         return typingEl;
       }
       
-      // Send user message to AI and render response
+      // If no conversation exists, show the initial AI greeting with typing effect
+      window.addEventListener("load", () => {
+        if (chatHistory.length === 0) {
+          const typingEl = createTypingAnimation();
+          setTimeout(() => {
+            chatBox.removeChild(typingEl);
+            addMessage("ai", "How can I assist you?");
+          }, 2000);
+        }
+      });
+      
+      // Send user message to AI and render the AI response with typing animation
       async function sendMessage() {
         const userInputEl = document.getElementById("user-input");
         const userInput = userInputEl.value.trim();
@@ -476,7 +473,7 @@
         userInputEl.value = "";
         const typingEl = createTypingAnimation();
         try {
-          // Enhanced API prompt with school details; remove extraneous text from previous versions
+          // Enhanced API prompt with school details
           const prompt = "I am the St. Mary's High AI Chatbot, created to assist students at St. Mary's High School. Founded in 1959, our school is located in Chitungwiza (Zengeza 2), has an enrollment of 1200, a pass rate over 98%, and excellent learning facilities. Feel free to ask any question.";
           const apiUrl = `https://bk9.fun/ai/BK93?BK9=${encodeURIComponent(prompt)}&q=${encodeURIComponent(userInput)}`;
           const response = await fetch(apiUrl);
