@@ -368,9 +368,10 @@
         transform: scale(1.05);
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
       }
+      /* Chart Container - Increased height for better visibility */
       .chart-container {
         width: 100%;
-        height: 300px;
+        height: 400px;
         margin-top: 1rem;
       }
       /* Updates Section */
@@ -539,9 +540,32 @@
           transform: translateX(100%);
         }
       }
+      /* Profile Picture Container (Small Icon on Top Left) */
+      #profile-container {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1100;
+      }
+      #profile-container img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid var(--primary);
+      }
+      #file-input {
+        display: none;
+      }
     </style>
   </head>
   <body>
+    <!-- Profile Picture Small Icon Container -->
+    <div id="profile-container">
+      <img id="smallProfilePic" src="https://i.postimg.cc/28gm27sy/2993763.png" alt="Profile Icon" />
+      <input type="file" id="file-input" accept="image/*" />
+    </div>
+
     <!-- Overlay for Side Menu -->
     <div id="menuOverlay"></div>
     <!-- Header -->
@@ -566,10 +590,8 @@
         <a href="#dashboard-home" class="active"><i class="fas fa-home"></i> Dashboard</a>
         <a href="#personal-info"><i class="fas fa-user"></i> Personal Info</a>
         <a href="#results"><i class="fas fa-chart-bar"></i> View Results</a>
-        <a href="#updates">
-          <i class="fas fa-bell" id="updatesBell"></i> Current Updates
-          <span id="updateCount"></span>
-        </a>
+        <a href="#performance"><i class="fas fa-line-chart"></i> Performance History</a>
+        <a href="#updates"><i class="fas fa-bell"></i> Current Updates <span id="updateCount"></span></a>
         <a href="/report"><i class="fas fa-share"></i> Send Report</a>
         <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </div>
@@ -726,6 +748,12 @@
           </div>
         </div>
       </section>
+      <!-- Performance History Section -->
+      <section id="performance" class="fade-in" style="display: none;">
+        <h2>Performance History</h2>
+        <div id="performance-chart"></div>
+        <div id="performance-details"></div>
+      </section>
       <!-- Current Updates Section -->
       <section id="updates" class="fade-in" style="display: none;">
         <h2>
@@ -808,7 +836,7 @@
         return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
       }
 
-      // Update performance chart
+      // Update performance chart (in View Results section)
       function updateChart(marksData) {
         const ctx = document.getElementById("performanceChart").getContext("2d");
         const subjects = Object.keys(marksData);
@@ -854,6 +882,8 @@
             document.getElementById("form").value = studentData.form || "";
             document.getElementById("stream").value = studentData.stream || "";
             document.getElementById("profilePic").src =
+              studentData.profilePic || "https://i.postimg.cc/28gm27sy/2993763.png";
+            document.getElementById("smallProfilePic").src =
               studentData.profilePic || "https://i.postimg.cc/28gm27sy/2993763.png";
             document.getElementById("studentDisplayName").textContent = studentData.firstname || "";
             const studentName = capitalize(studentData.firstname);
@@ -963,51 +993,6 @@
           const studentSnap = await getDoc(studentRef);
           if (studentSnap.exists()) {
             const studentData = studentSnap.data();
-
-            // Handle fees/results message:
-            if (studentData.feesPaid !== true) {
-              if (studentData.feesBalance && Number(studentData.feesBalance) > 0) {
-                const resultsMessage = document.getElementById("resultsMessage");
-                resultsMessage.innerHTML = `
-                  Dear ${studentData.firstname},<br/><br/>
-                  You cannot view your results as you have a pending fees balance of $<span style="color:red;">${studentData.feesBalance}</span>
-                  for ${studentData.year || "N/A"} ${studentData.term || "N/A"}. Please settle the outstanding amount.<br/><br/>
-                  <span style="color:green;">Yours, Team St Mary's Admin</span>
-                `;
-                resultsMessage.classList.add("show");
-                document.getElementById("reportCardContainer").style.display = "none";
-                return;
-              } else {
-                const resultsMessage = document.getElementById("resultsMessage");
-                resultsMessage.innerHTML = `
-                  Dear ${studentData.firstname},<br/><br/>
-                  Your results will appear here soon. Please check back later for your report card.<br/><br/>
-                  <span style="color:green;">Thank you for your patience!</span>
-                `;
-                resultsMessage.classList.add("show");
-                if (!studentData.marks || Object.keys(studentData.marks).length === 0) {
-                  document.getElementById("reportCardContainer").style.display = "none";
-                } else {
-                  document.getElementById("reportCardContainer").style.display = "block";
-                }
-                return;
-              }
-            } else {
-              document.getElementById("resultsMessage").classList.remove("show");
-              document.getElementById("reportCardContainer").style.display = "block";
-              // If results exist and haven't been marked as viewed, notify student and update DB.
-              if (studentData.marks && Object.keys(studentData.marks).length > 0 && !studentData.resultsViewed) {
-                Swal.fire({
-                  toast: true,
-                  position: 'top-end',
-                  icon: 'info',
-                  title: 'New results are out!',
-                  showConfirmButton: false,
-                  timer: 3000
-                });
-                await updateDoc(studentRef, { resultsViewed: true });
-              }
-            }
 
             // Populate report card.
             document.getElementById("reportName").textContent = `${capitalize(studentData.firstname)} ${capitalize(studentData.surname)}`;
@@ -1214,7 +1199,7 @@
         });
       });
 
-      // Upload Profile Picture with Progress Indicator
+      // Upload Profile Picture with Progress Indicator for personal info and update small icon
       document.getElementById("profilePicInput").addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -1238,6 +1223,7 @@
           try {
             await updateDoc(studentRef, { profilePic: base64String });
             document.getElementById("profilePic").src = base64String;
+            document.getElementById("smallProfilePic").src = base64String;
             showMessage("Profile picture updated!", "success");
           } catch (error) {
             console.error("Error updating profile picture:", error);
@@ -1248,6 +1234,28 @@
           progressContainer.style.display = "none";
         };
         reader.readAsDataURL(file);
+      });
+
+      // Small Profile Icon click: Open file input to change profile picture
+      document.getElementById('smallProfilePic').addEventListener('click', function() {
+        document.getElementById('file-input').click();
+      });
+      document.getElementById('file-input').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('smallProfilePic').src = e.target.result;
+            // Optionally, update the main profile picture as well
+            document.getElementById('profilePic').src = e.target.result;
+            // Update in Firestore if needed
+            const user = auth.currentUser;
+            if (user) {
+              updateDoc(doc(db, "students", user.email), { profilePic: e.target.result });
+            }
+          };
+          reader.readAsDataURL(file);
+        }
       });
 
       // Side Menu Controls
@@ -1295,6 +1303,9 @@
           if (targetId === "results") {
             loadResults();
           }
+          if (targetId === "performance") {
+            loadPerformanceHistory();
+          }
         });
       });
 
@@ -1327,6 +1338,31 @@
         });
       }
 
+      // Load Performance History Data
+      function loadPerformanceHistory() {
+        // For demonstration, using static data.
+        // Replace with actual fetch logic if available.
+        const performanceData = [
+          { term: 'Term 1', average: 85 },
+          { term: 'Term 2', average: 88 },
+          { term: 'Term 3', average: 90 },
+        ];
+        const performanceChart = document.getElementById('performance-chart');
+        const performanceDetails = document.getElementById('performance-details');
+        performanceChart.innerHTML = "";
+        performanceDetails.innerHTML = "";
+        if (performanceData.length === 0) {
+          performanceChart.textContent = 'Performance data is not available. Please check back later.';
+        } else {
+          performanceData.forEach(record => {
+            const div = document.createElement('div');
+            div.textContent = `${record.term}: ${record.average}%`;
+            performanceChart.appendChild(div);
+          });
+          // Optionally, add more detailed history information in performanceDetails.
+        }
+      }
+
       // Attach event listeners to Save and Reset buttons
       document.getElementById("saveChangesBtn").addEventListener("click", saveStudentData);
       document.getElementById("changePasswordBtn").addEventListener("click", resetPassword);
@@ -1343,15 +1379,14 @@
         }
       });
       document.getElementById("logoutBtn").addEventListener("click", async () => {
-  try {
-    await signOut(auth);
-    window.location.href = "/login"; // Redirect to login page after logout.
-  } catch (error) {
-    console.error("Error logging out:", error);
-    showMessage("Error logging out: " + error.message, "error");
-  }
-});
-
+        try {
+          await signOut(auth);
+          window.location.href = "/login"; // Redirect to login page after logout.
+        } catch (error) {
+          console.error("Error logging out:", error);
+          showMessage("Error logging out: " + error.message, "error");
+        }
+      });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
