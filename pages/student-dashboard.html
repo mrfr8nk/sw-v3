@@ -1438,11 +1438,11 @@
         });
       }
 
-      // Load Performance History Data (Enhanced with Expected Records & Analytics)
+      // Load Performance History Data (Collect all records across years and terms)
       async function loadPerformanceHistory() {
         try {
           const currentEmail = auth.currentUser.email;
-          // Query performance history from Firestore collection "performanceHistory"
+          // Query all performance records for the student from "performanceHistory"
           const perfQuery = query(
             collection(db, "performanceHistory"),
             orderBy("year", "desc"),
@@ -1452,77 +1452,31 @@
           let performanceRecords = [];
           querySnapshot.forEach((docSnap) => {
             const record = docSnap.data();
-            // Assuming each record contains: studentEmail, term, year, average, comments
             if (record.studentEmail === currentEmail) {
               performanceRecords.push(record);
             }
           });
-          
-          // Build a lookup keyed by "Term Year"
-          const recordsMap = {};
-          performanceRecords.forEach(record => {
-            const key = `${record.term} ${record.year}`;
-            recordsMap[key] = record;
-          });
-
-          // Define expected records (adjust this list as needed)
-          const expectedRecords = [
-            { term: 'Term 1', year: '2025' },
-            { term: 'Term 2', year: '2025' },
-            { term: 'Term 3', year: '2025' }
-          ];
-
-          // Container to display performance history
           const container = document.getElementById("performanceHistoryContainer");
-          container.innerHTML = "";
-          
-          // Display expected records or a message if missing
-          expectedRecords.forEach(exp => {
-            const key = `${exp.term} ${exp.year}`;
-            const div = document.createElement("div");
-            div.classList.add("performance-item");
-            if (recordsMap[key]) {
-              const record = recordsMap[key];
-              div.innerHTML = `
-                <h4>${record.term} ${record.year}</h4>
-                <p>Average: ${record.average}%</p>
-                <p>Comments: ${record.comments}</p>
-              `;
-            } else {
-              div.innerHTML = `
-                <h4>${exp.term} ${exp.year}</h4>
-                <p>No results available for ${exp.term} ${exp.year}.</p>
-              `;
-            }
-            container.appendChild(div);
-          });
-
-          // Optionally, display any additional records (e.g. previous years)
-          const additionalRecords = performanceRecords.filter(record => {
-            const key = `${record.term} ${record.year}`;
-            return !expectedRecords.some(exp => `${exp.term} ${exp.year}` === key);
-          });
-          if (additionalRecords.length > 0) {
-            const extraHeader = document.createElement("h3");
-            extraHeader.textContent = "Additional Records:";
-            container.appendChild(extraHeader);
-            additionalRecords.forEach(record => {
+          if (performanceRecords.length === 0) {
+            container.innerHTML = "No performance records available.";
+          } else {
+            container.innerHTML = "";
+            // Display all records (already sorted by year descending, term descending)
+            performanceRecords.forEach(record => {
               const div = document.createElement("div");
               div.classList.add("performance-item");
               div.innerHTML = `
                 <h4>${record.term} ${record.year}</h4>
                 <p>Average: ${record.average}%</p>
-                <p>Comments: ${record.comments}</p>
+                <p>Comments: ${record.comments || "No comments"}</p>
               `;
               container.appendChild(div);
             });
           }
-          
           // Update overall performance chart with all records
           updateOverallPerformanceChart(performanceRecords);
           // Compute and display analytics based on all performance records
           computeAnalytics(performanceRecords);
-          
         } catch (error) {
           console.error("Error loading performance history:", error);
           document.getElementById("performanceHistoryContainer").innerHTML = "Error loading performance history.";
