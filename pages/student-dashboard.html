@@ -108,6 +108,16 @@
         height: 40px;
         margin-right: 10px;
       }
+      /* Small profile pic appended to logo */
+      .header-profile-pic {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-left: 10px;
+        border: 2px solid var(--primary);
+        cursor: pointer;
+      }
       .menu-btn {
         font-size: 1.5rem;
         cursor: pointer;
@@ -374,6 +384,23 @@
         height: 400px;
         margin-top: 1rem;
       }
+      /* Performance History Container */
+      .performance-container {
+        background: var(--glass);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        transition: all 0.5s ease;
+      }
+      .performance-item {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+      }
+      .performance-item h4 {
+        margin-bottom: 0.5rem;
+      }
       /* Updates Section */
       #updates h2 {
         color: var(--primary);
@@ -445,22 +472,6 @@
         padding-left: 10px;
         margin-top: 5px;
       }
-      /* 3D Mark All as Read Button in Hamburger */
-      #markAllReadBtn {
-        padding: 8px 16px;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
-        margin-bottom: 10px;
-        box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
-      }
-      #markAllReadBtn:active {
-        transform: translateY(2px);
-        box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
-      }
       /* Footer */
       footer {
         background: var(--glass);
@@ -525,58 +536,25 @@
       #personal-info h2 {
         font-size: 2rem;
       }
-      /* Extra Fields Styling */
-      .extra-info {
-        margin-top: 1rem;
-      }
-      .extra-info label {
-        font-weight: 500;
-        color: var(--primary);
-      }
-      /* Responsive Side Menu */
-      @media (max-width: 768px) {
-        .side-menu {
-          width: 100%;
-          transform: translateX(100%);
-        }
-      }
-      /* Profile Picture Container (Small Icon on Top Left) */
-      #profile-container {
-        position: fixed;
-        top: 10px;
-        left: 50px; /* Adjusted to align with header text/logo */
-        z-index: 1100;
-      }
-      #profile-container img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid var(--primary);
-      }
-      #file-input {
-        display: none;
-      }
     </style>
   </head>
   <body>
-    <!-- Profile Picture Small Icon Container -->
-    <div id="profile-container">
-      <img id="smallProfilePic" src="https://i.postimg.cc/28gm27sy/2993763.png" alt="Profile Icon" />
-      <input type="file" id="file-input" accept="image/*" />
-    </div>
-    <!-- Overlay for Side Menu -->
-    <div id="menuOverlay"></div>
+    <!-- The Profile Picture is now integrated into the Header Logo -->
     <!-- Header -->
     <header>
       <div class="logo fade-in">
         <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="Logo" class="header-logo" />
         St. Mary's High
+        <img id="smallProfilePic" src="https://i.postimg.cc/28gm27sy/2993763.png" alt="Profile Icon" class="header-profile-pic" />
       </div>
       <button class="menu-btn fade-in" id="menuBtn">
         <i class="fas fa-bars"></i>
       </button>
     </header>
+    <!-- Hidden File Input for Profile Pic Update -->
+    <input type="file" id="file-input" accept="image/*" style="display:none;" />
+    <!-- Overlay for Side Menu -->
+    <div id="menuOverlay"></div>
     <!-- Side Menu -->
     <div class="side-menu fade-in" id="sideMenu">
       <div class="menu-header">
@@ -751,8 +729,16 @@
       <!-- Performance History Section -->
       <section id="performance" class="fade-in" style="display: none;">
         <h2>Performance History</h2>
-        <div id="performance-chart"></div>
-        <div id="performance-details"></div>
+        <!-- Container for performance records -->
+        <div id="performanceHistoryContainer" class="performance-container">
+          Loading performance history...
+        </div>
+        <!-- Container for overall performance graph -->
+        <div class="chart-container">
+          <canvas id="overallPerformanceChart"></canvas>
+        </div>
+        <!-- Button to download performance history as PDF -->
+        <button class="pdf-btn" onclick="exportPerformancePDF()">Download Performance History PDF</button>
       </section>
       <!-- Chat with AI Section -->
       <section id="chat" class="fade-in" style="display: none;">
@@ -844,7 +830,7 @@
         return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
       }
 
-      // Update performance chart (in View Results section)
+      // Update performance chart in the View Results section
       function updateChart(marksData) {
         const canvas = document.getElementById("performanceChart");
         if (!canvas) return;
@@ -870,6 +856,33 @@
         });
       }
 
+      // Update overall performance chart for performance history section
+      function updateOverallPerformanceChart(performanceData) {
+        const canvas = document.getElementById("overallPerformanceChart");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        const labels = performanceData.map(item => `${item.term} ${item.year}`);
+        const averages = performanceData.map(item => item.average);
+        if (window.overallPerformanceChartInstance) {
+          window.overallPerformanceChartInstance.destroy();
+        }
+        window.overallPerformanceChartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Average Marks",
+              data: averages,
+              backgroundColor: "rgba(0, 123, 255, 0.2)",
+              borderColor: "rgba(0, 123, 255, 1)",
+              borderWidth: 2,
+              fill: true
+            }]
+          },
+          options: { scales: { y: { beginAtZero: true } } }
+        });
+      }
+
       // Fetch student data and update UI
       async function fetchStudentData(email) {
         try {
@@ -877,7 +890,6 @@
           const docSnap = await getDoc(studentRef);
           if (docSnap.exists()) {
             const studentData = docSnap.data();
-            // Use stored email or fallback to auth email
             document.getElementById("email").value = studentData.email || auth.currentUser.email;
             document.getElementById("name").value = studentData.firstname || "";
             document.getElementById("surname").value = studentData.surname || "";
@@ -914,7 +926,6 @@
               }
             }
           } else {
-            // If document doesn't exist, prefill email from auth
             document.getElementById("email").value = auth.currentUser.email;
             const defaultName = auth.currentUser.email.split('@')[0];
             document.getElementById("welcomeMessage").textContent = `Hello, ${capitalize(defaultName)} 😊`;
@@ -931,15 +942,12 @@
       async function saveStudentData() {
         const saveButton = document.getElementById("saveChangesBtn");
         try {
-          // Disable button and show loading state
           saveButton.disabled = true;
           saveButton.textContent = "Saving...";
-
           const user = auth.currentUser;
           if (!user) return;
           const studentRef = doc(db, "students", user.email);
           const studentData = {
-            // Always use the auth email regardless of UI edits.
             email: auth.currentUser.email,
             firstname: document.getElementById("name").value.trim(),
             surname: document.getElementById("surname").value.trim(),
@@ -955,7 +963,6 @@
             stream: document.getElementById("stream").value,
             lastUpdated: new Date()
           };
-          // Using setDoc with merge: true creates the document if it doesn't exist
           await setDoc(studentRef, studentData, { merge: true });
           Swal.fire({
             icon: 'success',
@@ -964,13 +971,11 @@
             timer: 2000,
             showConfirmButton: false
           });
-          // Refresh data after saving
           fetchStudentData(user.email);
         } catch (error) {
           console.error("Error saving student data:", error);
           showMessage("Error saving student data: " + error.message, "error");
         } finally {
-          // Re-enable the button and reset its text
           saveButton.disabled = false;
           saveButton.textContent = "Save Changes";
         }
@@ -1003,7 +1008,6 @@
           const studentSnap = await getDoc(studentRef);
           if (studentSnap.exists()) {
             const studentData = studentSnap.data();
-
             // Handle fees/results message:
             if (studentData.feesPaid !== true) {
               if (studentData.feesBalance && Number(studentData.feesBalance) > 0) {
@@ -1035,7 +1039,6 @@
             } else {
               document.getElementById("resultsMessage").classList.remove("show");
               document.getElementById("reportCardContainer").style.display = "block";
-              // If results exist and haven't been marked as viewed, notify student and update DB.
               if (studentData.marks && Object.keys(studentData.marks).length > 0 && !studentData.resultsViewed) {
                 Swal.fire({
                   toast: true,
@@ -1048,8 +1051,6 @@
                 await updateDoc(studentRef, { resultsViewed: true });
               }
             }
-
-            // Populate report card.
             document.getElementById("reportName").textContent = `${capitalize(studentData.firstname)} ${capitalize(studentData.surname)}`;
             document.getElementById("reportEmail").textContent = studentData.email || auth.currentUser.email;
             document.getElementById("reportYear").textContent = studentData.year || "Not set";
@@ -1214,7 +1215,7 @@
         }
       }
 
-      // Mark Individual Update as Read and update DB (also triggered by tapping the notice-card)
+      // Mark Individual Update as Read and update DB
       window.markUpdateAsRead = async (updateElem) => {
         const updateId = updateElem.getAttribute("data-id");
         const currentEmail = auth.currentUser.email;
@@ -1301,9 +1302,7 @@
           const reader = new FileReader();
           reader.onload = function(e) {
             document.getElementById('smallProfilePic').src = e.target.result;
-            // Optionally, update the main profile picture as well
             document.getElementById('profilePic').src = e.target.result;
-            // Update in Firestore if needed
             const user = auth.currentUser;
             if (user) {
               updateDoc(doc(db, "students", user.email), { profilePic: e.target.result });
@@ -1392,38 +1391,78 @@
           window.location.href = "/report";
         });
       }
- const aiLink = document.querySelector('.menu-links a[href="/ai"]');
-      if (reportLink) {
-        reportLink.addEventListener("click", (e) => {
+      const aiLink = document.querySelector('.menu-links a[href="/ai"]');
+      if (aiLink) {
+        aiLink.addEventListener("click", (e) => {
           e.preventDefault();
           window.location.href = "/ai";
         });
       }
 
-      // Load Performance History Data
-      function loadPerformanceHistory() {
-        // For demonstration, using static data.
-        // Replace with actual fetch logic if available.
-        const performanceData = [
-          { term: 'Term 1', average: 85 },
-          { term: 'Term 2', average: 88 },
-          { term: 'Term 3', average: 90 },
-        ];
-        const performanceChart = document.getElementById('performance-chart');
-        const performanceDetails = document.getElementById('performance-details');
-        performanceChart.innerHTML = "";
-        performanceDetails.innerHTML = "";
-        if (performanceData.length === 0) {
-          performanceChart.textContent = 'Performance data is not available. Please check back later.';
-        } else {
-          performanceData.forEach(record => {
-            const div = document.createElement('div');
-            div.textContent = `${record.term}: ${record.average}%`;
-            performanceChart.appendChild(div);
+      // Load Performance History Data (Enhanced)
+      async function loadPerformanceHistory() {
+        try {
+          const currentEmail = auth.currentUser.email;
+          // Query performance history from Firestore collection "performanceHistory"
+          const perfQuery = query(
+            collection(db, "performanceHistory"),
+            orderBy("year", "desc"),
+            orderBy("term", "desc")
+          );
+          const querySnapshot = await getDocs(perfQuery);
+          let performanceRecords = [];
+          querySnapshot.forEach((docSnap) => {
+            const record = docSnap.data();
+            // Assuming each record contains studentEmail, term, year, average, comments
+            if (record.studentEmail === currentEmail) {
+              performanceRecords.push(record);
+            }
           });
-          // Optionally, add more detailed history information in performanceDetails.
+          // If no records found, use fallback static data
+          if (performanceRecords.length === 0) {
+            performanceRecords = [
+              { term: 'Term 1', year: '2025', average: 85, comments: "Good performance overall." },
+              { term: 'Term 2', year: '2025', average: 88, comments: "Improved in most subjects." },
+              { term: 'Term 3', year: '2025', average: 90, comments: "Excellent progress this term." }
+            ];
+          }
+          // Render each performance record in a container
+          const container = document.getElementById("performanceHistoryContainer");
+          container.innerHTML = "";
+          performanceRecords.forEach(record => {
+            const div = document.createElement("div");
+            div.classList.add("performance-item");
+            div.innerHTML = `
+              <h4>${record.term} ${record.year}</h4>
+              <p>Average: ${record.average}%</p>
+              <p>Comments: ${record.comments}</p>
+            `;
+            container.appendChild(div);
+          });
+          // Update overall performance chart with the records
+          updateOverallPerformanceChart(performanceRecords);
+        } catch (error) {
+          console.error("Error loading performance history:", error);
+          document.getElementById("performanceHistoryContainer").innerHTML = "Error loading performance history.";
         }
       }
+
+      // Export Performance History as PDF
+      window.exportPerformancePDF = () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(12);
+        doc.text("Performance History", 14, 15);
+        let yPos = 25;
+        const container = document.getElementById("performanceHistoryContainer");
+        const items = container.querySelectorAll(".performance-item");
+        items.forEach(item => {
+          const text = item.textContent;
+          doc.text(text, 14, yPos);
+          yPos += 10;
+        });
+        doc.save("performance_history.pdf");
+      };
 
       // Attach event listeners to Save and Reset buttons
       document.getElementById("saveChangesBtn").addEventListener("click", saveStudentData);
@@ -1443,7 +1482,7 @@
       document.getElementById("logoutBtn").addEventListener("click", async () => {
         try {
           await signOut(auth);
-          window.location.href = "/login"; // Redirect to login page after logout.
+          window.location.href = "/login";
         } catch (error) {
           console.error("Error logging out:", error);
           showMessage("Error logging out: " + error.message, "error");
