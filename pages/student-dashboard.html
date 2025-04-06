@@ -401,6 +401,16 @@
       .performance-item h4 {
         margin-bottom: 0.5rem;
       }
+      /* Analytics Message */
+      .analytics-message {
+        margin-top: 1rem;
+        padding: 0.5rem;
+        background: rgba(0, 123, 255, 0.1);
+        border-radius: 5px;
+        text-align: center;
+        font-size: 1rem;
+        color: var(--primary);
+      }
       /* Updates Section */
       #updates h2 {
         color: var(--primary);
@@ -737,6 +747,8 @@
         <div class="chart-container">
           <canvas id="overallPerformanceChart"></canvas>
         </div>
+        <!-- Analytics Message -->
+        <div id="analyticsMessage" class="analytics-message"></div>
         <!-- Button to download performance history as PDF -->
         <button class="pdf-btn" onclick="exportPerformancePDF()">Download Performance History PDF</button>
       </section>
@@ -881,6 +893,33 @@
           },
           options: { scales: { y: { beginAtZero: true } } }
         });
+      }
+
+      // Compute performance analytics and display a trend message
+      function computeAnalytics(records) {
+        let message = "";
+        if (records.length >= 2) {
+          // Sort records by year and term in ascending order
+          records.sort((a, b) => {
+            if (a.year === b.year) {
+              return a.term.localeCompare(b.term);
+            }
+            return a.year - b.year;
+          });
+          const last = records[records.length - 1].average;
+          const previous = records[records.length - 2].average;
+          const change = last - previous;
+          if (change > 0) {
+            message = `Great job! Your average has increased by ${change}% compared to the previous term.`;
+          } else if (change < 0) {
+            message = `There is a drop of ${Math.abs(change)}% in your average compared to the previous term. Let's focus on improving!`;
+          } else {
+            message = "Your performance is consistent with the previous term.";
+          }
+        } else {
+          message = "Not enough data to generate performance analytics.";
+        }
+        document.getElementById("analyticsMessage").textContent = message;
       }
 
       // Fetch student data and update UI
@@ -1399,7 +1438,7 @@
         });
       }
 
-      // Load Performance History Data (Enhanced)
+      // Load Performance History Data (Enhanced with Analytics)
       async function loadPerformanceHistory() {
         try {
           const currentEmail = auth.currentUser.email;
@@ -1418,7 +1457,7 @@
               performanceRecords.push(record);
             }
           });
-          // If no records found, use fallback static data
+          // If no records found, use fallback sample data
           if (performanceRecords.length === 0) {
             performanceRecords = [
               { term: 'Term 1', year: '2025', average: 85, comments: "Good performance overall." },
@@ -1426,7 +1465,7 @@
               { term: 'Term 3', year: '2025', average: 90, comments: "Excellent progress this term." }
             ];
           }
-          // Render each performance record in a container
+          // Render each performance record in the container
           const container = document.getElementById("performanceHistoryContainer");
           container.innerHTML = "";
           performanceRecords.forEach(record => {
@@ -1441,6 +1480,8 @@
           });
           // Update overall performance chart with the records
           updateOverallPerformanceChart(performanceRecords);
+          // Compute and display analytics based on performance records
+          computeAnalytics(performanceRecords);
         } catch (error) {
           console.error("Error loading performance history:", error);
           document.getElementById("performanceHistoryContainer").innerHTML = "Error loading performance history.";
