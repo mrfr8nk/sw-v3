@@ -227,7 +227,7 @@
     }
     .slideshow img.active { opacity: 1; }
 
-    /* Hero Navigation Arrows */
+    /* Hero Navigation Arrows (Less Visible by Default) */
     .hero-nav {
       position: absolute;
       top: 50%;
@@ -246,10 +246,12 @@
       background: rgba(0,0,0,0.3);
       padding: 0.5rem 1rem;
       border-radius: 50%;
-      transition: background var(--transition-speed);
+      transition: background var(--transition-speed), opacity var(--transition-speed);
+      opacity: 0.3;
     }
     .hero-nav span:hover {
       background: rgba(0,0,0,0.5);
+      opacity: 1;
     }
 
     /* “Dope” Welcome Message Animation */
@@ -311,7 +313,7 @@
       60% { transform: translateX(-50%) translateY(-5px); }
     }
 
-    /* Sections: About, Faculty, Gallery, Staff, Contact */
+    /* Sections */
     section {
       padding: 4rem 5%;
       text-align: center;
@@ -348,7 +350,6 @@
     .faculty-card:hover, .staff-card:hover {
       transform: translateY(-10px);
     }
-    /* Bigger icons for faculties */
     .faculty-card i {
       font-size: 4rem;
       color: var(--primary);
@@ -420,15 +421,18 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       cursor: pointer;
       opacity: 0;
+      /* Default slide offset: if "left" class added, slide from left; otherwise, from right */
+      transform: translateX(50px);
+      transition: transform 0.6s ease, opacity 0.6s ease;
     }
-    /* Slide in animations for gallery images */
-    @keyframes slideInLeft {
-      from { transform: translateX(-100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    /* When visible, reset transform and opacity */
+    .gallery-grid img.visible {
+      opacity: 1;
+      transform: translateX(0);
     }
-    @keyframes slideInRight {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    /* For images that should slide in from left */
+    .gallery-grid img.left {
+      transform: translateX(-50px);
     }
 
     /* Footer */
@@ -454,7 +458,6 @@
       margin-top: 1rem;
       font-size: 0.9rem;
     }
-    /* Additional Footer Links */
     .footer-links {
       margin-top: 1rem;
       display: flex;
@@ -510,6 +513,21 @@
         box-shadow: none;
       }
       .dropdown .dropdown-content a { padding: 10px 0; }
+
+      /* Adjust Hero Section for Mobile */
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .hero p {
+        font-size: 1.2rem;
+      }
+      .hero-buttons .btn {
+        padding: 0.5rem 1rem;
+      }
+      /* Center gallery images and remove extra offset on mobile */
+      .gallery-grid img {
+        transform: translateX(0);
+      }
     }
   </style>
 </head>
@@ -525,7 +543,6 @@
       <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo" />
       St. Mary's
     </div>
-    <!-- Animated Hamburger Icon -->
     <div class="menu-btn" id="menu-btn">
       <div class="menu-btn__burger"></div>
     </div>
@@ -548,7 +565,6 @@
           <a href="/teacherslogin"><i class="fas fa-sign-in-alt"></i> Login</a>
         </div>
       </div>
-      <!-- Developer Info Link -->
       <a href="/credits"><i class="fas fa-code"></i> Developer Info</a>
       <a href="/apply" class="btn" style="background: var(--button-blue); padding: 0.75rem 1.5rem; border-radius: 25px;">
         <i class="fas fa-file-download"></i> Apply Now
@@ -563,7 +579,6 @@
       <img src="https://i.postimg.cc/kXH63b4j/IMG-20250227-WA0009.jpg" alt="School Photo 2" />
       <img src="https://i.postimg.cc/RhFF2Sz5/IMG-20250227-WA0005.jpg" alt="School Photo 3" />
     </div>
-    <!-- Hero Navigation Arrows -->
     <div class="hero-nav">
       <span id="prevSlide">&#10094;</span>
       <span id="nextSlide">&#10095;</span>
@@ -574,8 +589,7 @@
       <a href="/download-application" class="btn"><i class="fas fa-download"></i> Download Application Form</a>
       <a href="/signup" class="btn"><i class="fas fa-user-plus"></i> Sign Up</a>
     </div>
-    <!-- Scroll Down Indicator -->
-    <div class="scroll-indicator">&#x21e3;</div>
+    <div class="scroll-indicator" id="scrollDown">&#x21e3;</div>
   </section>
 
   <!-- About Section -->
@@ -590,7 +604,6 @@
   <section id="faculty">
     <h2>Our Faculty</h2>
     <div class="faculty-cards">
-      <!-- Sciences Card with Subject Dropdown -->
       <div class="faculty-card" id="sciencesCard">
         <i class="fas fa-flask"></i>
         <h3>Sciences</h3>
@@ -610,7 +623,6 @@
           </ul>
         </div>
       </div>
-      <!-- Arts Card with Subject Dropdown -->
       <div class="faculty-card" id="artsCard">
         <i class="fas fa-paint-brush"></i>
         <h3>Arts</h3>
@@ -630,7 +642,6 @@
           </ul>
         </div>
       </div>
-      <!-- Commercial Studies Card with Subject Dropdown -->
       <div class="faculty-card" id="commercialsCard">
         <i class="fas fa-chart-line"></i>
         <h3>Commercials</h3>
@@ -653,7 +664,7 @@
     </div>
   </section>
 
-  <!-- Gallery Section with Slide-in & Modal Info -->
+  <!-- Gallery Section with Scroll-triggered Transitions and Modal Info -->
   <section id="gallery">
     <h2>Gallery</h2>
     <div class="gallery-grid">
@@ -750,14 +761,10 @@
         img.classList.toggle('active', index === currentSlide);
       });
     };
-
-    // Automatic slideshow every 5 seconds
     let slideInterval = setInterval(() => {
       currentSlide = (currentSlide + 1) % slides.length;
       updateSlide();
     }, 5000);
-
-    // Navigation arrows for slideshow
     document.getElementById('prevSlide').addEventListener('click', () => {
       clearInterval(slideInterval);
       currentSlide = (currentSlide - 1 + slides.length) % slides.length;
@@ -769,17 +776,10 @@
       updateSlide();
     });
 
-    // Update Hero Text (if needed)
-    const heroText = document.getElementById('hero-text');
-    const texts = [
-      "Welcome to St. Mary's High School",
-      "The Best School in Harare",
-      "Where True Potential is Discovered"
-    ];
-    const updateHeroText = () => { heroText.textContent = texts[currentSlide]; };
-    setInterval(() => {
-      updateHeroText();
-    }, 5000);
+    // Scroll Down Indicator: Scroll to next section when clicked
+    document.getElementById('scrollDown').addEventListener('click', () => {
+      document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+    });
 
     // Toggle Subject Dropdown for Faculty Cards
     function toggleSubjectDropdown(cardId) {
@@ -800,10 +800,28 @@
       toggleSubjectDropdown('commercialsCard');
     });
 
-    // Gallery Images: Slide-in animations and Modal Info
+    // Gallery Images: Intersection Observer to trigger slide-in transitions
     const galleryImages = document.querySelectorAll('.gallery-image');
-    galleryImages.forEach((img, index) => {
-      img.style.animation = (index % 2 === 0) ? 'slideInLeft 1s forwards' : 'slideInRight 1s forwards';
+    const observerOptions = { threshold: 0.1 };
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Alternate slide direction based on index:
+          const index = Array.from(galleryImages).indexOf(entry.target);
+          if (index % 2 === 0) {
+            entry.target.classList.add('left');
+          } else {
+            entry.target.classList.remove('left');
+          }
+          entry.target.classList.add('visible');
+          galleryObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    galleryImages.forEach(img => galleryObserver.observe(img));
+
+    // Gallery Modal: Open on click to display larger image and info
+    galleryImages.forEach((img) => {
       img.addEventListener('click', () => {
         document.getElementById('modalTitle').textContent = img.alt;
         document.getElementById('modalInfo').textContent = img.getAttribute('data-info');
@@ -811,7 +829,6 @@
         document.getElementById('galleryModal').style.display = 'flex';
       });
     });
-    // Modal Close Functionality
     document.getElementById('modalClose').addEventListener('click', () => {
       document.getElementById('galleryModal').style.display = 'none';
     });
