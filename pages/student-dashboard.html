@@ -807,7 +807,8 @@
         orderBy,
         getDocs,
         limit,
-        arrayUnion
+        arrayUnion,
+        where
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
       import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
@@ -1472,9 +1473,10 @@
       async function loadPerformanceHistory() {
         try {
           const currentEmail = auth.currentUser.email;
-          // Query all performance records for the student from "performanceHistory"
+          // Query performance records for the student
           const perfQuery = query(
             collection(db, "performanceHistory"),
+            where("studentEmail", "==", currentEmail),
             orderBy("year", "desc"),
             orderBy("term", "desc")
           );
@@ -1482,17 +1484,13 @@
           let performanceRecords = [];
           querySnapshot.forEach((docSnap) => {
             const record = docSnap.data();
-            if (record.studentEmail === currentEmail) {
-              performanceRecords.push(record);
-            }
+            performanceRecords.push(record);
           });
           const container = document.getElementById("performanceHistoryContainer");
           if (performanceRecords.length === 0) {
-            // Display message indicating no records for the current term and year
             container.innerHTML = `No performance records available for ${window.currentTerm} ${window.currentYear}.`;
           } else {
             container.innerHTML = "";
-            // Display all records (already sorted by year descending, term descending)
             performanceRecords.forEach(record => {
               const div = document.createElement("div");
               div.classList.add("performance-item");
@@ -1504,11 +1502,9 @@
               container.appendChild(div);
             });
           }
-          // Update overall performance chart with all records if available
           if (performanceRecords.length > 0) {
             updateOverallPerformanceChart(performanceRecords);
           }
-          // Compute and display analytics based on all performance records
           computeAnalytics(performanceRecords);
         } catch (error) {
           console.error("Error loading performance history:", error);
