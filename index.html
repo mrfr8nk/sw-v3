@@ -23,6 +23,7 @@
       --bg-light: #f9f9f9;
       --bg-dark: #1a1a1a;
       --transition-speed: 0.3s;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Global Styles */
@@ -45,14 +46,16 @@
     }
     a {
       text-decoration: none;
-      transition: color var(--transition-speed);
+      transition: color var(--transition-speed) var(--ease);
     }
 
     /* Preloader */
     #preloader {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: var(--bg-light);
       display: flex;
       justify-content: center;
@@ -98,7 +101,7 @@
       height: 50px;
       margin-right: 10px;
       border-radius: 50%;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s var(--ease);
     }
     .logo img:hover {
       transform: scale(1.1);
@@ -111,7 +114,7 @@
       color: white;
       margin: 0 1rem;
       font-weight: 500;
-      transition: color var(--transition-speed);
+      transition: color var(--transition-speed) var(--ease);
     }
     nav a:hover {
       color: var(--secondary);
@@ -138,7 +141,7 @@
       color: white;
       padding: 12px 16px;
       display: block;
-      transition: background var(--transition-speed);
+      transition: background var(--transition-speed) var(--ease);
     }
     .dropdown .dropdown-content a:hover {
       background: rgba(255,255,255,0.1);
@@ -165,7 +168,7 @@
       background-color: white;
       border-radius: 5px;
       transform: translateY(-50%);
-      transition: all 0.3s ease-in-out;
+      transition: all var(--transition-speed) var(--ease);
     }
     .menu-btn__burger::before,
     .menu-btn__burger::after {
@@ -175,7 +178,7 @@
       height: 4px;
       background-color: white;
       border-radius: 5px;
-      transition: all 0.3s ease-in-out;
+      transition: all var(--transition-speed) var(--ease);
     }
     .menu-btn__burger::before { top: -10px; }
     .menu-btn__burger::after { top: 10px; }
@@ -200,7 +203,8 @@
       text-align: center;
       color: white;
       overflow: hidden;
-      margin-top: 80px; /* To avoid fixed header overlap */
+      margin-top: 80px; /* Account for fixed header */
+      padding: 0 1rem;
     }
     .hero::before {
       content: '';
@@ -223,11 +227,11 @@
       position: absolute;
       top: 0; left: 0;
       opacity: 0;
-      transition: opacity 1s ease;
+      transition: opacity 1s var(--ease);
     }
     .slideshow img.active { opacity: 1; }
 
-    /* Hero Navigation Arrows (Less Visible by Default) */
+    /* Hero Navigation Arrows (Subtle) */
     .hero-nav {
       position: absolute;
       top: 50%;
@@ -246,7 +250,7 @@
       background: rgba(0,0,0,0.3);
       padding: 0.5rem 1rem;
       border-radius: 50%;
-      transition: background var(--transition-speed), opacity var(--transition-speed);
+      transition: background var(--transition-speed) var(--ease), opacity var(--transition-speed) var(--ease);
       opacity: 0.3;
     }
     .hero-nav span:hover {
@@ -254,13 +258,13 @@
       opacity: 1;
     }
 
-    /* “Dope” Welcome Message Animation */
+    /* “Dope” Welcome Message */
     .hero h1 {
       position: relative;
       z-index: 2;
       font-size: 4rem;
       margin-bottom: 1rem;
-      animation: dopeText 2s ease forwards;
+      animation: dopeText 2s var(--ease) forwards;
     }
     @keyframes dopeText {
       0% { opacity: 0; transform: scale(0.8); }
@@ -271,7 +275,7 @@
     .hero-buttons {
       position: relative;
       z-index: 2;
-      animation: fadeIn 2s ease;
+      animation: fadeIn 2s var(--ease);
     }
     .hero p { font-size: 1.5rem; margin-top: 1rem; }
     .hero-buttons { margin-top: 1.5rem; }
@@ -284,7 +288,7 @@
       margin: 0 0.5rem;
       border-radius: 25px;
       font-weight: 600;
-      transition: background var(--transition-speed), color var(--transition-speed);
+      transition: background var(--transition-speed) var(--ease), color var(--transition-speed) var(--ease);
     }
     .hero-buttons .btn:hover {
       background: var(--button-blue);
@@ -317,7 +321,7 @@
     section {
       padding: 4rem 5%;
       text-align: center;
-      animation: fadeIn 1.5s ease;
+      animation: fadeIn 1.5s var(--ease);
     }
     section h2 {
       font-size: 2.5rem;
@@ -343,7 +347,7 @@
       padding: 2rem;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s var(--ease);
       position: relative;
       cursor: pointer;
     }
@@ -379,7 +383,7 @@
       padding: 1rem;
       margin-top: 1rem;
       border-radius: 5px;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn 0.5s var(--ease);
     }
     .subject-dropdown h4 {
       margin-bottom: 0.5rem;
@@ -421,9 +425,8 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       cursor: pointer;
       opacity: 0;
-      /* Default slide offset: if "left" class added, slide from left; otherwise, from right */
       transform: translateX(50px);
-      transition: transform 0.6s ease, opacity 0.6s ease;
+      transition: transform 0.6s var(--ease), opacity 0.6s var(--ease);
     }
     /* When visible, reset transform and opacity */
     .gallery-grid img.visible {
@@ -449,7 +452,7 @@
       color: white;
       font-size: 1.5rem;
       margin: 0 0.5rem;
-      transition: color var(--transition-speed);
+      transition: color var(--transition-speed) var(--ease);
     }
     footer .social-icons a:hover {
       color: var(--secondary);
@@ -468,7 +471,7 @@
       margin: 0.5rem 1rem;
       color: white;
       font-size: 0.9rem;
-      transition: color var(--transition-speed);
+      transition: color var(--transition-speed) var(--ease);
     }
     .footer-links a:hover {
       color: var(--secondary);
@@ -515,6 +518,9 @@
       .dropdown .dropdown-content a { padding: 10px 0; }
 
       /* Adjust Hero Section for Mobile */
+      .hero {
+        padding: 1rem;
+      }
       .hero h1 {
         font-size: 2.5rem;
       }
@@ -524,7 +530,7 @@
       .hero-buttons .btn {
         padding: 0.5rem 1rem;
       }
-      /* Center gallery images and remove extra offset on mobile */
+      /* Gallery images: remove extra horizontal translation on mobile */
       .gallery-grid img {
         transform: translateX(0);
       }
