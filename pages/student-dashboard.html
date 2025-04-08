@@ -922,6 +922,31 @@
         document.getElementById("analyticsMessage").textContent = message;
       }
 
+      // New Function: Store or update a performance record in Firestore
+      async function storePerformanceRecord(studentData, average) {
+        const recordId = `${studentData.email}_${studentData.term || "NotSet"}_${studentData.year || "NotSet"}`;
+        const recordRef = doc(db, "performanceHistory", recordId);
+        const recordData = {
+          studentEmail: studentData.email,
+          term: studentData.term || "Not set",
+          year: studentData.year || "Not set",
+          // storing the current month (1-12)
+          month: new Date().getMonth() + 1,
+          average: average,
+          comments: studentData.teacherComments || ""
+        };
+        const recordSnap = await getDoc(recordRef);
+        if(recordSnap.exists()) {
+          await updateDoc(recordRef, recordData);
+        } else {
+          await setDoc(recordRef, recordData);
+        }
+      }
+
+      // Global variables to store current term and year for display in performance history
+      window.currentTerm = "Not set";
+      window.currentYear = "Not set";
+
       // Fetch student data and update UI
       async function fetchStudentData(email) {
         try {
@@ -1090,6 +1115,9 @@
                 await updateDoc(studentRef, { resultsViewed: true });
               }
             }
+            // Set global term and year for use in performance history
+            window.currentTerm = studentData.term || "Not set";
+            window.currentYear = studentData.year || "Not set";
             document.getElementById("reportName").textContent = `${capitalize(studentData.firstname)} ${capitalize(studentData.surname)}`;
             document.getElementById("reportEmail").textContent = studentData.email || auth.currentUser.email;
             document.getElementById("reportYear").textContent = studentData.year || "Not set";
@@ -1127,6 +1155,8 @@
               const row = document.createElement("tr");
               row.innerHTML = `<td colspan="4"><strong>Average Marks: ${avg}</strong></td>`;
               tbody.appendChild(row);
+              // Store the performance record for future reference
+              await storePerformanceRecord(studentData, avg);
             } else {
               tbody.innerHTML = "<tr><td colspan='4'>You have no report card available yet. Please check back later.</td></tr>";
             }
@@ -1458,7 +1488,8 @@
           });
           const container = document.getElementById("performanceHistoryContainer");
           if (performanceRecords.length === 0) {
-            container.innerHTML = "No performance records available.";
+            // Display message indicating no records for the current term and year
+            container.innerHTML = `No performance records available for ${window.currentTerm} ${window.currentYear}.`;
           } else {
             container.innerHTML = "";
             // Display all records (already sorted by year descending, term descending)
@@ -1473,8 +1504,10 @@
               container.appendChild(div);
             });
           }
-          // Update overall performance chart with all records
-          updateOverallPerformanceChart(performanceRecords);
+          // Update overall performance chart with all records if available
+          if (performanceRecords.length > 0) {
+            updateOverallPerformanceChart(performanceRecords);
+          }
           // Compute and display analytics based on all performance records
           computeAnalytics(performanceRecords);
         } catch (error) {
