@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -896,10 +895,10 @@
                 </div>
               </div>
               <div class="quick-links">
-                <a href="#profile" class="btn btn-outline btn-sm">
+                <a href="#profile" class="btn btn-outline btn-sm quick-link">
                   <i class="fas fa-user btn-icon"></i> Update Profile
                 </a>
-                <a href="#results" class="btn btn-outline btn-sm mt-2">
+                <a href="#results" class="btn btn-outline btn-sm mt-2 quick-link">
                   <i class="fas fa-file-alt btn-icon"></i> View Results
                 </a>
               </div>
@@ -1109,472 +1108,1055 @@
               </table>
             </div>
             
-            <div class="chart-container mt-4">
-                            <canvas id="performanceChart"></canvas>
-            </div>
-          </div>
+                   <div class="chart-container mt-4">
+          <canvas id="performanceChart"></canvas>
         </div>
-      </section>
-
-      <!-- Performance History Section -->
-      <section id="performance" class="section" style="display: none;">
-        <div class="container">
-          <div class="section-title">
-            <h2>Performance History</h2>
-            <p>Track your academic progress over time</p>
-          </div>
-          
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Historical Performance</h3>
-              <button class="btn btn-secondary" onclick="exportPerformancePDF()">
-                <i class="fas fa-download btn-icon"></i> Download Report
-              </button>
-            </div>
-            
-            <div id="performanceHistoryContainer" class="p-4">
-              <p>Loading performance history...</p>
-            </div>
-            
-            <div class="chart-container">
-              <canvas id="overallPerformanceChart"></canvas>
-            </div>
-            
-            <div id="analyticsMessage" class="alert alert-info mt-4" style="display: none;"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Chat with AI Section -->
-      <section id="chat" class="section" style="display: none;">
-        <div class="container">
-          <div class="section-title">
-            <h2>Chat with AI Assistant</h2>
-            <p>Get instant help with your academic questions</p>
-          </div>
-          
-          <div class="card">
-            <div id="chatContainer" class="p-4">
-              <div class="text-center py-5">
-                <i class="fas fa-robot fa-4x text-primary mb-3"></i>
-                <h4>AI Learning Assistant</h4>
-                <p class="text-muted">Start a conversation with our AI assistant to get help with your studies.</p>
-                <button class="btn btn-primary mt-3" id="startChatBtn">
-                  <i class="fas fa-comments btn-icon"></i> Start Chat
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Updates Section -->
-      <section id="updates" class="section" style="display: none;">
-        <div class="container">
-          <div class="section-title">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <h2>School Updates</h2>
-                <p>Latest announcements and notices</p>
-              </div>
-              <button class="btn btn-outline" id="markAllReadBtn">
-                <i class="fas fa-check-circle btn-icon"></i> Mark All as Read
-              </button>
-            </div>
-          </div>
-          
-          <div class="card">
-            <div id="updatesList" class="p-4">
-              <div class="notice-card">
-                <h4 class="notice-title">Loading updates...</h4>
-                <p>Please wait while we fetch the latest updates.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Report Section -->
-      <section id="report" class="section" style="display: none;">
-        <div class="container">
-          <div class="section-title">
-            <h2>Send Report</h2>
-            <p>Submit reports or issues to school administration</p>
-          </div>
-          
-          <div class="card">
-            <div class="p-4">
-              <form id="reportForm">
-                <div class="form-group">
-                  <label class="form-label" for="reportType">Report Type</label>
-                  <select class="form-control" id="reportType">
-                    <option value="academic">Academic Concern</option>
-                    <option value="technical">Technical Issue</option>
-                    <option value="feedback">General Feedback</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label class="form-label" for="reportSubject">Subject</label>
-                  <input type="text" class="form-control" id="reportSubject" placeholder="Enter subject">
-                </div>
-                
-                <div class="form-group">
-                  <label class="form-label" for="reportMessage">Message</label>
-                  <textarea class="form-control" id="reportMessage" rows="5" placeholder="Enter your message"></textarea>
-                </div>
-                
-                <div class="form-group">
-                  <label class="form-label" for="reportAttachment">Attachment (Optional)</label>
-                  <input type="file" class="form-control" id="reportAttachment">
-                </div>
-                
-                <button type="submit" class="btn btn-primary mt-3">
-                  <i class="fas fa-paper-plane btn-icon"></i> Send Report
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="social-links">
-          <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-        <p class="mt-3">&copy; 2025 St. Mary's High School. All rights reserved.</p>
-        <p class="text-muted small mt-2">Version 2.0.0</p>
       </div>
-    </footer>
-
-    <!-- Theme Toggle -->
-    <div class="theme-toggle" id="themeToggle">
-      <i class="fas fa-moon"></i>
     </div>
+  </section>
 
-    <!-- Hidden File Input for Profile Pic Update -->
-    <input type="file" id="file-input" accept="image/*" style="display:none;" />
-
-    <!-- Firebase and App Scripts -->
-    <script type="module">
-      // Import Firebase modules
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      import { 
-        getAuth, 
-        signOut, 
-        onAuthStateChanged, 
-        sendPasswordResetEmail 
-      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-      import { 
-        getFirestore, 
-        doc, 
-        getDoc, 
-        setDoc, 
-        updateDoc, 
-        collection, 
-        query, 
-        orderBy, 
-        getDocs, 
-        limit, 
-        arrayUnion, 
-        where 
-      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-      import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
-      // Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
-        authDomain: "deee-9ab53.firebaseapp.com",
-        projectId: "deee-9ab53",
-        storageBucket: "deee-9ab53.appspot.com",
-        messagingSenderId: "399732664479",
-        appId: "1:399732664479:web:b84ac30e8266cc51761aaa",
-        measurementId: "G-524ZPBX42B"
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      const storage = getStorage(app);
-
-      // DOM Elements
-      const menuBtn = document.getElementById('menuBtn');
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      const mainContent = document.getElementById('mainContent');
-      const themeToggle = document.getElementById('themeToggle');
-      const sections = document.querySelectorAll('section');
-      const navLinks = document.querySelectorAll('.sidebar-link');
+  <!-- Performance History Section -->
+  <section id="performance" class="section" style="display: none;">
+    <div class="container">
+      <div class="section-title">
+        <h2>Performance History</h2>
+        <p>Track your academic progress over time</p>
+      </div>
       
-      // Toggle Sidebar
-      menuBtn.addEventListener('click', () => {
-        sidebar.classList.add('active');
-        overlay.classList.add('active');
-        mainContent.classList.add('expanded');
-      });
-
-      // Close Sidebar
-      overlay.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-        mainContent.classList.remove('expanded');
-      });
-
-      // Theme Toggle
-      themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? 
-          '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-      });
-
-      // Set initial theme
-      if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-      }
-
-      // Navigation
-      navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          
-          // Hide all sections
-          sections.forEach(section => {
-            section.style.display = 'none';
-          });
-          
-          // Show selected section
-          const target = link.getAttribute('href').substring(1);
-          document.getElementById(target).style.display = 'block';
-          
-          // Update active link
-          navLinks.forEach(navLink => {
-            navLink.classList.remove('active');
-          });
-          link.classList.add('active');
-          
-          // Close sidebar on mobile
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-          mainContent.classList.remove('expanded');
-          
-          // Load section-specific content
-          switch(target) {
-            case 'dashboard':
-              loadDashboard();
-              break;
-            case 'profile':
-              loadProfile();
-              break;
-            case 'results':
-              loadResults();
-              break;
-            case 'performance':
-              loadPerformanceHistory();
-              break;
-            case 'updates':
-              loadUpdates();
-              break;
-          }
-        });
-      });
-
-      // Utility Functions
-      function showMessage(message, type = 'success') {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: type,
-          title: message,
-          showConfirmButton: false,
-          timer: 3000
-        });
-      }
-
-      function capitalize(str) {
-        return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-      }
-
-      // Dashboard Functions
-      function loadDashboard() {
-        // This would be populated from Firebase
-        console.log('Loading dashboard data...');
-      }
-
-      // Profile Functions
-      function loadProfile() {
-        // This would be populated from Firebase
-        console.log('Loading profile data...');
-      }
-
-      // Results Functions
-      function loadResults() {
-        // This would be populated from Firebase
-        console.log('Loading results data...');
-      }
-
-      // Performance History Functions
-      function loadPerformanceHistory() {
-        // This would be populated from Firebase
-        console.log('Loading performance history...');
-      }
-
-      // Updates Functions
-      function loadUpdates() {
-        // This would be populated from Firebase
-        console.log('Loading updates...');
-      }
-
-      // Export to PDF Functions
-      window.exportPDF = function() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Historical Performance</h3>
+          <button class="btn btn-secondary" onclick="exportPerformancePDF()">
+            <i class="fas fa-download btn-icon"></i> Download Report
+          </button>
+        </div>
         
-        // Add report card content to PDF
-        doc.text('St. Mary\'s High School - Report Card', 14, 15);
-        doc.text(`Name: ${document.getElementById('reportName').textContent}`, 14, 25);
-        doc.text(`Term: ${document.getElementById('reportTerm').textContent} ${document.getElementById('reportYear').textContent}`, 14, 35);
+        <div id="performanceHistoryContainer" class="p-4">
+          <p>Loading performance history...</p>
+        </div>
         
-        // Add table
-        const rows = [];
-        document.querySelectorAll('#reportCardBody tr').forEach(tr => {
-          const row = [];
-          tr.querySelectorAll('td').forEach(td => {
-            row.push(td.textContent);
-          });
-          rows.push(row);
-        });
+        <div class="chart-container">
+          <canvas id="overallPerformanceChart"></canvas>
+        </div>
         
-        doc.autoTable({
-          head: [['Subject', 'Marks', 'Grade', 'Performance']],
-          body: rows,
-          startY: 45,
-        });
-        
-        doc.save('report_card.pdf');
-      };
+        <div id="analyticsMessage" class="alert alert-info mt-4" style="display: none;"></div>
+      </div>
+    </div>
+  </section>
 
-      window.exportPerformancePDF = function() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        doc.text('St. Mary\'s High School - Performance History', 14, 15);
-        
-        // Add performance history content
-        const history = document.getElementById('performanceHistoryContainer').textContent;
-        doc.text(history, 14, 25);
-        
-        doc.save('performance_history.pdf');
-      };
+  <!-- Chat with AI Section -->
+  <section id="chat" class="section" style="display: none;">
+    <div class="container">
+      <div class="section-title">
+        <h2>Chat with AI Assistant</h2>
+        <p>Get instant help with your academic questions</p>
+      </div>
+      
+      <div class="card">
+        <div id="chatContainer" class="p-4">
+          <div class="text-center py-5">
+            <i class="fas fa-robot fa-4x text-primary mb-3"></i>
+            <h4>AI Learning Assistant</h4>
+            <p class="text-muted">Start a conversation with our AI assistant to get help with your studies.</p>
+            <button class="btn btn-primary mt-3" id="startChatBtn">
+              <i class="fas fa-comments btn-icon"></i> Start Chat
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      // Initialize the app when DOM is loaded
-      document.addEventListener('DOMContentLoaded', () => {
-        // Show dashboard by default
-        document.getElementById('dashboard').style.display = 'block';
-        
-        // Check auth state
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            // User is signed in
-            console.log('User is signed in:', user.email);
+  <!-- Updates Section -->
+  <section id="updates" class="section" style="display: none;">
+    <div class="container">
+      <div class="section-title">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h2>School Updates</h2>
+            <p>Latest announcements and notices</p>
+          </div>
+          <button class="btn btn-outline" id="markAllReadBtn">
+            <i class="fas fa-check-circle btn-icon"></i> Mark All as Read
+          </button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div id="updatesList" class="p-4">
+          <div class="notice-card">
+            <h4 class="notice-title">Loading updates...</h4>
+            <p>Please wait while we fetch the latest updates.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Report Section -->
+  <section id="report" class="section" style="display: none;">
+    <div class="container">
+      <div class="section-title">
+        <h2>Send Report</h2>
+        <p>Submit reports or issues to school administration</p>
+      </div>
+      
+      <div class="card">
+        <div class="p-4">
+          <form id="reportForm">
+            <div class="form-group">
+              <label class="form-label" for="reportType">Report Type</label>
+              <select class="form-control" id="reportType">
+                <option value="academic">Academic Concern</option>
+                <option value="technical">Technical Issue</option>
+                <option value="feedback">General Feedback</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
             
-            // Load user data
-            loadUserData(user.email);
-          } else {
-            // User is signed out
-            window.location.href = '/login';
-          }
-        });
-      });
+            <div class="form-group">
+              <label class="form-label" for="reportSubject">Subject</label>
+              <input type="text" class="form-control" id="reportSubject" placeholder="Enter subject">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="reportMessage">Message</label>
+              <textarea class="form-control" id="reportMessage" rows="5" placeholder="Enter your message"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="reportAttachment">Attachment (Optional)</label>
+              <input type="file" class="form-control" id="reportAttachment">
+            </div>
+            
+            <button type="submit" class="btn btn-primary mt-3">
+              <i class="fas fa-paper-plane btn-icon"></i> Send Report
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 
-      // Logout
-      document.getElementById('logoutBtn').addEventListener('click', async () => {
-        try {
-          await signOut(auth);
-          window.location.href = '/login';
-        } catch (error) {
-          console.error('Error signing out:', error);
-          showMessage('Error signing out', 'error');
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="social-links">
+      <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+    <p class="mt-3">&copy; 2025 St. Mary's High School. All rights reserved.</p>
+    <p class="text-muted small mt-2">Version 2.0.0</p>
+  </div>
+</footer>
+
+<!-- Theme Toggle -->
+<div class="theme-toggle" id="themeToggle">
+  <i class="fas fa-moon"></i>
+</div>
+
+<!-- Hidden File Input for Profile Pic Update -->
+<input type="file" id="file-input" accept="image/*" style="display:none;" />
+
+<!-- Firebase and App Scripts -->
+<script type="module">
+  // Import Firebase modules
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { 
+    getAuth, 
+    signOut, 
+    onAuthStateChanged, 
+    sendPasswordResetEmail 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    setDoc, 
+    updateDoc, 
+    collection, 
+    query, 
+    orderBy, 
+    getDocs, 
+    limit, 
+    arrayUnion, 
+    where 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
+    authDomain: "deee-9ab53.firebaseapp.com",
+    projectId: "deee-9ab53",
+    storageBucket: "deee-9ab53.appspot.com",
+    messagingSenderId: "399732664479",
+    appId: "1:399732664479:web:b84ac30e8266cc51761aaa",
+    measurementId: "G-524ZPBX42B"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  // DOM Elements
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const mainContent = document.getElementById('mainContent');
+  const themeToggle = document.getElementById('themeToggle');
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.sidebar-link');
+  const quickLinks = document.querySelectorAll('.quick-link');
+  
+  // Global variables
+  let performanceChart = null;
+  let overallPerformanceChart = null;
+  
+  // Toggle Sidebar
+  menuBtn.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    mainContent.classList.add('expanded');
+  });
+
+  // Close Sidebar
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    mainContent.classList.remove('expanded');
+  });
+
+  // Theme Toggle
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? 
+      '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+  });
+
+  // Set initial theme
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+  }
+
+  // Navigation
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Hide all sections
+      sections.forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      // Show selected section
+      const target = link.getAttribute('href').substring(1);
+      document.getElementById(target).style.display = 'block';
+      
+      // Update active link
+      navLinks.forEach(navLink => {
+        navLink.classList.remove('active');
+      });
+      link.classList.add('active');
+      
+      // Close sidebar on mobile
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      mainContent.classList.remove('expanded');
+      
+      // Load section-specific content
+      switch(target) {
+        case 'dashboard':
+          loadDashboard();
+          break;
+        case 'profile':
+          loadProfile();
+          break;
+        case 'results':
+          loadResults();
+          break;
+        case 'performance':
+          loadPerformanceHistory();
+          break;
+        case 'updates':
+          loadUpdates();
+          break;
+      }
+    });
+  });
+
+  // Quick Links functionality
+  quickLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = link.getAttribute('href').substring(1);
+      
+      // Hide all sections
+      sections.forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      // Show target section
+      document.getElementById(target).style.display = 'block';
+      
+      // Update active link in sidebar
+      navLinks.forEach(navLink => {
+        navLink.classList.remove('active');
+        if (navLink.getAttribute('href') === `#${target}`) {
+          navLink.classList.add('active');
         }
       });
+      
+      // Load section content if needed
+      if (target === 'results') loadResults();
+      if (target === 'profile') loadProfile();
+    });
+  });
 
-      // Load user data from Firestore
-      async function loadUserData(email) {
-        try {
-          const docRef = doc(db, 'students', email);
-          const docSnap = await getDoc(docRef);
+  // Utility Functions
+  function showMessage(message, type = 'success') {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: type,
+      title: message,
+      showConfirmButton: false,
+      timer: 3000
+    });
+  }
+
+  function capitalize(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  // Dashboard Functions
+  function loadDashboard() {
+    // Already loaded when page loads
+  }
+
+  // Profile Functions
+  function loadProfile() {
+    // Already loaded when user data is fetched
+  }
+
+  // Results Functions
+  async function loadResults() {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      const studentRef = doc(db, 'students', user.email);
+      const docSnap = await getDoc(studentRef);
+      
+      if (docSnap.exists()) {
+        const studentData = docSnap.data();
+        const resultsMessage = document.getElementById('resultsMessage');
+        const reportCardContainer = document.getElementById('reportCardContainer');
+        
+        // Check if fees are paid
+        if (studentData.feesPaid !== true && studentData.feesBalance > 0) {
+          resultsMessage.innerHTML = `
+            <strong>Notice:</strong> You cannot view your results as you have a pending fees balance of 
+            $${studentData.feesBalance} for ${studentData.year || 'N/A'} ${studentData.term || 'N/A'}. 
+            Please settle the outstanding amount to access your results.
+          `;
+          resultsMessage.style.display = 'block';
+          reportCardContainer.style.display = 'none';
+          return;
+        } else if (!studentData.marks || Object.keys(studentData.marks).length === 0) {
+          resultsMessage.innerHTML = `
+            <strong>Notice:</strong> Your results are not yet available. Please check back later.
+          `;
+          resultsMessage.style.display = 'block';
+          reportCardContainer.style.display = 'none';
+          return;
+        } else {
+          resultsMessage.style.display = 'none';
+          reportCardContainer.style.display = 'block';
           
-          if (docSnap.exists()) {
-            const userData = docSnap.data();
+          // Populate report card
+          document.getElementById('reportName').textContent = 
+            `${capitalize(studentData.firstname || '')} ${capitalize(studentData.surname || '')}`;
+          document.getElementById('reportEmail').textContent = studentData.email || '';
+          document.getElementById('reportYear').textContent = studentData.year || 'Not set';
+          document.getElementById('reportTerm').textContent = studentData.term || 'Not set';
+          document.getElementById('reportTeacherComments').textContent = 
+            studentData.teacherComments || 'No comments available';
+          
+          // Populate results table
+          const tbody = document.getElementById('reportCardBody');
+          tbody.innerHTML = '';
+          
+          let totalMarks = 0;
+          let subjectCount = 0;
+          
+          for (const [subject, data] of Object.entries(studentData.marks)) {
+            const row = document.createElement('tr');
             
-            // Update UI with user data
-            document.getElementById('welcomeMessage').textContent = `Welcome, ${capitalize(userData.firstname || 'Student')}`;
-            document.getElementById('name').value = userData.firstname || '';
-            document.getElementById('surname').value = userData.surname || '';
-            document.getElementById('email').value = userData.email || '';
-            document.getElementById('phone').value = userData.phone || '';
-            document.getElementById('dob').value = userData.dob || '';
-            document.getElementById('gender').value = userData.gender || 'male';
-            document.getElementById('address').value = userData.address || '';
-            document.getElementById('parent-name').value = userData.parentName || '';
-            document.getElementById('parent-phone').value = userData.parentPhone || '';
-            document.getElementById('healthIssues').value = userData.healthIssues || '';
-            document.getElementById('additionalInfo').value = userData.additionalInfo || '';
-            document.getElementById('form').value = userData.form || '';
-            document.getElementById('stream').value = userData.stream || '';
-            
-            if (userData.profilePic) {
-              document.getElementById('profilePic').src = userData.profilePic;
-              document.getElementById('smallProfilePic').src = userData.profilePic;
+            let performanceIcon = '';
+            if (data.marks >= 75) {
+              performanceIcon = '<i class="fas fa-thumbs-up text-success"></i> Excellent';
+            } else if (data.marks >= 50) {
+              performanceIcon = '<i class="fas fa-check text-primary"></i> Good';
+            } else {
+              performanceIcon = '<i class="fas fa-exclamation-triangle text-danger"></i> Needs Improvement';
             }
             
-            if (userData.form && userData.stream) {
-              document.getElementById('currentGrade').textContent = `${userData.form} ${userData.stream}`;
-            }
+            row.innerHTML = `
+              <td>${subject}</td>
+              <td>${data.marks}</td>
+              <td>${data.grade || 'N/A'}</td>
+              <td>${performanceIcon}</td>
+            `;
+            tbody.appendChild(row);
             
-            if (userData.attendance) {
-              document.getElementById('attendanceProgress').style.width = `${userData.attendance}%`;
-              document.getElementById('attendanceText').textContent = `Attendance: ${userData.attendance}%`;
-            }
-          } else {
-            console.log('No user data found');
+            totalMarks += Number(data.marks);
+            subjectCount++;
           }
-        } catch (error) {
-          console.error('Error loading user data:', error);
-          showMessage('Error loading user data', 'error');
+          
+          // Add average row
+          if (subjectCount > 0) {
+            const average = (totalMarks / subjectCount).toFixed(2);
+            const avgRow = document.createElement('tr');
+            avgRow.innerHTML = `
+              <td colspan="4" class="text-center">
+                <strong>Average: ${average}%</strong>
+              </td>
+            `;
+            tbody.appendChild(avgRow);
+          }
+          
+          // Update performance chart
+          updatePerformanceChart(studentData.marks);
         }
       }
+    } catch (error) {
+      console.error('Error loading results:', error);
+      showMessage('Error loading results', 'error');
+    }
+  }
 
-      // Save profile changes
-      document.getElementById('saveChangesBtn').addEventListener('click', async () => {
-        const saveBtn = document.getElementById('saveChangesBtn');
-        const user = auth.currentUser;
+  function updatePerformanceChart(marksData) {
+    const canvas = document.getElementById('performanceChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const subjects = Object.keys(marksData);
+    const marks = subjects.map(subject => marksData[subject].marks);
+    
+    // Destroy previous chart if it exists
+    if (performanceChart) {
+      performanceChart.destroy();
+    }
+    
+    performanceChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: subjects,
+        datasets: [{
+          label: 'Marks',
+          data: marks,
+          backgroundColor: 'rgba(0, 123, 255, 0.5)',
+          borderColor: 'rgba(0, 123, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Marks (%)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Subjects'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Performance History Functions
+  async function loadPerformanceHistory() {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      const container = document.getElementById('performanceHistoryContainer');
+      container.innerHTML = '<p>Loading performance history...</p>';
+      
+      // Query performance records for this student
+      const q = query(
+        collection(db, 'performanceHistory'),
+        where('studentEmail', '==', user.email),
+        orderBy('year', 'desc'),
+        orderBy('term', 'desc')
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const performanceRecords = [];
+      
+      querySnapshot.forEach((doc) => {
+        performanceRecords.push(doc.data());
+      });
+      
+      if (performanceRecords.length === 0) {
+        container.innerHTML = '<p>No performance records found.</p>';
+        return;
+      }
+      
+      // Display performance records
+      container.innerHTML = '';
+      performanceRecords.forEach(record => {
+        const recordElement = document.createElement('div');
+        recordElement.className = 'performance-item mb-3 p-3 border rounded';
+        recordElement.innerHTML = `
+          <h4>${record.term} ${record.year}</h4>
+          <p><strong>Average:</strong> ${record.average}%</p>
+          <p><strong>Comments:</strong> ${record.comments || 'No comments'}</p>
+        `;
+        container.appendChild(recordElement);
+      });
+      
+      // Update overall performance chart
+      updateOverallPerformanceChart(performanceRecords);
+      
+      // Show analytics message
+      showPerformanceAnalytics(performanceRecords);
+    } catch (error) {
+      console.error('Error loading performance history:', error);
+      document.getElementById('performanceHistoryContainer').innerHTML = 
+        '<p class="text-danger">Error loading performance history</p>';
+    }
+  }
+
+  function updateOverallPerformanceChart(records) {
+    const canvas = document.getElementById('overallPerformanceChart');
+    if (!canvas) return;
+    
+    // Sort records chronologically
+    const sortedRecords = [...records].sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.term.localeCompare(b.term);
+    });
+    
+    const labels = sortedRecords.map(r => `${r.term} ${r.year}`);
+    const averages = sortedRecords.map(r => r.average);
+    
+    // Destroy previous chart if it exists
+    if (overallPerformanceChart) {
+      overallPerformanceChart.destroy();
+    }
+    
+    const ctx = canvas.getContext('2d');
+    overallPerformanceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Average Marks',
+          data: averages,
+          backgroundColor: 'rgba(0, 123, 255, 0.2)',
+          borderColor: 'rgba(0, 123, 255, 1)',
+          borderWidth: 2,
+          tension: 0.1,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Average Marks (%)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Term'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function showPerformanceAnalytics(records) {
+    if (records.length < 2) {
+      document.getElementById('analyticsMessage').innerHTML = 
+        '<p>Not enough data to show performance trends.</p>';
+      document.getElementById('analyticsMessage').style.display = 'block';
+      return;
+    }
+    
+    // Sort records chronologically
+    const sortedRecords = [...records].sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.term.localeCompare(b.term);
+    });
+    
+    const latest = sortedRecords[sortedRecords.length - 1];
+    const previous = sortedRecords[sortedRecords.length - 2];
+    const change = latest.average - previous.average;
+    
+    let message = '';
+    if (change > 0) {
+      message = `Your performance has improved by ${change.toFixed(2)}% compared to the previous term. Keep up the good work!`;
+    } else if (change < 0) {
+      message = `Your performance has decreased by ${Math.abs(change).toFixed(2)}% compared to the previous term. Let's work on improvement!`;
+    } else {
+      message = 'Your performance is consistent with the previous term.';
+    }
+    
+    document.getElementById('analyticsMessage').innerHTML = message;
+    document.getElementById('analyticsMessage').style.display = 'block';
+  }
+
+  // Updates Functions
+  async function loadUpdates() {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      const updatesList = document.getElementById('updatesList');
+      updatesList.innerHTML = '<p>Loading updates...</p>';
+      
+      const q = query(
+        collection(db, 'updates'),
+        orderBy('timestamp', 'desc'),
+        limit(10)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      let unreadCount = 0;
+      let updatesHtml = '';
+      
+      querySnapshot.forEach(doc => {
+        const update = doc.data();
+        const isRead = update.readBy && update.readBy.includes(user.email);
         
-        if (!user) return;
+        if (!isRead) unreadCount++;
         
-        try {
-          saveBtn.disabled = true;
-          saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin btn-icon"></i> Saving...';
-          
-          const userData = {
-            firstname: document.getElementById('name').value.trim(),
-            surname: document.getElementById('surname').value.trim(),
-            email: user.email,
-            phone: document.getElementById('phone').value.trim(),
-            dob: document.getElementById('dob').value,
-            gender: document.getElementById('gender').value,
-            address: document.getElementById('address').value.trim(),
-            parentName: document.getElementById('parent-name').value.trim(),
-            parentPhone: document.getElementById('parent-phone').value.trim(),
+        updatesHtml += `
+          <div class="notice-card ${isRead ? 'read' : 'unread'}" data-id="${doc.id}">
+            <h4 class="notice-title">${update.updateTitle || 'No title'}</h4>
+            <p>${update.updateContent || ''}</p>
+            <div class="notice-meta">
+              Posted by ${update.teacherName || 'Staff'} on 
+              ${update.timestamp?.toDate().toLocaleDateString() || 'unknown date'}
+              ${isRead ? '<span class="badge bg-success float-end">Read</span>' : ''}
+            </div>
+          </div>
+        `;
+      });
+      
+      updatesList.innerHTML = updatesHtml || '<p>No updates available.</p>';
+      
+      // Update unread count badge
+      const updateCountBadge = document.getElementById('updateCount');
+      if (unreadCount > 0) {
+        updateCountBadge.textContent = unreadCount;
+        updateCountBadge.style.display = 'inline-block';
+      } else {
+        updateCountBadge.style.display = 'none';
+      }
+      
+      // Add click handlers to mark updates as read
+      document.querySelectorAll('.notice-card.unread').forEach(card => {
+        card.addEventListener('click', () => markUpdateAsRead(card));
+      });
+    } catch (error) {
+      console.error('Error loading updates:', error);
+      document.getElementById('updatesList').innerHTML = 
+        '<p class="text-danger">Error loading updates</p>';
+    }
+  }
+
+  async function markUpdateAsRead(card) {
+    const updateId = card.getAttribute('data-id');
+    const user = auth.currentUser;
+    
+    if (!user || !updateId) return;
+    
+    try {
+      await updateDoc(doc(db, 'updates', updateId), {
+        readBy: arrayUnion(user.email)
+      });
+      
+      card.classList.remove('unread');
+      card.classList.add('read');
+      
+      // Update the read badge
+      const meta = card.querySelector('.notice-meta');
+      if (meta) {
+        meta.innerHTML += '<span class="badge bg-success float-end">Read</span>';
+      }
+      
+      // Decrement unread count
+      const updateCountBadge = document.getElementById('updateCount');
+      let count = parseInt(updateCountBadge.textContent) || 0;
+      count--;
+      
+      if (count > 0) {
+        updateCountBadge.textContent = count;
+      } else {
+        updateCountBadge.style.display = 'none';
+      }
+    } catch (error) {
+      console.error('Error marking update as read:', error);
+    }
+  }
+
+  // Mark all updates as read
+  document.getElementById('markAllReadBtn').addEventListener('click', async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+    
+    try {
+      const q = query(
+        collection(db, 'updates'),
+        orderBy('timestamp', 'desc'),
+        limit(10)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const batch = [];
+      
+      querySnapshot.forEach(doc => {
+        batch.push(updateDoc(doc.ref, {
+          readBy: arrayUnion(user.email)
+        }));
+      });
+      
+      await Promise.all(batch);
+      
+      // Update UI
+      document.querySelectorAll('.notice-card').forEach(card => {
+        card.classList.remove('unread');
+        card.classList.add('read');
+        
+        const meta = card.querySelector('.notice-meta');
+        if (meta && !meta.innerHTML.includes('Read</span>')) {
+          meta.innerHTML += '<span class="badge bg-success float-end">Read</span>';
+        }
+      });
+      
+      document.getElementById('updateCount').style.display = 'none';
+      showMessage('All updates marked as read');
+    } catch (error) {
+      console.error('Error marking all updates as read:', error);
+      showMessage('Error marking updates as read', 'error');
+    }
+  });
+
+  // Notices Functions
+  async function loadNotices() {
+    try {
+      const noticesContainer = document.getElementById('notices');
+      noticesContainer.innerHTML = '<p>Loading notices...</p>';
+      
+      const q = query(
+        collection(db, 'updates'),
+        orderBy('timestamp', 'desc'),
+        limit(1)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      
+      if (querySnapshot.empty) {
+        noticesContainer.innerHTML = `
+          <div class="notice-card">
+            <h4 class="notice-title">No notices available</h4>
+            <p>Check back later for updates from the school.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      const notice = querySnapshot.docs[0].data();
+      noticesContainer.innerHTML = `
+        <div class="notice-card">
+          <h4 class="notice-title">${notice.updateTitle || 'School Notice'}</h4>
+          <p>${notice.updateContent || 'No content available'}</p>
+          <div class="notice-meta">
+            Posted on ${notice.timestamp?.toDate().toLocaleDateString() || 'unknown date'}
+          </div>
+        </div>
+      `;
+    } catch (error) {
+      console.error('Error loading notices:', error);
+      document.getElementById('notices').innerHTML = `
+        <div class="notice-card">
+          <h4 class="notice-title">Error loading notices</h4>
+          <p>Please try again later.</p>
+        </div>
+      `;
+    }
+  }
+
+  // Export to PDF Functions
+  window.exportPDF = function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Add school logo and header
+    doc.setFontSize(16);
+    doc.setTextColor(0, 51, 102);
+    doc.text('St. Mary\'s High School', 105, 15, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text('Official Report Card', 105, 22, { align: 'center' });
+    
+    // Add student info
+    doc.setFontSize(10);
+    doc.text(`Name: ${document.getElementById('reportName').textContent}`, 14, 35);
+    doc.text(`Term: ${document.getElementById('reportTerm').textContent} ${document.getElementById('reportYear').textContent}`, 14, 40);
+    doc.text(`Comments: ${document.getElementById('reportTeacherComments').textContent}`, 14, 45);
+    
+    // Add table
+    const rows = [];
+    document.querySelectorAll('#reportCardBody tr').forEach(tr => {
+      const row = [];
+      tr.querySelectorAll('td').forEach(td => {
+        row.push(td.textContent);
+      });
+      if (row.length > 0) {
+        rows.push(row);
+      }
+    });
+    
+    doc.autoTable({
+      head: [['Subject', 'Marks', 'Grade', 'Performance']],
+      body: rows,
+      startY: 55,
+      headStyles: {
+        fillColor: [0, 51, 102],
+        textColor: [255, 255, 255]
+      },
+      alternateRowStyles: {
+        fillColor: [240, 240, 240]
+      }
+    });
+    
+    // Add footer
+    const date = new Date().toLocaleDateString();
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Generated on ${date}`, 14, doc.internal.pageSize.height - 10);
+    doc.text('Official Document - St. Mary\'s High School', 105, doc.internal.pageSize.height - 10, { align: 'center' });
+    
+    doc.save('report_card.pdf');
+  };
+
+  window.exportPerformancePDF = function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Add header
+    doc.setFontSize(16);
+    doc.setTextColor(0, 51, 102);
+    doc.text('St. Mary\'s High School', 105, 15, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text('Performance History Report', 105, 22, { align: 'center' });
+    
+    // Add student info
+    const user = auth.currentUser;
+    doc.setFontSize(10);
+    doc.text(`Student: ${user?.email || 'Unknown'}`, 14, 35);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 40);
+    
+    // Add performance records
+    const performanceItems = document.querySelectorAll('#performanceHistoryContainer .performance-item');
+    let yPos = 50;
+    
+    performanceItems.forEach(item => {
+      const text = item.textContent.trim();
+      const lines = doc.splitTextToSize(text, 180);
+      
+      if (yPos + (lines.length * 7) > doc.internal.pageSize.height - 20) {
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      doc.setFontSize(10);
+      doc.text(lines, 14, yPos);
+      yPos += (lines.length * 7) + 5;
+      
+      // Add separator
+      doc.setDrawColor(200, 200, 200);
+      doc.line(14, yPos, 200, yPos);
+      yPos += 10;
+    });
+    
+    // Add footer
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Confidential - St. Mary\'s High School', 105, doc.internal.pageSize.height - 10, { align: 'center' });
+    
+    doc.save('performance_history.pdf');
+  };
+
+  // Profile picture upload
+  document.getElementById('profilePicInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const uploadProgress = document.getElementById('uploadProgress');
+    
+    uploadProgress.style.display = 'block';
+    
+    reader.onload = async (event) => {
+      const base64Image = event.target.result;
+      const user = auth.currentUser;
+      
+      if (!user) return;
+      
+      try {
+        // Update Firestore
+        await updateDoc(doc(db, 'students', user.email), {
+          profilePic: base64Image
+        });
+        
+        // Update UI
+        document.getElementById('profilePic').src = base64Image;
+        document.getElementById('smallProfilePic').src = base64Image;
+        showMessage('Profile picture updated!');
+      } catch (error) {
+        console.error('Error updating profile picture:', error);
+        showMessage('Error updating profile picture', 'error');
+      } finally {
+        uploadProgress.style.display = 'none';
+      }
+    };
+    
+    reader.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        progressBar.style.width = `${percent}%`;
+        progressText.textContent = `${percent}%`;
+      }
+    };
+    
+    reader.readAsDataURL(file);
+  });
+
+  // Small profile picture click
+  document.getElementById('smallProfilePic').addEventListener('click', () => {
+    document.getElementById('profilePicInput').click();
+  });
+
+  // Initialize the app when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Show dashboard by default
+    document.getElementById('dashboard').style.display = 'block';
+    
+    // Check auth state
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in
+        console.log('User is signed in:', user.email);
+        
+        // Load user data
+        await loadUserData(user.email);
+        
+        // Load initial data for dashboard
+        loadNotices();
+        loadResults();
+      } else {
+        // User is signed out
+        window.location.href = '/login';
+      }
+    });
+  });
+
+  // Load user data from Firestore
+  async function loadUserData(email) {
+    try {
+      const docRef = doc(db, 'students', email);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        
+        // Update UI with user data
+        document.getElementById('welcomeMessage').textContent = `Welcome, ${capitalize(userData.firstname || 'Student')}`;
+        document.getElementById('name').value = userData.firstname || '';
+        document.getElementById('surname').value = userData.surname || '';
+        document.getElementById('email').value = userData.email || '';
+        document.getElementById('phone').value = userData.phone || '';
+        document.getElementById('dob').value = userData.dob || '';
+        document.getElementById('gender').value = userData.gender || 'male';
+        document.getElementById('address').value = userData.address || '';
+        document.getElementById('parent-name').value = userData.parentName || '';
+        document.getElementById('parent-phone').value = userData.parentPhone || '';
+        document.getElementById('healthIssues').value = userData.healthIssues || '';
+        document.getElementById('additionalInfo').value = userData.additionalInfo || '';
+        document.getElementById('form').value = userData.form || '';
+        document.getElementById('stream').value = userData.stream || '';
+        
+        if (userData.profilePic) {
+          document.getElementById('profilePic').src = userData.profilePic;
+          document.getElementById('smallProfilePic').src = userData.profilePic;
+        }
+        
+        if (userData.form && userData.stream) {
+          document.getElementById('currentGrade').textContent = `${userData.form} ${userData.stream}`;
+        }
+        
+        if (userData.attendance) {
+          document.getElementById('attendanceProgress').style.width = `${userData.attendance}%`;
+          document.getElementById('attendanceText').textContent = `Attendance: ${userData.attendance}%`;
+        }
+      } else {
+        console.log('No user data found');
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      showMessage('Error loading user data', 'error');
+    }
+  }
+
+  // Save profile changes
+  document.getElementById('saveChangesBtn').addEventListener('click', async () => {
+    const saveBtn = document.getElementById('saveChangesBtn');
+    const user = auth.currentUser;
+    
+    if (!user) return;
+    
+    try {
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin btn-icon"></i> Saving...';
+      
+      const userData = {
+        firstname: document.getElementById('name').value.trim(),
+        surname: document.getElementById('surname').value.trim(),
+        email: user.email,
+        phone: document.getElementById('phone').value.trim(),
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        address: document.getElementById('address').value.trim(),
+        parentName: document.getElementById('parentName').value.trim(),
+                    parentPhone: document.getElementById('parent-phone').value.trim(),
             healthIssues: document.getElementById('healthIssues').value.trim(),
             additionalInfo: document.getElementById('additionalInfo').value.trim(),
             form: document.getElementById('form').value,
@@ -1613,57 +2195,17 @@
         }
       });
 
-      // Profile picture upload
-      document.getElementById('profilePicInput').addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const uploadProgress = document.getElementById('uploadProgress');
-        
-        uploadProgress.style.display = 'block';
-        
-        reader.onload = async (event) => {
-          const base64Image = event.target.result;
-          const user = auth.currentUser;
-          
-          if (!user) return;
-          
-          try {
-            // Update Firestore
-            await updateDoc(doc(db, 'students', user.email), {
-              profilePic: base64Image
-            });
-            
-            // Update UI
-            document.getElementById('profilePic').src = base64Image;
-            document.getElementById('smallProfilePic').src = base64Image;
-            showMessage('Profile picture updated!');
-          } catch (error) {
-            console.error('Error updating profile picture:', error);
-            showMessage('Error updating profile picture', 'error');
-          } finally {
-            uploadProgress.style.display = 'none';
-          }
-        };
-        
-        reader.onprogress = (event) => {
-          if (event.lengthComputable) {
-            const percent = Math.round((event.loaded / event.total) * 100);
-            progressBar.style.width = `${percent}%`;
-            progressText.textContent = `${percent}%`;
-          }
-        };
-        
-        reader.readAsDataURL(file);
-      });
-
-      // Small profile picture click
-      document.getElementById('smallProfilePic').addEventListener('click', () => {
-        document.getElementById('profilePicInput').click();
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+          await signOut(auth);
+          window.location.href = '/login';
+        } catch (error) {
+          console.error('Error signing out:', error);
+          showMessage('Error signing out', 'error');
+        }
       });
     </script>
   </body>
 </html>
+        
