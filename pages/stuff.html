@@ -1,306 +1,490 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Staff - St. Mary's High School</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Faculty | St. Mary's High School</title>
+  <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/4476/4476871.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #003366; /* School theme color */
-      --secondary: #FFD700; /* Accent color */
-      --text-color: #333;
-      --bg-light: #ffffff; /* Default white theme */
-      --bg-dark: #1a1a1a;
+      --primary-color: #003366; /* Navy blue */
+      --secondary-color: #000000;
+      --accent-color: #4d94ff; /* Light blue */
+      --light-color: #ffffff;
+      --dark-color: #121212;
+      --text-color: #333333;
+      --light-gray: #f5f5f5;
     }
-
+    
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
     }
-
+    
     body {
-      background: var(--bg-light);
+      font-family: 'Poppins', sans-serif;
       color: var(--text-color);
-      overflow-x: hidden;
-      transition: background 0.6s ease, color 0.6s ease;
+      background-color: var(--light-color);
+      line-height: 1.6;
     }
-
-    body.dark-mode {
-      --text-color: #f9f9f9;
-      --bg-light: #1a1a1a;
-      --bg-dark: #333;
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
-
-    /* Header and Navigation */
+    
+    /* Header */
     header {
-      background: var(--primary);
-      color: white;
-      padding: 1rem 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background-color: var(--light-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       position: fixed;
       width: 100%;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+    }
+    
     .logo {
       display: flex;
       align-items: center;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--secondary);
+      text-decoration: none;
     }
-
-    .logo img {
+    
+    .logo-img {
       width: 50px;
       height: 50px;
       margin-right: 10px;
     }
-
-    nav {
-      display: flex;
-      align-items: center;
+    
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
     }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 1rem;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    nav a:hover {
-      color: var(--secondary);
-    }
-
-    .menu-btn {
-      display: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    /* Main Content */
-    main {
-      padding-top: 80px;
-    }
-
-    section {
-      padding: 4rem 5%;
-      background: var(--bg-light);
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      color: var(--primary);
-      text-align: center;
-    }
-
-    /* Teachers Grid */
-    .teachers-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-    }
-
-    /* Updated Teacher Card Styles with Scroll Reveal & Hover Animation */
-    .teacher-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      cursor: pointer;
-      /* Initial scroll animation state */
-      opacity: 0;
-      transform: translateY(var(--translate-y, 50px));
-      transition: transform 0.6s ease-out, opacity 0.6s ease-out;
-    }
-    /* When in view, animate into place */
-    .teacher-card.in-view {
-      --translate-y: 0;
-      opacity: 1;
-    }
-    /* On hover, move slightly upward */
-    .teacher-card:hover {
-      --translate-y: -10px;
-    }
-
-    .teacher-card img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-    }
-
-    .teacher-card h3 {
-      font-size: 1.2rem;
-      color: var(--primary);
-      text-align: center;
-      padding: 1rem;
-    }
-
-    .teacher-card p {
-      font-size: 1rem;
-      color: #666;
-      text-align: center;
-      padding: 0 1rem 1rem;
-    }
-
-    /* Modal for Teacher Details */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      max-width: 500px;
-      width: 90%;
-      position: relative;
-    }
-
-    .modal-content img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin: 0 auto 1rem;
-      display: block;
-    }
-
-    .modal-content h3 {
-      font-size: 1.5rem;
-      color: var(--primary);
-      text-align: center;
-    }
-
-    .modal-content p {
-      font-size: 1rem;
-      color: #666;
-      text-align: center;
-      margin: 0.5rem 0;
-    }
-
-    .close-modal {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--primary);
-    }
-
-    /* Footer */
-    footer {
-      background: var(--primary);
-      color: white;
-      padding: 2rem 5%;
-      text-align: center;
-    }
-
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .social-icons a {
-      color: white;
-      font-size: 1.5rem;
-      margin: 0 0.5rem;
-      transition: color 0.3s ease;
-    }
-
-    .social-icons a:hover {
-      color: var(--secondary);
-    }
-
-    .footer-links a {
-      color: white;
-      text-decoration: none;
-      margin: 0 1rem;
-      font-weight: 500;
-    }
-
-    .footer-links a:hover {
-      color: var(--secondary);
-    }
-
-    .footer-links .btn {
-      background: var(--secondary);
-      color: var(--primary);
-      padding: 10px 20px;
-      border-radius: 5px;
-      text-decoration: none;
+    
+    .logo-text span {
+      color: var(--accent-color);
       font-weight: 600;
     }
-
-    .footer-links .btn:hover {
-      background: #e6b800;
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
     }
-
-    /* Light/Dark Mode Toggle */
-    .theme-toggle {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
+    
+    .nav-links li {
+      margin-left: 30px;
+      position: relative;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: var(--secondary-color);
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+    
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary-color);
+    }
+    
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--primary-color);
+    }
+    
+    /* Page Header */
+    .page-header {
+      margin-top: 80px;
+      padding: 80px 0;
+      background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7)), 
+                  url('https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80') no-repeat center center/cover;
+      color: var(--light-color);
+      text-align: center;
+    }
+    
+    .page-header h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: fadeInUp 1s ease;
+    }
+    
+    .page-header p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease 0.3s forwards;
+      opacity: 0;
+    }
+    
+    /* Faculty Section */
+    .faculty {
+      padding: 80px 0;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    
+    .section-title h2 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      width: 80px;
+      height: 3px;
+      background-color: var(--accent-color);
+      transform: translateX(-50%);
+    }
+    
+    .faculty-categories {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .category-btn {
+      padding: 8px 20px;
+      background-color: var(--light-gray);
+      border: none;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .category-btn.active,
+    .category-btn:hover {
+      background-color: var(--primary-color);
+      color: var(--light-color);
+    }
+    
+    .faculty-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+    
+    .faculty-card {
+      background-color: var(--light-color);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .faculty-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .admin-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: var(--primary-color);
+      color: var(--light-color);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .senior-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #ff9f43;
+      color: var(--light-color);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .deputy-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #2ecc71;
+      color: var(--light-color);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .faculty-image {
+      height: 250px;
+      overflow: hidden;
+    }
+    
+    .faculty-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .faculty-card:hover .faculty-image img {
+      transform: scale(1.1);
+    }
+    
+    .faculty-info {
+      padding: 20px;
+    }
+    
+    .faculty-info h3 {
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+      color: var(--primary-color);
+    }
+    
+    .faculty-position {
+      font-size: 0.9rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .faculty-subject {
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .faculty-subject i {
+      margin-right: 5px;
+      color: var(--primary-color);
+    }
+    
+    .faculty-contact {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .faculty-contact a {
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
+      width: 35px;
+      height: 35px;
+      background-color: var(--light-gray);
+      border-radius: 50%;
+      color: var(--primary-color);
+      transition: all 0.3s ease;
     }
-
-    .theme-toggle i {
-      font-size: 1.5rem;
+    
+    .faculty-contact a:hover {
+      background-color: var(--primary-color);
+      color: var(--light-color);
+      transform: translateY(-3px);
     }
-
-    /* Responsive Design */
+    
+    /* Footer */
+    footer {
+      background-color: var(--dark-color);
+      color: var(--light-color);
+      padding: 60px 0 30px;
+    }
+    
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+    
+    .footer-col h3 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 40px;
+      height: 2px;
+      background-color: var(--accent-color);
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: var(--light-color);
+      transition: all 0.3s ease;
+    }
+    
+    .social-links a:hover {
+      background-color: var(--accent-color);
+      transform: translateY(-3px);
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-links a {
+      color: var(--light-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent-color);
+    }
+    
+    .quick-contact p {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+    
+    .quick-contact i {
+      margin-right: 10px;
+      color: var(--accent-color);
+    }
+    
+    .copyright {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+      .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
     @media (max-width: 768px) {
-      .menu-btn {
+      .nav-links {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background-color: var(--light-color);
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 40px;
+        transition: left 0.3s ease;
+      }
+      
+      .nav-links.show {
+        left: 0;
+      }
+      
+      .nav-links li {
+        margin: 0 0 30px 0;
+      }
+      
+      .mobile-menu-btn {
         display: block;
       }
-
-      nav {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 70px;
-        right: 0;
-        background: var(--primary);
-        width: 100%;
-        padding: 1rem;
+      
+      .page-header h1 {
+        font-size: 2.5rem;
       }
-
-      nav.active {
-        display: flex;
+    }
+    
+    @media (max-width: 576px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      
+      .faculty-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -308,258 +492,236 @@
 <body>
   <!-- Header -->
   <header>
-    <div class="logo">
-      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo" />
-      St. Mary's High
+    <div class="container header-container">
+      <a href="index.html" class="logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/4476/4476871.png" alt="St. Mary's Logo" class="logo-img">
+        <span class="logo-text">St. Mary's <span>High School</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faculty.html" class="active">Faculty</a></li>
+        <li><a href="academics.html">Academics</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
-    <button class="menu-btn">
-      <i class="fas fa-bars"></i>
-    </button>
-    <nav>
-      <a href="/"><i class="fas fa-home"></i> Home</a>
-      <a href="/about"><i class="fas fa-info-circle"></i> About</a>
-      <a href="/gallery"><i class="fas fa-images"></i> Gallery</a>
-      <a href="/contact"><i class="fas fa-envelope"></i> Contact</a>
-      <a href="/staff" class="btn btn-primary"><i class="fas fa-chalkboard-teacher"></i> Staff</a>
-    </nav>
   </header>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Teachers Section -->
-    <section id="teachers">
-      <h2>Our Teachers</h2>
-      <div class="teachers-grid">
-        <!-- Teacher Cards -->
-        <div class="teacher-card" data-teacher="1">
-          <img src="https://i.postimg.cc/VNWk6rfP/IMG-20250227-WA0003.jpg" alt="Teacher 1" />
-          <h3>Mr. Tapera</h3>
-          <p>Mathematics</p>
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Our Dedicated Faculty</h1>
+      <p>Meet the exceptional teachers and administrators who make St. Mary's High School a center of excellence.</p>
+    </div>
+  </section>
+
+  <!-- Faculty Section -->
+  <section class="faculty">
+    <div class="container">
+      <div class="section-title">
+        <h2>Faculty & Administration</h2>
+      </div>
+      
+      <div class="faculty-categories">
+        <button class="category-btn active" data-category="all">All Faculty</button>
+        <button class="category-btn" data-category="admin">Administration</button>
+        <button class="category-btn" data-category="senior">Senior Teachers</button>
+        <button class="category-btn" data-category="deputy">Deputy Heads</button>
+        <button class="category-btn" data-category="teachers">Teaching Staff</button>
+      </div>
+      
+      <div class="faculty-grid">
+        <!-- Principal -->
+        <div class="faculty-card" data-category="admin">
+          <div class="admin-badge">Principal</div>
+          <div class="faculty-image">
+            <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Dr. Sarah Johnson">
+          </div>
+          <div class="faculty-info">
+            <h3>Dr. Sarah Johnson</h3>
+            <div class="faculty-position">School Principal</div>
+            <div class="faculty-subject">
+              <i class="fas fa-book-open"></i> Educational Leadership
+            </div>
+            <div class="faculty-contact">
+              <a href="mailto:s.johnson@stmaryshs.edu"><i class="fas fa-envelope"></i></a>
+              <a href="#"><i class="fas fa-phone"></i></a>
+            </div>
+          </div>
         </div>
-        <div class="teacher-card" data-teacher="2">
-          <img src="https://i.ibb.co/d0ZhHs42/subzero-bot.jpg" alt="Teacher 2" />
-          <h3>Mrs. Masawi</h3>
-          <p>English</p>
+        
+        <!-- Vice Principal -->
+        <div class="faculty-card" data-category="admin">
+          <div class="admin-badge">Vice Principal</div>
+          <div class="faculty-image">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Mr. David Thompson">
+          </div>
+          <div class="faculty-info">
+            <h3>Mr. David Thompson</h3>
+            <div class="faculty-position">Vice Principal</div>
+            <div class="faculty-subject">
+              <i class="fas fa-book-open"></i> Administration
+            </div>
+            <div class="faculty-contact">
+              <a href="mailto:d.thompson@stmaryshs.edu"><i class="fas fa-envelope"></i></a>
+              <a href="#"><i class="fas fa-phone"></i></a>
+            </div>
+          </div>
         </div>
-        <div class="teacher-card" data-teacher="3">
-          <img src="https://i.ibb.co/spyym59W/subzero-bot.jpg" alt="Teacher 3" />
-          <h3>Mrs Maponga</h3>
-          <p>Shona</p>
+        
+        <!-- Senior Teacher - Head of Science -->
+        <div class="faculty-card" data-category="senior">
+          <div class="senior-badge">Head of Science</div>
+          <div class="faculty-image">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Mrs. Elizabeth Parker">
+          </div>
+          <div class="faculty-info">
+            <h3>Mrs. Elizabeth Parker</h3>
+            <div class="faculty-position">Senior Teacher</div>
+            <div class="faculty-subject">
+              <i class="fas fa-flask"></i> Chemistry & Physics
+            </div>
+            <div class="faculty-contact">
+              <a href="mailto:e.parker@stmaryshs.edu"><i class="fas fa-envelope"></i></a>
+              <a href="#"><i class="fas fa-phone"></i></a>
+            </div>
+          </div>
         </div>
-        <div class="teacher-card" data-teacher="4">
-          <img src="https://i.ibb.co/d0ZhHs42/subzero-bot.jpg" alt="Teacher 4" />
-          <h3>Mrs. Nyakurerwa</h3>
-          <p>Heritage</p>
+        
+        <!-- Deputy Head - Mathematics -->
+        <div class="faculty-card" data-category="deputy">
+          <div class="deputy-badge">Deputy Head</div>
+          <div class="faculty-image">
+            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Mr. Robert Chen">
+          </div>
+          <div class="faculty-info">
+            <h3>Mr. Robert Chen</h3>
+            <div class="faculty-position">Deputy Head - Academics</div>
+            <div class="faculty-subject">
+              <i class="fas fa-square-root-alt"></i> Mathematics
+            </div>
+            <div class="faculty-contact">
+              <a href="mailto:r.chen@stmaryshs.edu"><i class="fas fa-envelope"></i></a>
+              <a href="#"><i class="fas fa-phone"></i></a>
+            </div>
+          </div>
         </div>
-        <div class="teacher-card" data-teacher="5">
-          <img src="https://i.ibb.co/spyym59W/subzero-bot.jpg" alt="Teacher 5" />
-          <h3>Mrs Mutema</h3>
-          <p>Combined Science</p>
+        
+        <!-- English Teacher -->
+        <div class="faculty-card" data-category="teachers">
+          <div class="faculty-image">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80" alt="Ms. Angela Martin">
+          </div>
+          <div class="faculty-info">
+            <h3>Ms. Angela Martin</h3>
+            <div class="faculty-position">English Department</div>
+            <div class="faculty-subject">
+              <i class="fas fa-book"></i> Literature & Composition
+            </div>
+            <div class="faculty-contact">
+              <a href="mailto:a.martin@stmaryshs.edu"><i class="fas fa-envelope"></i></a>
+              <a href="#"><i class="fas fa-phone"></i></a>
+            </div>
+          </div>
         </div>
-        <div class="teacher-card" data-teacher="6">
-          <img src="https://i.ibb.co/spyym59W/subzero-bot.jpg" alt="Teacher 6" />
-          <h3>Mrs. Doro</h3>
-          <p>Geography</p>
-        </div>
-        <div class="teacher-card" data-teacher="7">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 7" />
-          <h3>Mrs Nyakurerw</h3>
-          <p>History</p>
-        </div>
-        <div class="teacher-card" data-teacher="8">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 8" />
-          <h3>Mrs. Kanengoni </h3>
-          <p>Accounts</p>
-        </div>
-        <div class="teacher-card" data-teacher="9">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 9" />
-          <h3>Mr. Enesi</h3>
-          <p>Biology</p>
-        </div>
-        <div class="teacher-card" data-teacher="10">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 10" />
-          <h3>Mr Sibanda</h3>
-          <p>Physics</p>
-        </div>
-        <div class="teacher-card" data-teacher="11">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 11" />
-          <h3>Mrs Chikuni</h3>
-          <p>Chemistry</p>
-        </div>
-        <div class="teacher-card" data-teacher="12">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 12" />
-          <h3>Mrs. Ava Rodriguez</h3>
-          <p>Sociology</p>
-        </div>
-        <div class="teacher-card" data-teacher="13">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 13" />
-          <h3>Mr. Munyanyi</h3>
-          <p>Literature in English</p>
-        </div>
-        <div class="teacher-card" data-teacher="14">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 14" />
-          <h3>Mrs. Maponga</h3>
-          <p>Literature in Shona</p>
-        </div>
-        <div class="teacher-card" data-teacher="15">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 15" />
-          <h3>Mr. Mukurunge</h3>
-          <p>Computer Science</p>
-        </div>
-        <div class="teacher-card" data-teacher="16">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 16" />
-          <h3>Mrs. Tachiona</h3>
-          <p>Business Studies</p>
-        </div>
-        <div class="teacher-card" data-teacher="17">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 17" />
-          <h3>Mr. Benjamin Torres</h3>
-          <p>Agriculture</p>
-        </div>
-        <div class="teacher-card" data-teacher="18">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 18" />
-          <h3>Mr Kanhanda</h3>
-          <p>Metal Work</p>
-        </div>
-        <div class="teacher-card" data-teacher="19">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 19" />
-          <h3>Mr. Elijah Rivera</h3>
-          <p>Wood Work</p>
-        </div>
-        <div class="teacher-card" data-teacher="20">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 20" />
-          <h3>Mrs. Ginger</h3>
-          <p>Fashion and Fabrics</p>
-        </div>
-        <div class="teacher-card" data-teacher="21">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 21" />
-          <h3>Mr. Mason Carter</h3>
-          <p>Food Science</p>
-        </div>
-        <div class="teacher-card" data-teacher="22">
-          <img src="https://i.ibb.co/yndYxr3Z/mrfrankofc.jpg" alt="Teacher 22" />
-          <h3>Mrs. Evelyn Mitchell</h3>
-          <p>Economics</p>
+        
+        <!-- History Teacher -->
+        <div class="faculty-card" data-category="teachers">
+          <div class="faculty-image">
+            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Mr. James Wilson">
+          </div>
+          <div class="faculty-info">
+            <h3>Mr. James Wilson</h3>
+            <div class="faculty-position">Social Sciences</div>
+            <div class="faculty-subject">
+              <i class="fas fa-landmark"></i> World History
+            </div>
+            <div class="faculty-contact">
+              <a href="mailto:j.wilson@stmaryshs.edu"><i class="fas fa-envelope"></i></a>
+              <a href="#"><i class="fas fa-phone"></i></a>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
-  </main>
-
-  <!-- Teacher Details Modal -->
-  <div class="modal" id="teacherModal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <img src="https://i.postimg.cc/VNWk6rfP/IMG-20250227-WA0003.jpg" alt="Teacher Image" />
-      <h3 id="modalName">Mr. John Doe</h3>
-      <p id="modalSubject">Mathematics</p>
-      <p id="modalBio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel justo nec nisi tincidunt tincidunt.</p>
     </div>
-  </div>
+  </section>
 
   <!-- Footer -->
   <footer>
-    <div class="footer-content">
-      <div class="social-icons">
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-tiktok"></i></a>
+    <div class="container">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>St. Mary's High School</h3>
+          <p>Providing excellence in education since 1952. Our mission is to develop the whole person - mind, body, and spirit.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="faculty.html">Faculty</a></li>
+            <li><a href="academics.html">Academics</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-col">
+          <h3>Contact Us</h3>
+          <div class="quick-contact">
+            <p><i class="fas fa-map-marker-alt"></i> 123 Education Way, Academic City, AC 12345</p>
+            <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+            <p><i class="fas fa-envelope"></i> info@stmaryshs.edu</p>
+          </div>
+        </div>
       </div>
-      <div class="footer-links">
-        <a href="/" class="btn"><i class="fas fa-home"></i> Go Home</a>
+      
+      <div class="copyright">
+        <p>&copy; 2023 St. Mary's High School. All rights reserved.</p>
       </div>
     </div>
-    <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
   </footer>
 
-  <!-- Light/Dark Mode Toggle -->
-  <div class="theme-toggle" id="themeToggle">
-    <i class="fas fa-moon"></i>
-  </div>
-
   <script>
-    // Teacher Modal Functionality
-    const teacherCards = document.querySelectorAll('.teacher-card');
-    const modal = document.getElementById('teacherModal');
-    const closeModal = document.querySelector('.close-modal');
-    const modalName = document.getElementById('modalName');
-    const modalSubject = document.getElementById('modalSubject');
-    const modalBio = document.getElementById('modalBio');
+    // Mobile menu toggle
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+    });
 
-    teacherCards.forEach(card => {
-      card.addEventListener('click', () => {
-        // Fetch teacher data (you can replace this with actual data)
-        const teacherData = {
-          name: card.querySelector('h3').textContent,
-          subject: card.querySelector('p').textContent,
-          bio: "We lead and they Follow, St Marys High"
-        };
-        modalName.textContent = teacherData.name;
-        modalSubject.textContent = teacherData.subject;
-        modalBio.textContent = teacherData.bio;
-        modal.style.display = 'flex';
+    // Faculty category filtering
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const facultyCards = document.querySelectorAll('.faculty-card');
+    
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        categoryBtns.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        btn.classList.add('active');
+        
+        const category = btn.dataset.category;
+        
+        // Filter faculty cards
+        facultyCards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
       });
-    });
-
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
-
-    // Light/Dark Mode Toggle
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      const isDarkMode = body.classList.contains('dark-mode');
-      themeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    });
-
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      body.classList.add('dark-mode');
-      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    }
-
-    // Hamburger Menu Toggle
-    const menuBtn = document.querySelector('.menu-btn');
-    const nav = document.querySelector('nav');
-
-    menuBtn.addEventListener('click', () => {
-      nav.classList.toggle('active');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
-        nav.classList.remove('active');
-      }
-    });
-
-    // Scroll Animation: Reveal teacher cards when they come into view
-    const observerOptions = {
-      threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
-
-    teacherCards.forEach(card => {
-      observer.observe(card);
     });
   </script>
 </body>
