@@ -2136,51 +2136,55 @@
     }
   }
 
-  // Save profile changes
-  document.getElementById('saveChangesBtn').addEventListener('click', async () => {
-    const saveBtn = document.getElementById('saveChangesBtn');
-    const user = auth.currentUser;
+// Save profile changes
+document.getElementById('saveChangesBtn').addEventListener('click', async () => {
+  const saveBtn = document.getElementById('saveChangesBtn');
+  const user = auth.currentUser;
+  
+  if (!user) return;
+  
+  try {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin btn-icon"></i> Saving...';
     
-    if (!user) return;
+    const userData = {
+      firstname: document.getElementById('name').value.trim(),
+      surname: document.getElementById('surname').value.trim(),
+      email: user.email,
+      phone: document.getElementById('phone').value.trim(),
+      dob: document.getElementById('dob').value,
+      gender: document.getElementById('gender').value,
+      address: document.getElementById('address').value.trim(),
+      parentName: document.getElementById('parent-name').value.trim(),  // Fixed ID here
+      parentPhone: document.getElementById('parent-phone').value.trim(),
+      healthIssues: document.getElementById('healthIssues').value.trim(),
+      additionalInfo: document.getElementById('additionalInfo').value.trim(),
+      form: document.getElementById('form').value,
+      stream: document.getElementById('stream').value,
+      lastUpdated: new Date().toISOString()
+    };
     
-    try {
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin btn-icon"></i> Saving...';
-      
-      const userData = {
-        firstname: document.getElementById('name').value.trim(),
-        surname: document.getElementById('surname').value.trim(),
-        email: user.email,
-        phone: document.getElementById('phone').value.trim(),
-        dob: document.getElementById('dob').value,
-        gender: document.getElementById('gender').value,
-        address: document.getElementById('address').value.trim(),
-        parentName: document.getElementById('parentName').value.trim(),
-                    parentPhone: document.getElementById('parent-phone').value.trim(),
-            healthIssues: document.getElementById('healthIssues').value.trim(),
-            additionalInfo: document.getElementById('additionalInfo').value.trim(),
-            form: document.getElementById('form').value,
-            stream: document.getElementById('stream').value,
-            lastUpdated: new Date().toISOString()
-          };
-          
-          await setDoc(doc(db, 'students', user.email), userData, { merge: true });
-          showMessage('Profile updated successfully!');
-          
-          // Update welcome message and grade display
-          document.getElementById('welcomeMessage').textContent = `Welcome, ${capitalize(userData.firstname)}`;
-          if (userData.form && userData.stream) {
-            document.getElementById('currentGrade').textContent = `${userData.form} ${userData.stream}`;
-          }
-        } catch (error) {
-          console.error('Error saving profile:', error);
-          showMessage('Error saving profile', 'error');
-        } finally {
-          saveBtn.disabled = false;
-          saveBtn.innerHTML = '<i class="fas fa-save btn-icon"></i> Save Changes';
-        }
-      });
-
+    // Validate required fields
+    if (!userData.firstname || !userData.surname) {
+      throw new Error('First name and surname are required');
+    }
+    
+    await setDoc(doc(db, 'students', user.email), userData, { merge: true });
+    showMessage('Profile updated successfully!');
+    
+    // Update welcome message and grade display
+    document.getElementById('welcomeMessage').textContent = `Welcome, ${capitalize(userData.firstname)}`;
+    if (userData.form && userData.stream) {
+      document.getElementById('currentGrade').textContent = `${userData.form} ${userData.stream}`;
+    }
+  } catch (error) {
+    console.error('Error saving profile:', error);
+    showMessage(error.message || 'Error saving profile', 'error');
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = '<i class="fas fa-save btn-icon"></i> Save Changes';
+  }
+});
       // Reset password
       document.getElementById('changePasswordBtn').addEventListener('click', async () => {
         const user = auth.currentUser;
