@@ -5,6 +5,10 @@
       "dest": "/pages/academics.html"
     },
     {
+      "src": "/news",
+      "dest": "/pages/news.html"
+    },
+    {
       "src": "/schoolview",
       "dest": "/pages/environment.html"
     },
