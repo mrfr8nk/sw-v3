@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,6 +128,7 @@
         .header-actions {
             display: flex;
             gap: var(--space-md);
+            align-items: center;
         }
 
         .header-btn {
@@ -138,11 +138,42 @@
             font-size: var(--text-lg);
             cursor: pointer;
             transition: transform var(--transition-normal);
+            padding: var(--space-sm);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .header-btn:hover {
             transform: scale(1.1);
             color: var(--secondary);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Theme toggle in header */
+        .theme-toggle-header {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: var(--text-lg);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            padding: var(--space-sm);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle-header:hover {
+            transform: scale(1.1);
+            color: var(--secondary);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         /* Chat Area */
@@ -236,10 +267,12 @@
         /* Input Area */
         .input-container {
             display: flex;
+            align-items: center;
             padding: var(--space-md);
             background-color: var(--light);
             border-top: 1px solid rgba(0, 0, 0, 0.1);
             position: relative;
+            gap: var(--space-md);
         }
 
         .message-input {
@@ -248,10 +281,11 @@
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: var(--radius-full);
             font-family: 'Poppins', sans-serif;
-            font-size: var(--text-base);
+            font-size: 1rem;
             outline: none;
             transition: all var(--transition-normal);
             background-color: var(--light-gray);
+            height: 48px;
         }
 
         .message-input:focus {
@@ -266,12 +300,12 @@
             background-color: var(--primary);
             color: var(--light);
             border: none;
-            margin-left: var(--space-md);
             cursor: pointer;
             transition: all var(--transition-normal);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .send-btn:hover {
@@ -282,29 +316,7 @@
         .send-btn:disabled {
             background-color: var(--text-light);
             cursor: not-allowed;
-        }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            position: fixed;
-            bottom: var(--space-xl);
-            right: var(--space-xl);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            z-index: 999;
-            transition: all var(--transition-normal);
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
+            transform: none;
         }
 
         /* Dropdown Menu */
@@ -393,20 +405,32 @@
             }
             
             .chat-title {
-                font-size: var(--text-base);
+                font-size: 1rem;
             }
             
             .message {
                 max-width: 90%;
                 padding: var(--space-sm) var(--space-md);
             }
-            
-            .theme-toggle {
-                bottom: var(--space-lg);
-                right: var(--space-lg);
-                width: 40px;
-                height: 40px;
-                font-size: var(--text-base);
+
+            .header-btn, 
+            .theme-toggle-header {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .input-container {
+                padding: var(--space-sm);
+            }
+
+            .send-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .message-input {
+                height: 44px;
             }
         }
 
@@ -450,7 +474,7 @@
 
         .welcome-message h2 {
             margin-bottom: var(--space-md);
-            font-size: var(--text-2xl);
+            font-size: 1.5rem;
         }
 
         .welcome-message p {
@@ -458,53 +482,10 @@
         }
 
         .welcome-icon {
-            font-size: var(--text-3xl);
+            font-size: 2rem;
             margin-bottom: var(--space-md);
             color: var(--secondary);
             animation: pulse 2s infinite;
-        }
-
-        /* Bottom Action Buttons */
-        .bottom-actions {
-            position: fixed;
-            bottom: var(--space-md);
-            right: var(--space-md);
-            display: flex;
-            gap: var(--space-md);
-            z-index: 998;
-        }
-
-        .action-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: var(--light);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            transition: all var(--transition-normal);
-        }
-
-        .action-btn:hover {
-            transform: scale(1.1);
-            background-color: var(--primary-dark);
-        }
-
-        @media (max-width: 768px) {
-            .bottom-actions {
-                bottom: var(--space-sm);
-                right: var(--space-sm);
-            }
-            
-            .action-btn {
-                width: 44px;
-                height: 44px;
-                font-size: var(--text-base);
-            }
         }
     </style>
 </head>
@@ -517,7 +498,12 @@
                 <h1 class="chat-title">St. Mary's AI Assistant</h1>
             </div>
             <div class="header-actions">
-                <button class="header-btn" id="menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                <button class="theme-toggle-header" id="theme-toggle-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="header-btn" id="menu-btn">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
             </div>
             
             <!-- Dropdown Menu -->
@@ -558,13 +544,6 @@
         </div>
     </div>
     
-    <!-- Bottom Action Buttons -->
-    <div class="bottom-actions">
-        <button class="action-btn" id="theme-toggle-btn">
-            <i class="fas fa-moon"></i>
-        </button>
-    </div>
-    
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -579,20 +558,11 @@
         const aboutBtn = document.getElementById('about-btn');
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         
-        // Chat history
-        let chatHistory = JSON.parse(localStorage.getItem('stMarysChatHistory'))
-        || [];
+        // Chat history - using in-memory storage for Claude environment
+        let chatHistory = [];
 
         // Initialize the chat
         function initChat() {
-            // Load chat history if available
-            if (chatHistory.length > 0) {
-                chatHistory.forEach(msg => {
-                    addMessage(msg.role, msg.content, false);
-                });
-                scrollToBottom();
-            }
-            
             // Set up event listeners
             messageInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && messageInput.value.trim() !== '') {
@@ -643,7 +613,6 @@
             
             if (saveToHistory) {
                 chatHistory.push({ role, content });
-                localStorage.setItem('stMarysChatHistory', JSON.stringify(chatHistory));
             }
             
             scrollToBottom();
@@ -752,7 +721,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     chatHistory = [];
-                    localStorage.removeItem('stMarysChatHistory');
                     // Clear the chat area except welcome message
                     const messages = document.querySelectorAll('.message');
                     messages.forEach(msg => msg.remove());
@@ -790,18 +758,10 @@
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
-            localStorage.setItem('stMarysDarkMode', isDarkMode ? 'enabled' : 'disabled');
             
             // Update theme icon
             const themeIcon = themeToggleBtn.querySelector('i');
             themeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
-        }
-
-        // Check for saved theme preference
-        if (localStorage.getItem('stMarysDarkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            const themeIcon = themeToggleBtn.querySelector('i');
-            themeIcon.className = 'fas fa-sun';
         }
 
         // Initialize the chat when DOM is loaded
@@ -809,4 +769,3 @@
     </script>
 </body>
 </html>
-
