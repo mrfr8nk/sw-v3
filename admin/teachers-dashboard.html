@@ -1219,12 +1219,17 @@
                 <h3><i class="fas fa-chalkboard-teacher"></i> Total Teachers</h3>
                 <p>${totalTeachers}</p>
               </div>
-              <div class="stat-card">
+              
+              
+            </div>
+          `;
+          /*
+ <div class="stat-card">
                 <h3><i class="fas fa-calendar-check"></i> Attendance Records</h3>
                 <p>${totalAttendanceRecords}</p>
               </div>
-            </div>
-          `;
+              */
+          
           document.getElementById("teacherStats").innerHTML = statsHTML;
         } catch (error) {
           console.error("Error loading teacher stats:", error);
