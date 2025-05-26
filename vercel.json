@@ -4,6 +4,10 @@
       "src": "/academics",
       "dest": "/pages/academics.html"
     },
+{
+      "src": "/admissions",
+      "dest": "/pages/admissions.html"
+    },
     {
       "src": "/news",
       "dest": "/pages/news.html"
