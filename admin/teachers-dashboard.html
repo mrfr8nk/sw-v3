@@ -1187,61 +1187,58 @@
 
       /* --------------------- Enhanced Teacher Dashboard Functions --------------------- */
       async function loadTeacherStats() {
-        try {
-          const studentsSnapshot = await getDocs(collection(db, "students"));
-          const updatesSnapshot = await getDocs(collection(db, "updates"));
-          const usersSnapshot = await getDocs(collection(db, "users"));
-          const attendanceSnapshot = await getDocs(collection(db, "attendance"));
-          
-          let totalTeachers = 0;
-          usersSnapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            if (data.role && data.role.toLowerCase() === "teacher") {
-              totalTeachers++;
-            }
-          });
+  try {
+    // Get all necessary data in parallel for better performance
+    const [studentsSnapshot, updatesSnapshot, usersSnapshot] = await Promise.all([
+      getDocs(collection(db, "students")),
+      getDocs(collection(db, "updates")),
+      getDocs(collection(db, "users"))
+    ]);
 
-          const totalStudents = studentsSnapshot.size;
-          const totalUpdates = updatesSnapshot.size;
-          const totalAttendanceRecords = attendanceSnapshot.size;
-
-          const statsHTML = `
-            <div class="stats-grid">
-              <div class="stat-card">
-                <h3><i class="fas fa-user-graduate"></i> Total Students</h3>
-                <p>${totalStudents}</p>
-              </div>
-              <div class="stat-card">
-                <h3><i class="fas fa-bullhorn"></i> Total Notices</h3>
-                <p>${totalUpdates}</p>
-              </div>
-              <div class="stat-card">
-                <h3><i class="fas fa-chalkboard-teacher"></i> Total Teachers</h3>
-                <p>${totalTeachers}</p>
-              </div>
-              
-              
-            </div>
-          `;
-          /*
- <div class="stat-card">
-                <h3><i class="fas fa-calendar-check"></i> Attendance Records</h3>
-                <p>${totalAttendanceRecords}</p>
-              </div>
-              */
-          
-          document.getElementById("teacherStats").innerHTML = statsHTML;
-        } catch (error) {
-          console.error("Error loading teacher stats:", error);
-          document.getElementById("teacherStats").innerHTML = `
-            <div class="notification error">
-              <i class="fas fa-exclamation-circle"></i> Error loading statistics
-            </div>
-          `;
-        }
+    // Count teachers (users with role 'teacher' or 'admin')
+    let totalTeachers = 0;
+    usersSnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      if (data.role && (data.role.toLowerCase() === 'teacher' || data.role.toLowerCase() === 'admin')) {
+        totalTeachers++;
       }
+    });
 
-      /* --------------------- Enhanced Notice Management --------------------- */
+    const totalStudents = studentsSnapshot.size;
+    const totalNotices = updatesSnapshot.size;
+
+    // Create the stats HTML
+    const statsHTML = `
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3><i class="fas fa-chalkboard-teacher"></i> Total Teachers</h3>
+          <p>${totalTeachers}</p>
+        </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-user-graduate"></i> Total Students</h3>
+          <p>${totalStudents}</p>
+        </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-bullhorn"></i> Total Notices</h3>
+          <p>${totalNotices}</p>
+        </div>
+      </div>
+    `;
+
+    // Insert into the page
+    document.getElementById("teacherStats").innerHTML = statsHTML;
+
+  } catch (error) {
+    console.error("Error loading teacher stats:", error);
+    document.getElementById("teacherStats").innerHTML = `
+      <div class="notification error">
+        <i class="fas fa-exclamation-circle"></i> Error loading statistics: ${error.message}
+      </div>
+    `;
+  }
+}
+
+  /* --------------------- Enhanced Notice Management --------------------- */
       async function loadUpdates() {
         try {
           const q = query(collection(db, "updates"), orderBy("timestamp", "desc"));
@@ -1776,49 +1773,155 @@
       });
 
       // Profile update
-      document.getElementById("settingsForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const user = auth.currentUser;
-        if (!user) return;
-        
-        const profilePicBase64 =
-          document.getElementById("profilePicPreview").dataset.base64 ||
-          document.getElementById("profilePicPreview").src;
-        
-        const firstname = document.getElementById("firstName").value;
-        const surname = document.getElementById("surname").value;
-        const email = document.getElementById("emailInfo").value;
-        const newPassword = document.getElementById("newPassword").value;
-        
-        const updatedProfile = {
-          profilePic: profilePicBase64,
-          firstname,
-          surname,
-          email,
-          lastUpdated: new Date()
-        };
-        
-        try {
-          // Update profile in Firestore
-          await setDoc(doc(db, "users", user.uid), updatedProfile, { merge: true });
-          
-          // Update password if provided
-          if (newPassword.trim() !== "") {
-            if (newPassword.length < 8) {
-              showNotification("Password must be at least 8 characters", "error");
-              return;
-            }
-            await updatePassword(user, newPassword);
-          }
-          
-          showNotification("Profile updated successfully", "success");
-        } catch (error) {
-          console.error("Error updating profile:", error);
-          showNotification("Error updating profile", "error");
-        }
-      });
+      // Add this CSS to your style section
+const loadingStyle = document.createElement('style');
+loadingStyle.textContent = `
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .loading-spinner {
+    border: 5px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top: 5px solid var(--secondary);
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .success-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #38a169;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+  }
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+`;
+document.head.appendChild(loadingStyle);
 
-      /* --------------------- Initialize Grades Form --------------------- */
+// Enhanced save profile function
+document.getElementById("settingsForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  // Show loading overlay
+  const loadingOverlay = document.createElement('div');
+  loadingOverlay.className = 'loading-overlay';
+  loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+  document.body.appendChild(loadingOverlay);
+  
+  const user = auth.currentUser;
+  if (!user) {
+    loadingOverlay.remove();
+    showError("User not authenticated. Please login again.");
+    return;
+  }
+
+  try {
+    // Get form values
+    const firstname = document.getElementById("firstName").value.trim();
+    const surname = document.getElementById("surname").value.trim();
+    const email = document.getElementById("emailInfo").value.trim();
+    const newPassword = document.getElementById("newPassword").value.trim();
+    
+    // Validate required fields
+    if (!firstname || !surname || !email) {
+      loadingOverlay.remove();
+      showError("Please fill all required fields");
+      return;
+    }
+
+    // Get profile picture (use existing if no new one selected)
+    const profilePicPreview = document.getElementById("profilePicPreview");
+    const profilePicBase64 = profilePicPreview.dataset.base64 || profilePicPreview.src;
+
+    // Prepare update data
+    const updatedProfile = {
+      profilePic: profilePicBase64,
+      firstname,
+      surname,
+      email,
+      lastUpdated: new Date()
+    };
+
+    // Update Firestore document
+    await setDoc(doc(db, "users", user.uid), updatedProfile, { merge: true });
+    
+    // Update password if provided and valid
+    if (newPassword) {
+      if (newPassword.length < 8) {
+        loadingOverlay.remove();
+        showError("Password must be at least 8 characters");
+        return;
+      }
+      await updatePassword(user, newPassword);
+    }
+    
+    // Remove loading overlay
+    loadingOverlay.remove();
+    
+    // Show success message
+    const successMsg = document.createElement('div');
+    successMsg.className = 'success-message';
+    successMsg.innerHTML = `
+      <i class="fas fa-check-circle"></i>
+      <span>Profile updated successfully!</span>
+    `;
+    document.body.appendChild(successMsg);
+    
+    // Remove success message after 3 seconds
+    setTimeout(() => {
+      successMsg.style.opacity = '0';
+      setTimeout(() => successMsg.remove(), 300);
+    }, 3000);
+    
+    // Update teacher name in notice form
+    document.getElementById("teacherName").value = `${firstname} ${surname}`.trim();
+    
+  } catch (error) {
+    loadingOverlay.remove();
+    console.error("Error updating profile:", error);
+    let errorMessage = "Error updating profile";
+    
+    // Handle specific Firebase errors
+    if (error.code) {
+      switch(error.code) {
+        case "auth/requires-recent-login":
+          errorMessage = "Please reauthenticate to change password";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password should be at least 8 characters";
+          break;
+        default:
+          errorMessage = error.message;
+      }
+    }
+    
+    showError(errorMessage);
+  }
+});    /* --------------------- Initialize Grades Form --------------------- */
       document.getElementById("gradeForm")?.addEventListener("submit", async (e) => {
         e.preventDefault();
         const studentEmail = document.getElementById("gradeStudent").value;
