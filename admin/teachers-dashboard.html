@@ -1713,28 +1713,75 @@
       }
 
       /* --------------------- Enhanced Auth & Initialization --------------------- */
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          window.location.href = "/teacherslogin";
-        } else {
-          const name = user.email.split("@")[0];
-          const welcomeMessage = document.getElementById("welcomeMessage");
-          welcomeMessage.innerHTML = `Welcome, <span>${name}</span>!`;
-          welcomeMessage.style.animation = "fadeIn 1s ease-in-out";
-          
-          // Load initial data
-          populateStudentDropdowns();
-          generateAttendanceRows();
-          loadTeacherStats();
-          loadTeacherProfile();
-          
-          // Show dashboard by default
-          document.querySelector("section").style.display = "block";
-          document.querySelector('.menu-links a[href="#dashboard"]').classList.add("active");
-        }
-      });
+      
 
-      /* --------------------- Enhanced Teacher Profile Settings --------------------- */
+
+// Auth state checker function
+function checkAuthState() {
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      // No user logged in, redirect to login
+      window.location.href = "/teacherslogin";
+      return;
+    }
+
+    // Get user document from Firestore
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    
+    if (!userDoc.exists()) {
+      // User document doesn't exist, log out
+      await signOut(auth);
+      window.location.href = "/teacherslogin";
+      return;
+    }
+
+    const userData = userDoc.data();
+    
+    // Check if user is a student (shouldn't have access)
+    if (userData.role && userData.role.toLowerCase() === "student") {
+      // Log out student users immediately
+      await signOut(auth);
+      
+      // Show message and redirect
+      Swal.fire({
+        icon: 'error',
+        title: 'Access Denied',
+        text: 'Students cannot access the admin portal',
+        confirmButtonColor: '#d69e2e'
+      }).then(() => {
+        window.location.href = "/studentlogin"; // Redirect to student login
+      });
+      return;
+    }
+
+    // For teachers/admins, you can optionally show their role
+    const welcomeMessage = document.getElementById("welcomeMessage");
+    if (welcomeMessage) {
+      welcomeMessage.innerHTML = `Welcome, <span>${userData.firstname || user.email.split('@')[0]}</span> (${userData.role || 'teacher'})!`;
+    }
+  });
+}
+
+// Call this when your page loads
+checkAuthState();
+
+// Add this to your logout button handler
+document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+  e.preventDefault();
+  try {
+    await signOut(auth);
+    window.location.href = "/teacherslogin";
+  } catch (error) {
+    console.error("Logout error:", error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Logout Failed',
+      text: error.message,
+      confirmButtonColor: '#d69e2e'
+    });
+  }
+});
+     /* --------------------- Enhanced Teacher Profile Settings --------------------- */
       async function loadTeacherProfile() {
         try {
           const user = auth.currentUser;
