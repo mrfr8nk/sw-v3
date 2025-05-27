@@ -1178,28 +1178,68 @@
   </section>
 
   <!-- Chat with AI Section -->
-  <section id="chat" class="section" style="display: none;">
-    <div class="container">
-      <div class="section-title">
-        <h2>Chat with AI Assistant</h2>
-        <p>Get instant help with your academic questions</p>
-      </div>
-      
-      <div class="card">
-        <div id="chatContainer" class="p-4">
-          <div class="text-center py-5">
-            <i class="fas fa-robot fa-4x text-primary mb-3"></i>
-            <h4>AI Learning Assistant</h4>
-            <p class="text-muted">Start a conversation with our School AI assistant to get help with your studies & questions about the school.</p>
-            <button class="btn btn-primary mt-3" id="startChatBtn">
-              <i class="fas fa-comments btn-icon"></i><a href = "/ai"> Start Chat </a>
-            </button>
+<!-- Chat with AI Section -->
+<section id="chat" class="section" style="display: none;">
+  <div class="container">
+    <div class="section-title">
+      <h2>Chat with AI Assistant</h2>
+      <p>Get instant help with your academic questions</p>
+    </div>
+    
+    <div class="card">
+      <div id="chatContainer" class="p-4">
+        <div class="text-center py-5">
+          <div class="ai-icon-container" style="position: relative; display: inline-block;">
+            <i class="fas fa-robot fa-4x text-primary mb-3" style="color: var(--primary);"></i>
+            <div class="ai-pulse" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 123, 255, 0.3); animation: pulse 2s infinite;"></div>
+          </div>
+          <h4 style="margin-bottom: 15px; color: var(--primary); font-weight: 600;">AI Learning Assistant</h4>
+          <p class="text-muted" style="max-width: 500px; margin: 0 auto 25px;">Start a conversation with our School AI assistant to get help with your studies & questions about the school.</p>
+          <a href="/ai" class="btn btn-primary mt-3" id="startChatBtn" 
+             style="padding: 12px 30px; font-size: 1.1rem; border-radius: 50px; 
+                    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+                    position: relative; overflow: hidden;
+                    transition: all 0.3s ease;">
+            <i class="fas fa-comments btn-icon"></i> Start Chat Now
+            <span style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; 
+                         background: linear-gradient(to right, rgba(255,255,255,0) 0%, 
+                         rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+                         transform: rotate(30deg);
+                         animation: shine 3s infinite; opacity: 0;"></span>
+          </a>
+          <div class="mt-3" style="font-size: 0.9rem; color: var(--dark-gray);">
+            <i class="fas fa-bolt" style="color: var(--secondary);"></i> Powered by advanced AI technology
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
+<style>
+  /* Add these animations to your existing style section */
+  @keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    50% { transform: scale(1.1); opacity: 0.4; }
+    100% { transform: scale(0.95); opacity: 0.7; }
+  }
+  
+  @keyframes shine {
+    0% { left: -50%; opacity: 0; }
+    20% { opacity: 0.5; }
+    100% { left: 150%; opacity: 0; }
+  }
+  
+  #startChatBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+  }
+  
+  #startChatBtn:active {
+    transform: translateY(1px);
+  }
+</style>
   <!-- Updates Section -->
   <section id="updates" class="section" style="display: none;">
     <div class="container">
