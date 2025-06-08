@@ -505,7 +505,7 @@
         margin-bottom: 10px;
       }
       
-    /* Style for action buttons in the table */
+/* Style for action buttons in the table */
 .edit-btn, .delete-btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -576,8 +576,39 @@
   transform: translateY(-2px);
 }
 
-/* Responsive adjustments for buttons */
+/* Button animations when clicked */
+button:active {
+  transform: translateY(1px) !important;
+}
+
+/* Responsive adjustments */
 @media (max-width: 767px) {
+  .main-container {
+    padding: calc(var(--header-height) + 20px) 3% 120px;
+  }
+  #guidance {
+    flex-direction: column;
+  }
+  .guidance-favicon {
+    margin-bottom: 15px;
+  }
+  #filterSection {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #filterSection select {
+    width: 100%;
+  }
+  .form-actions {
+    flex-direction: column;
+  }
+  .form-group button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  /* Mobile-specific button adjustments */
   .edit-btn, .delete-btn {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
@@ -588,12 +619,7 @@
     justify-content: center;
   }
 }
-
-/* Button animations when clicked */
-button:active {
-  transform: translateY(1px) !important;
-}
-  </style>
+ </style>
 </head>
 <body>
   <!-- Header -->
