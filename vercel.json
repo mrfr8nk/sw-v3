@@ -13,6 +13,10 @@
       "dest": "/pages/news.html"
     },
     {
+      "src": "/fees",
+      "dest": "/pages/fees.html"
+    },
+    {
       "src": "/schoolview",
       "dest": "/pages/environment.html"
     },
