@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher Dashboard - St. Mary's High School</title>
+  <title>Fees Management System - St. Mary's High School</title>
   <!-- Favicon -->
   <link rel="icon" href="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" type="image/jpeg" />
   <!-- Google Fonts -->
@@ -17,9 +17,10 @@
   <!-- jsPDF and autoTable plugin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-  <!-- DataTables CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   <style>
     :root {
       --primary: #1a365d;
@@ -132,38 +133,36 @@
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    #totalsDisplay {
-      margin-bottom: 2rem;
-    }
-    #totalsDisplay p {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-      color: white;
-    }
-    #formTotals {
+    .nav-menu {
       list-style: none;
+      margin-top: 2rem;
     }
-    #formTotals li {
+    .nav-menu li {
       margin-bottom: 1rem;
-      color: white;
     }
-    #formTotals li strong {
+    .nav-menu a {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .nav-menu a:hover, .nav-menu a.active {
+      background: rgba(214, 158, 46, 0.2);
       color: var(--secondary);
     }
-    #formTotals ul {
-      list-style: none;
-      margin-top: 5px;
-      padding-left: 15px;
-    }
-    #formTotals ul li {
-      margin-bottom: 3px;
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.8);
+    .nav-menu i {
+      font-size: 1.2rem;
+      width: 24px;
+      text-align: center;
     }
     /* Main Content */
     .main-container {
       padding: calc(var(--header-height) + 40px) 5% 120px;
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       transition: margin-left 0.4s ease;
     }
@@ -172,76 +171,116 @@
         margin-left: 280px;
       }
     }
-    /* Guidance Section */
-    #guidance {
+    .page-title {
       display: flex;
-      align-items: flex-start;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .page-title h1 {
+      font-size: 1.8rem;
+      color: var(--secondary);
+    }
+    .page-title .actions {
+      display: flex;
+      gap: 15px;
+    }
+    /* Cards */
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
       background: var(--glass);
       padding: 1.5rem;
       border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
+      box-shadow: var(--card-shadow);
     }
-    .guidance-favicon {
-      width: 40px;
-      height: 40px;
-      margin-right: 15px;
-      border-radius: 50%;
-      flex-shrink: 0;
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     }
-    #guidance p {
-      color: white;
-      font-size: 0.95rem;
-    }
-    #guidance p strong {
+    .stat-card h3 {
       color: var(--secondary);
-    }
-    /* Search and Filters */
-    #searchStudent {
-      width: 100%;
-      padding: 0.9rem 1.2rem;
-      margin-bottom: 1.5rem;
-      border: none;
-      border-radius: 8px;
-      background: var(--glass);
-      color: var(--text-color);
-      font-size: 1rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid rgba(255,255,255,0.2);
-      transition: all 0.3s ease;
-    }
-    #searchStudent:focus {
-      outline: none;
-      border-color: var(--secondary);
-      box-shadow: 0 0 0 3px rgba(214, 158, 46, 0.3);
-    }
-    #filterSection {
-      margin-bottom: 2rem;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
       display: flex;
-      gap: 15px;
       align-items: center;
-      flex-wrap: wrap;
+      gap: 10px;
     }
-    #filterSection select {
-      padding: 0.8rem 1rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.3);
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card .trend {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+    }
+    .trend.up {
+      color: #48bb78;
+    }
+    .trend.down {
+      color: #f56565;
+    }
+    /* Tables */
+    .data-table {
+      width: 100%;
       background: var(--glass);
-      color: var(--text-color);
-      font-size: 0.95rem;
-      min-width: 180px;
-      transition: all 0.3s ease;
+      border-radius: 12px;
+      overflow: hidden;
       box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
     }
-    #filterSection select:focus {
-      outline: none;
-      border-color: var(--secondary);
-      box-shadow: 0 0 0 3px rgba(214, 158, 46, 0.3);
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
     }
-    /* Marks Entry Form */
-    #marksForm {
-      display: none;
+    .data-table th, .data-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .data-table th {
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+    .data-table tr:nth-child(even) {
+      background: rgba(255,255,255,0.03);
+    }
+    .data-table tr:hover {
+      background: rgba(214, 158, 46, 0.1);
+    }
+    /* Status badges */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .status-paid {
+      background: rgba(72, 187, 120, 0.2);
+      color: #48bb78;
+    }
+    .status-unpaid {
+      background: rgba(245, 101, 101, 0.2);
+      color: #f56565;
+    }
+    .status-partial {
+      background: rgba(246, 173, 85, 0.2);
+      color: #f6ad55;
+    }
+    /* Forms */
+    .form-card {
       background: var(--glass);
       padding: 2rem;
       border-radius: 12px;
@@ -250,13 +289,10 @@
       margin-bottom: 2rem;
       box-shadow: var(--card-shadow);
     }
-    #marksForm h2 {
+    .form-card h2 {
       color: var(--secondary);
       margin-bottom: 1.5rem;
       font-size: 1.5rem;
-    }
-    #marksForm h2 span {
-      color: white;
     }
     .form-group {
       margin-bottom: 1.5rem;
@@ -286,144 +322,54 @@
       border-color: var(--secondary);
       box-shadow: 0 0 0 3px rgba(214, 158, 46, 0.3);
     }
-    .form-group textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-    .form-group button {
-      padding: 0.9rem 1.8rem;
-      background: var(--secondary);
-      color: #1a365d;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      margin-right: 15px;
-    }
-    .form-group button:hover {
-      background: #e69c2a;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
     .form-actions {
       display: flex;
       gap: 15px;
       margin-top: 2rem;
     }
-    /* Report Card */
-    #reportCard {
-      background: var(--glass);
-      padding: 2rem;
-      border-radius: 12px;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
-      margin-bottom: 2rem;
-      box-shadow: var(--card-shadow);
-      display: none;
-    }
-    .report-header {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 1.5rem;
-    }
-    .report-header p {
-      color: white;
-      font-size: 0.95rem;
-    }
-    .report-header p span {
-      color: var(--secondary);
-      font-weight: 500;
-    }
-    #reportCard h3 {
-      color: var(--secondary);
-      margin-bottom: 1.5rem;
-      font-size: 1.5rem;
-    }
-    #reportCard table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
-      background: rgba(255,255,255,0.05);
-    }
-    #reportCard th,
-    #reportCard td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    #reportCard th {
-      background: var(--primary);
-      color: white;
-      font-weight: 600;
-    }
-    #reportCard tr:nth-child(even) {
-      background: rgba(255,255,255,0.03);
-    }
-    #reportCard tr:hover {
-      background: rgba(214, 158, 46, 0.1);
-    }
-    .pdf-btn {
+    /* Buttons */
+    .btn {
       padding: 0.9rem 1.8rem;
-      background: var(--primary);
-      color: white;
-      border: none;
       border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
       font-weight: 600;
+      cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: 2rem;
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      border: 2px solid transparent;
     }
-    .pdf-btn:hover {
-      background: #2c5282;
+    .btn-primary {
+      background-color: var(--secondary);
+      color: #1a365d;
+    }
+    .btn-primary:hover {
+      background-color: #e69c2a;
       transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .pdf-btn i {
-      font-size: 1.1rem;
-    }
-    .chart-container {
-      width: 100%;
-      height: 300px;
-      margin-top: 2rem;
-    }
-    /* Student List */
-    .student-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      margin-bottom: 2rem;
-    }
-    .student-card {
-      background: var(--glass);
-      padding: 1.5rem;
-      border-radius: 12px;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      box-shadow: var(--card-shadow);
-    }
-    .student-card:hover {
-      transform: translateY(-5px);
-      background: rgba(214, 158, 46, 0.1);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    }
-    .student-card h3 {
-      color: var(--secondary);
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
-    }
-    .student-card p {
+    .btn-secondary {
+      background-color: transparent;
       color: white;
-      font-size: 0.9rem;
-      opacity: 0.8;
+      border-color: rgba(255,255,255,0.3);
+    }
+    .btn-secondary:hover {
+      background-color: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-2px);
+    }
+    .btn-danger {
+      background-color: rgba(245, 101, 101, 0.2);
+      color: #f56565;
+      border-color: rgba(245, 101, 101, 0.3);
+    }
+    .btn-danger:hover {
+      background-color: rgba(245, 101, 101, 0.3);
+      transform: translateY(-2px);
+    }
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
     }
     /* Footer */
     footer {
@@ -482,592 +428,70 @@
       font-size: 1.6rem;
       color: var(--secondary);
     }
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 1.5rem;
+    }
+    .tab {
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      position: relative;
+      color: rgba(255,255,255,0.7);
+    }
+    .tab.active {
+      color: var(--secondary);
+    }
+    .tab.active:after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--secondary);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    /* Currency Input */
+    .currency-input {
+      position: relative;
+    }
+    .currency-input:before {
+      content: '$';
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-color);
+      font-weight: 500;
+    }
+    .currency-input input {
+      padding-left: 30px !important;
+    }
     /* Responsive Adjustments */
     @media (max-width: 767px) {
       .main-container {
         padding: calc(var(--header-height) + 20px) 3% 120px;
       }
-      #guidance {
+      .page-title {
         flex-direction: column;
-      }
-      .guidance-favicon {
-        margin-bottom: 15px;
-      }
-      #filterSection {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      #filterSection select {
-        width: 100%;
+        align-items: flex-start;
+        gap: 15px;
       }
       .form-actions {
         flex-direction: column;
       }
-      .form-group button {
+      .btn {
         width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
+        justify-content: center;
       }
     }
-/* Style for action buttons in the table */
-.edit-btn, .delete-btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  margin-right: 5px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.edit-btn {
-  background-color: rgba(214, 158, 46, 0.2);
-  color: var(--secondary);
-}
-
-.delete-btn {
-  background-color: rgba(255, 99, 71, 0.2);
-  color: #ff6347;
-}
-
-.edit-btn:hover {
-  background-color: rgba(214, 158, 46, 0.3);
-  transform: translateY(-1px);
-}
-
-.delete-btn:hover {
-  background-color: rgba(255, 99, 71, 0.3);
-  transform: translateY(-1px);
-}
-
-/* Style for form action buttons */
-.form-actions button {
-  padding: 0.9rem 1.8rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 2px solid transparent;
-}
-
-.form-actions button:first-child {
-  background-color: var(--secondary);
-  color: #1a365d;
-}
-
-.form-actions button:first-child:hover {
-  background-color: #e69c2a;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.form-actions button:last-child {
-  background-color: transparent;
-  color: white;
-  border-color: rgba(255,255,255,0.3);
-}
-
-.form-actions button:last-child:hover {
-  background-color: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.5);
-  transform: translateY(-2px);
-}
-
-/* Button animations when clicked */
-button:active {
-  transform: translateY(1px) !important;
-}
-
-/* Responsive adjustments */
-@media (max-width: 767px) {
-  .main-container {
-    padding: calc(var(--header-height) + 20px) 3% 120px;
-  }
-  #guidance {
-    flex-direction: column;
-  }
-  .guidance-favicon {
-    margin-bottom: 15px;
-  }
-  #filterSection {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  #filterSection select {
-    width: 100%;
-  }
-  .form-actions {
-    flex-direction: column;
-  }
-  .form-group button {
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-  
-  /* Mobile-specific button adjustments */
-  .edit-btn, .delete-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-  }
-  
-  .form-actions button {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Enhanced Fee Management Styles */
-.fee-management-section {
-  background: var(--glass);
-  padding: 2rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: var(--card-shadow);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.fee-management-section h2 {
-  color: var(--secondary);
-  margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.fee-management-section h2 i {
-  font-size: 1.3rem;
-}
-
-.fee-tabs {
-  display: flex;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  margin-bottom: 1.5rem;
-}
-
-.fee-tab {
-  padding: 0.8rem 1.5rem;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.fee-tab.active {
-  border-bottom-color: var(--secondary);
-  color: var(--secondary);
-}
-
-.fee-tab:hover:not(.active) {
-  background: rgba(255,255,255,0.05);
-}
-
-.fee-tab-content {
-  display: none;
-}
-
-.fee-tab-content.active {
-  display: block;
-}
-
-.fee-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 2rem;
-}
-
-.fee-form-group {
-  margin-bottom: 1rem;
-}
-
-.fee-form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--secondary);
-}
-
-.fee-form-group input,
-.fee-form-group select {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 8px;
-  background: var(--glass);
-  color: var(--text-color);
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-}
-
-.fee-form-group input:focus,
-.fee-form-group select:focus {
-  outline: none;
-  border-color: var(--secondary);
-  box-shadow: 0 0 0 3px rgba(214, 158, 46, 0.3);
-}
-
-.fee-form-actions {
-  display: flex;
-  gap: 15px;
-  margin-top: 1.5rem;
-}
-
-.fee-form-actions button {
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-}
-
-.fee-form-actions button:first-child {
-  background-color: var(--secondary);
-  color: #1a365d;
-}
-
-.fee-form-actions button:first-child:hover {
-  background-color: #e69c2a;
-  transform: translateY(-2px);
-}
-
-.fee-form-actions button:last-child {
-  background-color: transparent;
-  color: white;
-  border: 1px solid rgba(255,255,255,0.3);
-}
-
-.fee-form-actions button:last-child:hover {
-  background-color: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.5);
-}
-
-/* Fee Summary Cards */
-.fee-summary-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  margin-bottom: 2rem;
-}
-
-.fee-summary-card {
-  background: var(--glass);
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: var(--card-shadow);
-  border: 1px solid rgba(255,255,255,0.1);
-  transition: all 0.3s ease;
-}
-
-.fee-summary-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-}
-
-.fee-summary-card h3 {
-  color: var(--secondary);
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.fee-summary-card h3 i {
-  font-size: 1.2rem;
-}
-
-.fee-summary-card p {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.fee-summary-card small {
-  font-size: 0.85rem;
-  opacity: 0.8;
-}
-
-.fee-summary-card.paid {
-  border-bottom: 4px solid #4ade80;
-}
-
-.fee-summary-card.unpaid {
-  border-bottom: 4px solid #f87171;
-}
-
-.fee-summary-card.partial {
-  border-bottom: 4px solid #fbbf24;
-}
-
-.fee-summary-card.total {
-  border-bottom: 4px solid var(--accent);
-}
-
-/* DataTable Customization */
-.dataTables_wrapper {
-  margin-top: 1.5rem;
-}
-
-.dataTables_wrapper .dataTables_filter input {
-  background: var(--glass);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: var(--text-color);
-  padding: 0.5rem;
-  border-radius: 6px;
-  margin-left: 10px;
-}
-
-.dataTables_wrapper .dataTables_length select {
-  background: var(--glass);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: var(--text-color);
-  padding: 0.3rem;
-  border-radius: 6px;
-}
-
-.dataTables_wrapper .dataTables_info,
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-  color: var(--text-color) !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.current,
-.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-  background: var(--secondary) !important;
-  color: #1a365d !important;
-  border: none !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-  background: rgba(255,255,255,0.1) !important;
-  border: none !important;
-}
-
-/* Status Badges */
-.status-badge {
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  display: inline-block;
-}
-
-.status-badge.paid {
-  background-color: rgba(74, 222, 128, 0.2);
-  color: #4ade80;
-}
-
-.status-badge.unpaid {
-  background-color: rgba(248, 113, 113, 0.2);
-  color: #f87171;
-}
-
-.status-badge.partial {
-  background-color: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
-}
-
-/* Fee Table */
-.fee-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 1.5rem;
-}
-
-.fee-table th {
-  background: var(--primary);
-  color: white;
-  padding: 12px 15px;
-  text-align: left;
-  font-weight: 600;
-}
-
-.fee-table td {
-  padding: 12px 15px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.fee-table tr:nth-child(even) {
-  background: rgba(255,255,255,0.03);
-}
-
-.fee-table tr:hover {
-  background: rgba(214, 158, 46, 0.1);
-}
-
-/* Payment Receipt Modal */
-.receipt-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  z-index: 2000;
-  overflow-y: auto;
-  backdrop-filter: blur(5px);
-}
-
-.receipt-content {
-  background: var(--glass);
-  max-width: 800px;
-  margin: 5% auto;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  position: relative;
-}
-
-.close-receipt {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  font-size: 1.5rem;
-  color: var(--secondary);
-  cursor: pointer;
-  background: none;
-  border: none;
-}
-
-.receipt-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.receipt-header img {
-  height: 80px;
-  margin-bottom: 1rem;
-}
-
-.receipt-header h2 {
-  color: var(--secondary);
-  margin-bottom: 0.5rem;
-}
-
-.receipt-details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.receipt-details div p {
-  margin-bottom: 0.5rem;
-}
-
-.receipt-details div p span {
-  font-weight: 600;
-  color: var(--secondary);
-}
-
-.receipt-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 2rem;
-}
-
-.receipt-table th,
-.receipt-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.receipt-table th {
-  background: var(--primary);
-  color: white;
-}
-
-.receipt-table tr:last-child td {
-  border-bottom: none;
-  font-weight: 600;
-}
-
-.receipt-footer {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px dashed rgba(255,255,255,0.2);
-}
-
-.receipt-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 2rem;
-}
-
-.receipt-actions button {
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.receipt-actions button:first-child {
-  background: var(--secondary);
-  color: #1a365d;
-  border: none;
-}
-
-.receipt-actions button:last-child {
-  background: transparent;
-  color: white;
-  border: 1px solid rgba(255,255,255,0.3);
-}
-
-/* Responsive adjustments for fee management */
-@media (max-width: 767px) {
-  .fee-form {
-    grid-template-columns: 1fr;
-  }
-  
-  .fee-summary-cards {
-    grid-template-columns: 1fr;
-  }
-  
-  .receipt-details {
-    grid-template-columns: 1fr;
-  }
-  
-  .receipt-actions {
-    flex-direction: column;
-  }
-  
-  .receipt-actions button {
-    width: 100%;
-  }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255,255,255,0.05);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--secondary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #e69c2a;
-}
   </style>
 </head>
 <body>
@@ -1079,7 +503,7 @@ button:active {
         alt="Logo"
         class="header-logo"
       />
-      <span>Teacher</span> Dashboard
+      <span>Fees</span> Management
     </div>
     <div class="header-controls">
       <button id="hamburgerBtn" class="hamburger-btn">
@@ -1090,62 +514,104 @@ button:active {
 
   <!-- Side Menu -->
   <aside id="sideMenu">
-    <h2><i class="fas fa-users"></i> Student Totals</h2>
-    <div id="totalsDisplay">
-      <p><strong>Overall:</strong> <span id="overallTotal">0</span></p>
-      <ul id="formTotals"></ul>
-    </div>
+    <h2><i class="fas fa-school"></i> St. Mary's High</h2>
+    <ul class="nav-menu">
+      <li><a href="#" class="active" id="dashboardLink"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li><a href="#" id="studentsLink"><i class="fas fa-user-graduate"></i> Students</a></li>
+      <li><a href="#" id="paymentsLink"><i class="fas fa-money-bill-wave"></i> Payments</a></li>
+      <li><a href="#" id="feeStructureLink"><i class="fas fa-list-alt"></i> Fee Structure</a></li>
+      <li><a href="#" id="reportsLink"><i class="fas fa-chart-bar"></i> Reports</a></li>
+      <li><a href="#" id="settingsLink"><i class="fas fa-cog"></i> Settings</a></li>
+    </ul>
   </aside>
 
   <!-- Main Content -->
   <div class="main-container">
-    <!-- Guidance Instructions -->
-    <div id="guidance">
-      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="Favicon" class="guidance-favicon" />
-      <p>
-        <strong>Instructions:</strong> Choose your class by selecting the Form and Stream from the dropdown menus. Then, click on a student card to view or enter marks. If you choose the wrong student, simply click "Cancel" to choose another.
-      </p>
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page-content active">
+      <div class="page-title">
+        <h1><i class="fas fa-tachometer-alt"></i> Fees Dashboard</h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showPaymentModal()"><i class="fas fa-plus"></i> Record Payment</button>
+          <button class="btn btn-secondary" onclick="generateReport()"><i class="fas fa-file-pdf"></i> Generate Report</button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-cards">
+        <div class="stat-card">
+          <h3><i class="fas fa-dollar-sign"></i> Total Collected</h3>
+          <div class="value" id="totalCollected">$0</div>
+          <div class="trend up"><i class="fas fa-arrow-up"></i> 12% from last month</div>
+        </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-users"></i> Total Students</h3>
+          <div class="value" id="totalStudents">0</div>
+          <div class="trend up"><i class="fas fa-arrow-up"></i> 5% from last term</div>
+        </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-check-circle"></i> Fully Paid</h3>
+          <div class="value" id="fullyPaid">0</div>
+          <div class="trend down"><i class="fas fa-arrow-down"></i> 8% from last term</div>
+        </div>
+        <div class="stat-card">
+          <h3><i class="fas fa-exclamation-circle"></i> Outstanding</h3>
+          <div class="value" id="totalOutstanding">$0</div>
+          <div class="trend up"><i class="fas fa-arrow-up"></i> 15% from last term</div>
+        </div>
+      </div>
+
+      <!-- Recent Payments -->
+      <div class="page-title">
+        <h1><i class="fas fa-history"></i> Recent Payments</h1>
+        <div class="actions">
+          <button class="btn btn-secondary" onclick="refreshData()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+      </div>
+
+      <div class="data-table">
+        <table id="recentPaymentsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Student</th>
+              <th>Class</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recentPaymentsBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Charts -->
+      <div class="page-title">
+        <h1><i class="fas fa-chart-line"></i> Payment Trends</h1>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 2rem;">
+        <div class="form-card">
+          <h2>Payments by Month</h2>
+          <canvas id="monthlyPaymentsChart" height="300"></canvas>
+        </div>
+        <div class="form-card">
+          <h2>Payment Methods</h2>
+          <canvas id="paymentMethodsChart" height="300"></canvas>
+        </div>
+      </div>
     </div>
 
-    <!-- Fee Management Section -->
-    <div class="fee-management-section">
-      <h2><i class="fas fa-money-bill-wave"></i> Fee Management</h2>
-      
-      <div class="fee-tabs">
-        <div class="fee-tab active" data-tab="fee-records">Fee Records</div>
-        <div class="fee-tab" data-tab="fee-payment">Record Payment</div>
-        <div class="fee-tab" data-tab="fee-reports">Reports</div>
-      </div>
-      
-      <!-- Fee Records Tab -->
-      <div class="fee-tab-content active" id="fee-records">
-        <div class="fee-summary-cards">
-          <div class="fee-summary-card paid">
-            <h3><i class="fas fa-check-circle"></i> Paid Fees</h3>
-            <p id="paid-count">0</p>
-            <small>Students who have fully paid</small>
-          </div>
-          <div class="fee-summary-card unpaid">
-            <h3><i class="fas fa-times-circle"></i> Unpaid Fees</h3>
-            <p id="unpaid-count">0</p>
-            <small>Students with unpaid fees</small>
-          </div>
-          <div class="fee-summary-card partial">
-          	            <h3><i class="fas fa-exclamation-circle"></i> Partial Payments</h3>
-            <p id="partial-count">0</p>
-            <small>Students with partial payments</small>
-          </div>
-          <div class="fee-summary-card total">
-            <h3><i class="fas fa-coins"></i> Total Collected</h3>
-            <p id="total-collected">K0.00</p>
-            <small>Total fees collected this term</small>
-          </div>
-        </div>
-
-        <div class="filter-group">
-          <div class="filter-row">
-            <select id="feeFormFilter" class="filter-select">
-              <option value="">All Forms</option>
+    <!-- Students Page -->
+    <div id="studentsPage" class="page-content">
+      <div class="page-title">
+        <h1><i class="fas fa-user-graduate"></i> Student Records</h1>
+        <div class="actions">
+          <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+            <select id="studentFilterClass" onchange="filterStudents()">
+              <option value="">All Classes</option>
               <option value="Form 1">Form 1</option>
               <option value="Form 2">Form 2</option>
               <option value="Form 3">Form 3</option>
@@ -1153,315 +619,255 @@ button:active {
               <option value="Form 5">Form 5</option>
               <option value="Form 6">Form 6</option>
             </select>
-            <select id="feeStreamFilter" class="filter-select">
+          </div>
+          <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+            <select id="studentFilterStream" onchange="filterStudents()">
               <option value="">All Streams</option>
-              <option value="Arts">Arts</option>
-              <option value="Commercials">Commercials</option>
-              <option value="Sciences">Sciences</option>
-              <option value="G">G</option>
-              <option value="W">W</option>
-              <option value="Z">Z</option>
-              <option value="E">E</option>
-              <option value="U">U</option>
             </select>
-            <select id="feeStatusFilter" class="filter-select">
+          </div>
+          <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+            <select id="studentFilterStatus" onchange="filterStudents()">
               <option value="">All Statuses</option>
               <option value="paid">Paid</option>
               <option value="unpaid">Unpaid</option>
               <option value="partial">Partial</option>
             </select>
-            <button id="resetFilters" class="filter-btn">
-              <i class="fas fa-sync-alt"></i> Reset
-            </button>
           </div>
+          <input type="text" id="studentSearch" placeholder="Search students..." onkeyup="filterStudents()" style="padding: 0.9rem 1.2rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: var(--glass); color: var(--text-color);">
         </div>
+      </div>
 
-        <table id="feeRecordsTable" class="display" style="width:100%">
+      <div class="data-table">
+        <table id="studentsTable">
           <thead>
             <tr>
-              <th>Student</th>
-              <th>Form</th>
-              <th>Stream</th>
-              <th>Fee Amount</th>
-              <th>Amount Paid</th>
+              <th>Adm No.</th>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Total Fees</th>
+              <th>Paid</th>
               <th>Balance</th>
               <th>Status</th>
-              <th>Payment Date</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Data will be populated by JavaScript -->
+          <tbody id="studentsBody">
+            <!-- Dynamically populated -->
           </tbody>
         </table>
       </div>
-      
-      <!-- Fee Payment Tab -->
-      <div class="fee-tab-content" id="fee-payment">
-        <form id="feePaymentForm" class="fee-form">
-          <div class="fee-form-group">
-            <label for="paymentStudent">Select Student</label>
-            <select id="paymentStudent" required>
-              <option value="">-- Select Student --</option>
-              <!-- Will be populated dynamically -->
-            </select>
-          </div>
-          <div class="fee-form-group">
-            <label for="paymentTerm">Term</label>
-            <select id="paymentTerm" required>
-              <option value="">-- Select Term --</option>
-              <option value="Term 1">Term 1</option>
-              <option value="Term 2">Term 2</option>
-              <option value="Term 3">Term 3</option>
-            </select>
-          </div>
-          <div class="fee-form-group">
-            <label for="paymentYear">Year</label>
-            <input type="text" id="paymentYear" placeholder="Enter academic year (e.g. 2025)" required>
-          </div>
-          <div class="fee-form-group">
-            <label for="feeAmount">Total Fee Amount (K)</label>
-            <input type="number" id="feeAmount" placeholder="Enter total fee amount" required>
-          </div>
-          <div class="fee-form-group">
-            <label for="amountPaid">Amount Paid (K)</label>
-            <input type="number" id="amountPaid" placeholder="Enter amount paid" required>
-          </div>
-          <div class="fee-form-group">
-            <label for="paymentMethod">Payment Method</label>
-            <select id="paymentMethod" required>
-              <option value="">-- Select Method --</option>
-              <option value="Cash">Cash</option>
-              <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Mobile Money">Mobile Money</option>
-              <option value="Cheque">Cheque</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div class="fee-form-group">
-            <label for="receiptNumber">Receipt Number</label>
-            <input type="text" id="receiptNumber" placeholder="Enter receipt number">
-          </div>
-          <div class="fee-form-group">
-            <label for="paymentNotes">Notes</label>
-            <textarea id="paymentNotes" placeholder="Any additional notes"></textarea>
-          </div>
-          <div class="fee-form-actions">
-            <button type="submit"><i class="fas fa-save"></i> Record Payment</button>
-            <button type="reset"><i class="fas fa-times"></i> Clear Form</button>
-          </div>
-        </form>
+    </div>
+
+    <!-- Payments Page -->
+    <div id="paymentsPage" class="page-content">
+      <div class="page-title">
+        <h1><i class="fas fa-money-bill-wave"></i> Payment Records</h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showPaymentModal()"><i class="fas fa-plus"></i> Record Payment</button>
+          <button class="btn btn-secondary" onclick="exportPayments()"><i class="fas fa-file-excel"></i> Export</button>
+        </div>
       </div>
-      
-      <!-- Fee Reports Tab -->
-      <div class="fee-tab-content" id="fee-reports">
-        <div class="report-filters">
-          <div class="filter-row">
-            <select id="reportFormFilter" class="filter-select">
-              <option value="">All Forms</option>
-              <option value="Form 1">Form 1</option>
-              <option value="Form 2">Form 2</option>
-              <option value="Form 3">Form 3</option>
-              <option value="Form 4">Form 4</option>
-              <option value="Form 5">Form 5</option>
-              <option value="Form 6">Form 6</option>
-            </select>
-            <select id="reportTermFilter" class="filter-select">
-              <option value="">All Terms</option>
-              <option value="Term 1">Term 1</option>
-              <option value="Term 2">Term 2</option>
-              <option value="Term 3">Term 3</option>
-            </select>
-            <select id="reportYearFilter" class="filter-select">
-              <option value="">All Years</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-            </select>
-            <button id="generateReport" class="report-btn">
-              <i class="fas fa-file-export"></i> Generate Report
-            </button>
-          </div>
-        </div>
-        
-        <div class="chart-container">
-          <canvas id="feeTrendsChart"></canvas>
-        </div>
-        
-        <div class="report-actions">
-          <button class="pdf-btn" id="exportFeeReport">
-            <i class="fas fa-file-pdf"></i> Export to PDF
-          </button>
-          <button class="excel-btn" id="exportFeeExcel">
-            <i class="fas fa-file-excel"></i> Export to Excel
-          </button>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="allPayments">All Payments</div>
+        <div class="tab" data-tab="todayPayments">Today</div>
+        <div class="tab" data-tab="thisWeekPayments">This Week</div>
+        <div class="tab" data-tab="thisMonthPayments">This Month</div>
+      </div>
+
+      <div class="tab-content active" id="allPayments">
+        <div class="data-table">
+          <table id="paymentsTable">
+            <thead>
+              <tr>
+                <th>Receipt No.</th>
+                <th>Date</th>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Recorded By</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="paymentsBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- Search Field -->
-    <input
-      type="text"
-      id="searchStudent"
-      placeholder="🔍 Search student by name..."
-      onkeyup="filterStudents()"
-    />
-
-    <!-- Filter Section -->
-    <div id="filterSection">
-      <select id="formSelect" onchange="filterByForm()">
-        <option value="">Select Form</option>
-        <option value="Form 1">Form 1</option>
-        <option value="Form 2">Form 2</option>
-        <option value="Form 3">Form 3</option>
-        <option value="Form 4">Form 4</option>
-        <option value="Form 5">Form 5</option>
-        <option value="Form 6">Form 6</option>
-      </select>
-      <select id="streamSelect" onchange="filterByStream()" style="display: none;">
-        <option value="">Select Stream/Class</option>
-      </select>
-    </div>
-
-    <!-- Marks Entry Form -->
-    <form id="marksForm">
-      <h2>Enter Marks for <span id="selectedStudent"></span></h2>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" id="feesPaid" checked /> Fees Paid for this term
-        </label>
-      </div>
-      <div class="form-group" id="feesBalanceGroup" style="display: none;">
-        <label for="feesBalance">Enter Fees Balance</label>
-        <input type="number" id="feesBalance" placeholder="Enter fees balance" />
-      </div>
-      <div class="form-group">
-        <label for="yearInput">Year</label>
-        <input type="text" id="yearInput" placeholder="Enter academic year (e.g., 2025)" />
-      </div>
-      <div class="form-group">
-        <label for="termInput">Term</label>
-        <select id="termInput">
-          <option value="">Select Term</option>
-          <option value="Term 1">Term 1</option>
-          <option value="Term 2">Term 2</option>
-          <option value="Term 3">Term 3</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="teacherName">Class Teacher Name</label>
-        <input type="text" id="teacherName" placeholder="Enter your name" />
-      </div>
-      <div class="form-group">
-        <label for="teacherComments">Class Teachers Comments</label>
-        <textarea id="teacherComments" placeholder="Enter comments"></textarea>
-      </div>
-      <div id="subjectFields"></div>
-      <div class="form-actions">
-        <button type="submit"><i class="fas fa-save"></i> Save Marks</button>
-        <button type="button" onclick="cancelSelection()"><i class="fas fa-times"></i> Cancel</button>
-      </div>
-    </form>
-
-    <!-- Report Card -->
-    <div id="reportCard" class="report-card">
-      <div class="report-header">
-        <p>Name: <span id="reportName"></span></p>
-        <p>Surname: <span id="reportSurname"></span></p>
-        <p>Email: <span id="reportEmail"></span></p>
-        <p>Year: <span id="reportYear"></span></p>
-        <p>Term: <span id="reportTerm"></span></p>
-      </div>
-      <h3><i class="fas fa-file-alt"></i> Report Card</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Subject</th>
-            <th>Marks</th>
-            <th>Grade</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="reportCardBody"></tbody>
-      </table>
-      <button class="pdf-btn" onclick="exportPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
-      <div class="chart-container">
-        <canvas id="performanceChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Student List -->
-    <h2><i class="fas fa-user-graduate"></i> Student List</h2>
-    <div id="studentList" class="student-list">
-      <!-- Dynamically populated student cards -->
-    </div>
-  </div>
-
-  <!-- Payment Receipt Modal -->
-  <div id="receiptModal" class="receipt-modal">
-    <div class="receipt-content">
-      <button class="close-receipt">&times;</button>
-      <div class="receipt-header">
-        <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="School Logo">
-        <h2>St. Mary's High School</h2>
-        <p>Official Fee Payment Receipt</p>
-      </div>
-      <div class="receipt-details">
-        <div>
-          <p><span>Receipt No:</span> <span id="receiptNoDisplay">SMHS-2025-001</span></p>
-          <p><span>Date:</span> <span id="receiptDateDisplay">15/03/2025</span></p>
-          <p><span>Student Name:</span> <span id="receiptStudentDisplay">John Doe</span></p>
-          <p><span>Form:</span> <span id="receiptFormDisplay">Form 4</span></p>
-          <p><span>Stream:</span> <span id="receiptStreamDisplay">Sciences</span></p>
-        </div>
-        <div>
-          <p><span>Academic Year:</span> <span id="receiptYearDisplay">2025</span></p>
-          <p><span>Term:</span> <span id="receiptTermDisplay">Term 1</span></p>
-          <p><span>Payment Method:</span> <span id="receiptMethodDisplay">Bank Transfer</span></p>
-          <p><span>Received By:</span> <span id="receiptReceivedBy">Mrs. Banda</span></p>
+    <!-- Fee Structure Page -->
+    <div id="feeStructurePage" class="page-content">
+      <div class="page-title">
+        <h1><i class="fas fa-list-alt"></i> Fee Structure</h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="showFeeStructureModal()"><i class="fas fa-plus"></i> Add Fee Item</button>
         </div>
       </div>
-      <table class="receipt-table">
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Amount (K)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Tuition Fees</td>
-            <td id="receiptTuitionAmount">1,500.00</td>
-          </tr>
-          <tr>
-            <td>Examination Fees</td>
-            <td id="receiptExamAmount">300.00</td>
-          </tr>
-          <tr>
-            <td>Other Fees</td>
-            <td id="receiptOtherAmount">200.00</td>
-          </tr>
-          <tr>
-            <td><strong>Total Amount</strong></td>
-            <td><strong id="receiptTotalAmount">2,000.00</strong></td>
-          </tr>
-          <tr>
-            <td><strong>Amount Paid</strong></td>
-            <td><strong id="receiptPaidAmount">2,000.00</strong></td>
-          </tr>
-          <tr>
-            <td><strong>Balance</strong></td>
-            <td><strong id="receiptBalanceAmount">0.00</strong></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="receipt-footer">
-        <p>Thank you for your payment. Please keep this receipt for your records.</p>
-        <p><em>For any inquiries, contact the school office during working hours.</em></p>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="currentStructure">Current Structure</div>
+        <div class="tab" data-tab="historicalStructure">Historical</div>
       </div>
-      <div class="receipt-actions">
-        <button id="printReceipt"><i class="fas fa-print"></i> Print Receipt</button>
-        <button id="closeReceipt"><i class="fas fa-times"></i> Close</button>
+
+      <div class="tab-content active" id="currentStructure">
+        <div class="data-table">
+          <table id="feeStructureTable">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Fee Item</th>
+                <th>Amount (USD)</th>
+                <th>Amount (ZWL)</th>
+                <th>Term</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="feeStructureBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Page -->
+    <div id="reportsPage" class="page-content">
+      <div class="page-title">
+        <h1><i class="fas fa-chart-bar"></i> Reports</h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="generateReport()"><i class="fas fa-file-pdf"></i> Generate Report</button>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h2>Custom Report Generator</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div class="form-group">
+            <label for="reportType">Report Type</label>
+            <select id="reportType" class="form-control">
+              <option value="payments">Payments Report</option>
+              <option value="outstanding">Outstanding Balances</option>
+              <option value="student">Student Statement</option>
+              <option value="class">Class Summary</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="reportPeriod">Period</label>
+            <select id="reportPeriod" class="form-control">
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="term">This Term</option>
+              <option value="year">This Year</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
+        </div>
+        <div id="customDateRange" style="display: none; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+          <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate" class="form-control">
+          </div>
+        </div>
+        <div class="form-group" id="studentSelectGroup" style="display: none;">
+          <label for="studentSelect">Select Student</label>
+          <select id="studentSelect" class="form-control">
+            <option value="">Select Student</option>
+          </select>
+        </div>
+        <div class="form-group" id="classSelectGroup">
+          <label for="classSelect">Select Class</label>
+          <select id="classSelect" class="form-control">
+            <option value="">All Classes</option>
+            <option value="Form 1">Form 1</option>
+            <option value="Form 2">Form 2</option>
+            <option value="Form 3">Form 3</option>
+            <option value="Form 4">Form 4</option>
+            <option value="Form 5">Form 5</option>
+            <option value="Form 6">Form 6</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="generateCustomReport()"><i class="fas fa-chart-pie"></i> Generate</button>
+          <button class="btn btn-secondary" onclick="previewReport()"><i class="fas fa-eye"></i> Preview</button>
+        </div>
+      </div>
+
+      <div class="form-card" id="reportPreview" style="display: none;">
+        <h2>Report Preview</h2>
+        <div id="previewContent"></div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="downloadReport()"><i class="fas fa-download"></i> Download</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settingsPage" class="page-content">
+      <div class="page-title">
+        <h1><i class="fas fa-cog"></i> System Settings</h1>
+      </div>
+
+      <div class="form-card">
+        <h2><i class="fas fa-money-bill-wave"></i> Payment Settings</h2>
+        <div class="form-group">
+          <label for="currencyPref">Default Currency</label>
+          <select id="currencyPref" class="form-control">
+            <option value="USD">US Dollars (USD)</option>
+            <option value="ZWL">Zimbabwe Dollars (ZWL)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="exchangeRate">USD to ZWL Exchange Rate</label>
+          <input type="number" id="exchangeRate" class="form-control" placeholder="Enter current exchange rate">
+        </div>
+        <div class="form-group">
+          <label for="paymentMethods">Payment Methods</label>
+          <textarea id="paymentMethods" class="form-control" rows="3" placeholder="Enter payment methods, separated by commas"></textarea>
+          <small>Example: Cash, Ecocash, OneMoney, Bank Transfer, Swipe</small>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h2><i class="fas fa-user-shield"></i> User Management</h2>
+        <div class="data-table">
+          <table id="usersTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Last Login</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersBody">
+              <tr>
+                <td>Admin User</td>
+                <td>admin@stmarys.edu</td>
+                <td>Administrator</td>
+                <td>Today, 09:45 AM</td>
+                <td>
+                  <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                  <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-actions" style="justify-content: flex-end; margin-top: 1rem;">
+          <button class="btn btn-primary" onclick="showUserModal()"><i class="fas fa-plus"></i> Add User</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1477,20 +883,156 @@ button:active {
     </div>
   </footer>
 
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto;">
+    <div class="form-card" style="max-width: 600px; margin: 5% auto; position: relative;">
+      <button onclick="closeModal('paymentModal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      <h2><i class="fas fa-money-bill-wave"></i> Record New Payment</h2>
+      <div class="form-group">
+        <label for="paymentStudent">Student</label>
+        <select id="paymentStudent" class="form-control" onchange="loadStudentDetails()">
+          <option value="">Select Student</option>
+        </select>
+      </div>
+      <div id="studentPaymentDetails" style="display: none; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <p><strong>Class:</strong> <span id="studentClassDisplay"></span></p>
+            <p><strong>Total Fees:</strong> <span id="totalFeesDisplay"></span></p>
+          </div>
+          <div>
+            <p><strong>Paid:</strong> <span id="paidFeesDisplay"></span></p>
+            <p><strong>Balance:</strong> <span id="balanceFeesDisplay"></span></p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group currency-input">
+        <label for="paymentAmount">Amount</label>
+        <input type="number" id="paymentAmount" class="form-control" placeholder="Enter amount">
+      </div>
+      <div class="form-group">
+        <label for="paymentCurrency">Currency</label>
+        <select id="paymentCurrency" class="form-control">
+          <option value="USD">USD</option>
+          <option value="ZWL">ZWL</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" class="form-control">
+          <option value="Cash">Cash</option>
+          <option value="Ecocash">Ecocash</option>
+          <option value="OneMoney">OneMoney</option>
+          <option value="Bank Transfer">Bank Transfer</option>
+          <option value="Swipe">Swipe</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="paymentReference">Reference/Receipt No.</label>
+        <input type="text" id="paymentReference" class="form-control" placeholder="Enter reference number">
+      </div>
+      <div class="form-group">
+        <label for="paymentNotes">Notes</label>
+        <textarea id="paymentNotes" class="form-control" rows="3" placeholder="Any additional notes"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="recordPayment()"><i class="fas fa-save"></i> Record Payment</button>
+        <button class="btn btn-secondary" onclick="closeModal('paymentModal')"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fee Structure Modal -->
+  <div id="feeStructureModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto;">
+    <div class="form-card" style="max-width: 600px; margin: 5% auto; position: relative;">
+      <button onclick="closeModal('feeStructureModal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      <h2><i class="fas fa-list-alt"></i> Add Fee Item</h2>
+      <div class="form-group">
+        <label for="feeClass">Class</label>
+        <select id="feeClass" class="form-control">
+          <option value="">Select Class</option>
+          <option value="All Classes">All Classes</option>
+          <option value="Form 1">Form 1</option>
+          <option value="Form 2">Form 2</option>
+          <option value="Form 3">Form 3</option>
+          <option value="Form 4">Form 4</option>
+          <option value="Form 5">Form 5</option>
+          <option value="Form 6">Form 6</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="feeTerm">Term</label>
+        <select id="feeTerm" class="form-control">
+          <option value="All Terms">All Terms</option>
+          <option value="Term 1">Term 1</option>
+          <option value="Term 2">Term 2</option>
+          <option value="Term 3">Term 3</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="feeItem">Fee Item Name</label>
+        <input type="text" id="feeItem" class="form-control" placeholder="e.g., Tuition, Building Fund, Sports">
+      </div>
+      <div class="form-group currency-input">
+        <label for="feeAmountUSD">Amount (USD)</label>
+        <input type="number" id="feeAmountUSD" class="form-control" placeholder="Enter amount in USD">
+      </div>
+      <div class="form-group currency-input">
+        <label for="feeAmountZWL">Amount (ZWL)</label>
+        <input type="number" id="feeAmountZWL" class="form-control" placeholder="Enter amount in ZWL">
+      </div>
+      <div class="form-group">
+        <label for="feeDescription">Description</label>
+        <textarea id="feeDescription" class="form-control" rows="3" placeholder="Description of this fee item"></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveFeeItem()"><i class="fas fa-save"></i> Save Fee Item</button>
+        <button class="btn btn-secondary" onclick="closeModal('feeStructureModal')"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Management Modal -->
+  <div id="userModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto;">
+    <div class="form-card" style="max-width: 600px; margin: 5% auto; position: relative;">
+      <button onclick="closeModal('userModal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      <h2><i class="fas fa-user-plus"></i> Add New User</h2>
+      <div class="form-group">
+        <label for="userName">Full Name</label>
+        <input type="text" id="userName" class="form-control" placeholder="Enter full name">
+      </div>
+      <div class="form-group">
+        <label for="userEmail">Email</label>
+        <input type="email" id="userEmail" class="form-control" placeholder="Enter email address">
+      </div>
+      <div class="form-group">
+        <label for="userRole">Role</label>
+        <select id="userRole" class="form-control">
+          <option value="admin">Administrator</option>
+          <option value="bursar">Bursar</option>
+          <option value="teacher">Teacher</option>
+          <option value="viewer">Viewer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="userPassword">Password</label>
+        <input type="password" id="userPassword" class="form-control" placeholder="Enter password">
+      </div>
+      <div class="form-group">
+        <label for="userConfirmPassword">Confirm Password</label>
+        <input type="password" id="userConfirmPassword" class="form-control" placeholder="Confirm password">
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveUser()"><i class="fas fa-save"></i> Save User</button>
+        <button class="btn btn-secondary" onclick="closeModal('userModal')"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Theme Toggle Button -->
   <button id="themeToggleButton" title="Toggle Dark/Light Mode">
     <i class="fas fa-moon"></i>
   </button>
-
-  <!-- jQuery and DataTables -->
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
   <!-- Firebase and App Script -->
   <script type="module">
@@ -1502,8 +1044,12 @@ button:active {
       getDoc,
       doc,
       setDoc,
+      addDoc,
       updateDoc,
-      arrayUnion,
+      deleteDoc,
+      query,
+      where,
+      orderBy,
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -1524,970 +1070,732 @@ button:active {
 
     // Global variables
     let allStudents = [];
-    let feeRecords = [];
-    let feeTable;
-    let feeTrendsChart;
-    const studentList = document.getElementById("studentList");
-    const marksForm = document.getElementById("marksForm");
-    const reportCard = document.getElementById("reportCard");
-    const reportCardBody = document.getElementById("reportCardBody");
-    let performanceChart;
+    let allPayments = [];
+    let feeStructure = [];
+    let currentUser = {
+      name: "Admin User",
+      email: "admin@stmarys.edu",
+      role: "admin"
+    };
+    let settings = {
+      currency: "USD",
+      exchangeRate: 500,
+      paymentMethods: ["Cash", "Ecocash", "OneMoney", "Bank Transfer", "Swipe"]
+    };
 
-    // Initialize DataTable for fee records
-    function initializeFeeTable() {
-      feeTable = $('#feeRecordsTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-          'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
-        responsive: true,
-        pageLength: 10,
-        order: [[1, 'asc'], [2, 'asc']],
-        columnDefs: [
-          { targets: [3,4,5], render: $.fn.dataTable.render.number(',', '.', 2, 'K') },
-          { 
-            targets: 6,
-            render: function(data, type, row) {
-              let badgeClass = '';
-              if (data === 'paid') badgeClass = 'paid';
-              else if (data === 'unpaid') badgeClass = 'unpaid';
-              else badgeClass = 'partial';
-              return `<span class="status-badge ${badgeClass}">${data.charAt(0).toUpperCase() + data.slice(1)}</span>`;
-            }
-          },
-          {
-            targets: -1,
-            orderable: false,
-            render: function(data, type, row) {
-              return `
-                <button class="edit-btn" onclick="editFeeRecord('${row[8]}')"><i class="fas fa-edit"></i></button>
-                <button class="delete-btn" onclick="deleteFeeRecord('${row[8]}')"><i class="fas fa-trash"></i></button>
-                <button class="view-btn" onclick="viewReceipt('${row[8]}')"><i class="fas fa-receipt"></i></button>
-              `;
-            }
-          }
-        ]
-      });
-    }
+    // Initialize DataTables
+    let studentsTable, paymentsTable, feeStructureTable;
 
-    // Fetch students and fee records
-    async function fetchStudents() {
+    // DOM Ready
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Load all data
+      await loadAllData();
+      
+      // Initialize navigation
+      initNavigation();
+      
+      // Initialize tabs
+      initTabs();
+      
+      // Initialize theme toggle
+      initThemeToggle();
+      
+      // Initialize charts
+      initCharts();
+      
+      // Initialize DataTables
+      initDataTables();
+      
+      // Load settings
+      loadSettings();
+    });
+
+    // Load all data from Firebase
+    async function loadAllData() {
       try {
-        const querySnapshot = await getDocs(collection(db, "students"));
-        let students = [];
-        querySnapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          data.id = docSnap.id;
-          students.push(data);
-        });
-        // Sort by surname
-        students.sort((a, b) => (a.surname || "").localeCompare(b.surname || ""));
-        allStudents = students;
-        displayStudents(allStudents);
-        updateSideMenu();
+        // Load students
+        const studentsSnapshot = await getDocs(collection(db, "students"));
+        allStudents = studentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Load payments
+        const paymentsSnapshot = await getDocs(query(collection(db, "payments"), orderBy("date", "desc")));
+        allPayments = paymentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Load fee structure
+        const feesSnapshot = await getDocs(collection(db, "feeStructure"));
+        feeStructure = feesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Update UI
+        updateDashboardStats();
         populateStudentDropdown();
-        
-        // Now fetch fee records
-        await fetchFeeRecords();
+        populateStudentsTable();
+        populatePaymentsTable();
+        populateFeeStructureTable();
       } catch (err) {
-        console.error("Error fetching students:", err);
-        alert("Error fetching students. Please try again later.");
+        console.error("Error loading data:", err);
+        alert("Error loading data. Please try again later.");
       }
     }
 
-    // Fetch fee records
-    async function fetchFeeRecords() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "feePayments"));
-        feeRecords = [];
-        querySnapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          data.id = docSnap.id;
-          feeRecords.push(data);
-        });
-        updateFeeTable();
-        updateFeeSummaryCards();
-      } catch (err) {
-        console.error("Error fetching fee records:", err);
-        alert("Error fetching fee records. Please try again later.");
-      }
+    // Initialize navigation
+    function initNavigation() {
+      document.getElementById('dashboardLink').addEventListener('click', () => showPage('dashboardPage'));
+      document.getElementById('studentsLink').addEventListener('click', () => showPage('studentsPage'));
+      document.getElementById('paymentsLink').addEventListener('click', () => showPage('paymentsPage'));
+      document.getElementById('feeStructureLink').addEventListener('click', () => showPage('feeStructurePage'));
+      document.getElementById('reportsLink').addEventListener('click', () => showPage('reportsPage'));
+      document.getElementById('settingsLink').addEventListener('click', () => showPage('settingsPage'));
+      
+      // Show dashboard by default
+      showPage('dashboardPage');
     }
 
-    // Update fee records table
-    function updateFeeTable() {
-      if (!feeTable) initializeFeeTable();
-      
-      feeTable.clear();
-      
-      feeRecords.forEach(record => {
-        const student = allStudents.find(s => s.id === record.studentId);
-        if (!student) return;
-        
-        const status = getPaymentStatus(record);
-        const balance = record.feeAmount - record.amountPaid;
-        
-        feeTable.row.add([
-          `${student.firstname} ${student.surname}`,
-          student.form || '',
-          student.stream || '',
-          record.feeAmount,
-          record.amountPaid,
-          balance > 0 ? balance : 0,
-          status,
-          record.paymentDate || '',
-          record.id
-        ]);
+    // Show specific page
+    function showPage(pageId) {
+      document.querySelectorAll('.page-content').forEach(page => {
+        page.classList.remove('active');
       });
+      document.getElementById(pageId).classList.add('active');
       
-      feeTable.draw();
+      // Update active nav link
+      document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.classList.remove('active');
+      });
+      document.querySelector(`.nav-menu a[href="#"]`).classList.add('active');
     }
 
-    // Get payment status
-    function getPaymentStatus(record) {
-      if (record.amountPaid >= record.feeAmount) return 'paid';
-      if (record.amountPaid <= 0) return 'unpaid';
-      return 'partial';
+    // Initialize tabs
+    function initTabs() {
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+          const tabContainer = this.closest('.tabs').nextElementSibling;
+          
+          // Update active tab
+          this.closest('.tabs').querySelectorAll('.tab').forEach(t => {
+            t.classList.remove('active');
+          });
+          this.classList.add('active');
+          
+          // Show corresponding content
+          tabContainer.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          document.getElementById(tabId).classList.add('active');
+        });
+      });
     }
 
-    // Update fee summary cards
-    function updateFeeSummaryCards() {
-      let paidCount = 0;
-      let unpaidCount = 0;
-      let partialCount = 0;
-      let totalCollected = 0;
-      
-      feeRecords.forEach(record => {
-        const status = getPaymentStatus(record);
-        if (status === 'paid') {
-          paidCount++;
-          totalCollected += record.amountPaid;
-        } else if (status === 'unpaid') {
-          unpaidCount++;
+    // Initialize theme toggle
+    function initThemeToggle() {
+      const themeToggleButton = document.getElementById('themeToggleButton');
+      themeToggleButton.addEventListener('click', () => {
+        if (document.body.getAttribute('data-theme') === 'light') {
+          document.body.removeAttribute('data-theme');
+          themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+          localStorage.setItem('theme', 'dark');
         } else {
-          partialCount++;
-          totalCollected += record.amountPaid;
+          document.body.setAttribute('data-theme', 'light');
+          themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+          localStorage.setItem('theme', 'light');
         }
       });
-      
-      document.getElementById('paid-count').textContent = paidCount;
-      document.getElementById('unpaid-count').textContent = unpaidCount;
-      document.getElementById('partial-count').textContent = partialCount;
-      document.getElementById('total-collected').textContent = `K${totalCollected.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;}
-      
-    // Populate student dropdown for fee payment
-    function populateStudentDropdown() {
-      const dropdown = document.getElementById('paymentStudent');
-      dropdown.innerHTML = '<option value="">-- Select Student --</option>';
-      
-      allStudents.forEach(student => {
-        const option = document.createElement('option');
-        option.value = student.id;
-        option.textContent = `${student.firstname} ${student.surname} (${student.form || ''} ${student.stream || ''})`;
-        dropdown.appendChild(option);
-      });
-    }
 
-    // Handle fee payment form submission
-    document.getElementById('feePaymentForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const studentId = document.getElementById('paymentStudent').value;
-      const term = document.getElementById('paymentTerm').value;
-      const year = document.getElementById('paymentYear').value;
-      const feeAmount = parseFloat(document.getElementById('feeAmount').value);
-      const amountPaid = parseFloat(document.getElementById('amountPaid').value);
-      const paymentMethod = document.getElementById('paymentMethod').value;
-      const receiptNumber = document.getElementById('receiptNumber').value;
-      const paymentNotes = document.getElementById('paymentNotes').value;
-      
-      if (!studentId || !term || !year || isNaN(feeAmount) || isNaN(amountPaid) || !paymentMethod) {
-        alert('Please fill in all required fields');
-        return;
-      }
-      
-      if (amountPaid > feeAmount) {
-        alert('Amount paid cannot be greater than fee amount');
-        return;
-      }
-      
-      try {
-        // Add fee payment record
-        const paymentData = {
-          studentId,
-          term,
-          year,
-          feeAmount,
-          amountPaid,
-          paymentMethod,
-          receiptNumber: receiptNumber || null,
-          paymentNotes: paymentNotes || null,
-          paymentDate: new Date().toISOString().split('T')[0],
-          recordedAt: serverTimestamp()
-        };
-        
-        // Add to fee payments collection
-        const docRef = await addDoc(collection(db, "feePayments"), paymentData);
-        
-        // Update student document with fee status
-        const studentRef = doc(db, "students", studentId);
-        await updateDoc(studentRef, {
-          feesPaid: amountPaid >= feeAmount,
-          feesBalance: feeAmount - amountPaid,
-          lastFeePayment: paymentData
-        });
-        
-        alert('Fee payment recorded successfully!');
-        this.reset();
-        await fetchFeeRecords();
-        showReceipt(docRef.id);
-      } catch (err) {
-        console.error("Error recording fee payment:", err);
-        alert("Error recording fee payment. Please try again.");
-      }
-    });
-
-    // Show payment receipt
-    function showReceipt(paymentId) {
-      const payment = feeRecords.find(r => r.id === paymentId);
-      if (!payment) return;
-      
-      const student = allStudents.find(s => s.id === payment.studentId);
-      if (!student) return;
-      
-      // Populate receipt data
-      document.getElementById('receiptNoDisplay').textContent = payment.receiptNumber || `SMHS-${new Date().getFullYear()}-${payment.id.slice(0, 4).toUpperCase()}`;
-      document.getElementById('receiptDateDisplay').textContent = new Date().toLocaleDateString();
-      document.getElementById('receiptStudentDisplay').textContent = `${student.firstname} ${student.surname}`;
-      document.getElementById('receiptFormDisplay').textContent = student.form || '';
-      document.getElementById('receiptStreamDisplay').textContent = student.stream || '';
-      document.getElementById('receiptYearDisplay').textContent = payment.year;
-      document.getElementById('receiptTermDisplay').textContent = payment.term;
-      document.getElementById('receiptMethodDisplay').textContent = payment.paymentMethod;
-      document.getElementById('receiptReceivedBy').textContent = document.getElementById('teacherName').value || 'School Admin';
-      
-      // For demo purposes - in a real app these would come from the database
-      document.getElementById('receiptTuitionAmount').textContent = (payment.feeAmount * 0.75).toFixed(2);
-      document.getElementById('receiptExamAmount').textContent = (payment.feeAmount * 0.15).toFixed(2);
-      document.getElementById('receiptOtherAmount').textContent = (payment.feeAmount * 0.10).toFixed(2);
-      document.getElementById('receiptTotalAmount').textContent = payment.feeAmount.toFixed(2);
-      document.getElementById('receiptPaidAmount').textContent = payment.amountPaid.toFixed(2);
-      document.getElementById('receiptBalanceAmount').textContent = Math.max(0, payment.feeAmount - payment.amountPaid).toFixed(2);
-      
-      // Show modal
-      document.getElementById('receiptModal').style.display = 'block';
-    }
-
-    // Close receipt modal
-    document.querySelector('.close-receipt').addEventListener('click', function() {
-      document.getElementById('receiptModal').style.display = 'none';
-    });
-
-    document.getElementById('closeReceipt').addEventListener('click', function() {
-      document.getElementById('receiptModal').style.display = 'none';
-    });
-
-    // Print receipt
-    document.getElementById('printReceipt').addEventListener('click', function() {
-      window.print();
-    });
-
-    // Filter fee records
-    document.getElementById('feeFormFilter').addEventListener('change', filterFeeRecords);
-    document.getElementById('feeStreamFilter').addEventListener('change', filterFeeRecords);
-    document.getElementById('feeStatusFilter').addEventListener('change', filterFeeRecords);
-    document.getElementById('resetFilters').addEventListener('click', resetFeeFilters);
-
-    function filterFeeRecords() {
-      const formFilter = document.getElementById('feeFormFilter').value;
-      const streamFilter = document.getElementById('feeStreamFilter').value;
-      const statusFilter = document.getElementById('feeStatusFilter').value;
-      
-      feeTable.search('').columns().search('').draw();
-      
-      if (formFilter) {
-        feeTable.column(1).search(formFilter).draw();
-      }
-      
-      if (streamFilter) {
-        feeTable.column(2).search(streamFilter).draw();
-      }
-      
-      if (statusFilter) {
-        feeTable.column(6).search(statusFilter).draw();
+      // Check for saved theme preference
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+        themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
       }
     }
 
-    function resetFeeFilters() {
-      document.getElementById('feeFormFilter').value = '';
-      document.getElementById('feeStreamFilter').value = '';
-      document.getElementById('feeStatusFilter').value = '';
-      feeTable.search('').columns().search('').draw();
-    }
-
-    // Initialize fee trends chart
-    function initFeeTrendsChart() {
-      const ctx = document.getElementById('feeTrendsChart').getContext('2d');
-      feeTrendsChart = new Chart(ctx, {
-        type: 'bar',
+    // Initialize charts
+    function initCharts() {
+      // Monthly payments chart
+      const monthlyCtx = document.getElementById('monthlyPaymentsChart').getContext('2d');
+      const monthlyChart = new Chart(monthlyCtx, {
+        type: 'line',
         data: {
-          labels: ['Term 1', 'Term 2', 'Term 3'],
-          datasets: [
-            {
-              label: 'Total Collected (K)',
-              data: [0, 0, 0],
-              backgroundColor: 'rgba(214, 158, 46, 0.7)',
-              borderColor: 'rgba(214, 158, 46, 1)',
-              borderWidth: 1
-            },
-            {
-              label: 'Outstanding (K)',
-              data: [0, 0, 0],
-              backgroundColor: 'rgba(248, 113, 113, 0.7)',
-              borderColor: 'rgba(248, 113, 113, 1)',
-              borderWidth: 1
-            }
-          ]
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Payments',
+            data: [1200, 1900, 1500, 2000, 1800, 2200, 2400, 2100, 1900, 2300, 2500, 2800],
+            backgroundColor: 'rgba(214, 158, 46, 0.2)',
+            borderColor: 'rgba(214, 158, 46, 1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true
+          }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
           scales: {
             y: {
               beginAtZero: true,
               ticks: {
                 callback: function(value) {
-                  return 'K' + value.toLocaleString();
-                }
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return context.dataset.label + ': K' + context.raw.toLocaleString();
+                  return '$' + value;
                 }
               }
             }
           }
         }
       });
-      
-      updateFeeTrendsChart();
-    }
 
-    // Update fee trends chart
-    function updateFeeTrendsChart() {
-      if (!feeTrendsChart) initFeeTrendsChart();
-      
-      const currentYear = new Date().getFullYear();
-      const termData = {
-        'Term 1': { collected: 0, outstanding: 0 },
-        'Term 2': { collected: 0, outstanding: 0 },
-        'Term 3': { collected: 0, outstanding: 0 }
-      };
-      
-      feeRecords.forEach(record => {
-        if (record.year == currentYear && termData[record.term]) {
-          termData[record.term].collected += record.amountPaid;
-          termData[record.term].outstanding += Math.max(0, record.feeAmount - record.amountPaid);
-        }
-      });
-      
-      feeTrendsChart.data.datasets[0].data = [
-        termData['Term 1'].collected,
-        termData['Term 2'].collected,
-        termData['Term 3'].collected
-      ];
-      
-      feeTrendsChart.data.datasets[1].data = [
-        termData['Term 1'].outstanding,
-        termData['Term 2'].outstanding,
-        termData['Term 3'].outstanding
-      ];
-      
-      feeTrendsChart.update();
-    }
-
-    // Tab switching
-    document.querySelectorAll('.fee-tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        document.querySelectorAll('.fee-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.fee-tab-content').forEach(c => c.classList.remove('active'));
-        
-        this.classList.add('active');
-        document.getElementById(this.dataset.tab).classList.add('active');
-      });
-    });
-
-    // Export fee report
-    document.getElementById('exportFeeReport').addEventListener('click', exportFeeReportPDF);
-    document.getElementById('exportFeeExcel').addEventListener('click', exportFeeReportExcel);
-
-    function exportFeeReportPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      
-      // Add school logo
-      doc.addImage('https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg', 'JPEG', 10, 10, 30, 30);
-      
-      // School header
-      doc.setFontSize(18);
-      doc.setTextColor(26, 54, 93);
-      doc.text('St. Mary\'s High School', 50, 20);
-      doc.setFontSize(14);
-      doc.text('Fee Payment Report', 50, 28);
-      
-      // Report filters
-      const formFilter = document.getElementById('reportFormFilter').value || 'All Forms';
-      const termFilter = document.getElementById('reportTermFilter').value || 'All Terms';
-      const yearFilter = document.getElementById('reportYearFilter').value || 'All Years';
-      
-      doc.setFontSize(12);
-      doc.text(`Form: ${formFilter}`, 14, 45);
-      doc.text(`Term: ${termFilter}`, 14, 55);
-      doc.text(`Year: ${yearFilter}`, 14, 65);
-      
-      // Summary statistics
-      doc.setFontSize(14);
-      doc.setTextColor(26, 54, 93);
-      doc.text('Summary Statistics', 14, 80);
-      
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      doc.text(`Total Paid Students: ${document.getElementById('paid-count').textContent}`, 14, 90);
-      doc.text(`Total Unpaid Students: ${document.getElementById('unpaid-count').textContent}`, 14, 100);
-      doc.text(`Total Partial Payments: ${document.getElementById('partial-count').textContent}`, 14, 110);
-      doc.text(`Total Collected: ${document.getElementById('total-collected').textContent}`, 14, 120);
-      
-      // Fee records table
-      doc.setFontSize(14);
-      doc.setTextColor(26, 54, 93);
-      doc.text('Fee Payment Details', 14, 140);
-      
-      const headers = [['Student', 'Form', 'Stream', 'Fee Amount', 'Amount Paid', 'Balance', 'Status']];
-      const data = [];
-      
-      feeRecords.forEach(record => {
-        const student = allStudents.find(s => s.id === record.studentId);
-        if (!student) return;
-        
-        // Apply filters
-        if (formFilter !== 'All Forms' && student.form !== formFilter) return;
-        if (termFilter !== 'All Terms' && record.term !== termFilter) return;
-        if (yearFilter !== 'All Years' && record.year !== yearFilter) return;
-        
-        const status = getPaymentStatus(record);
-        const balance = record.feeAmount - record.amountPaid;
-        
-        data.push([
-          `${student.firstname} ${student.surname}`,
-          student.form || '',
-          student.stream || '',
-                    `K${record.feeAmount.toFixed(2)}`,
-          `K${record.amountPaid.toFixed(2)}`,
-          `K${Math.max(0, balance).toFixed(2)}`,
-          status.charAt(0).toUpperCase() + status.slice(1)
-        ]);
-      });
-
-      doc.autoTable({
-        head: headers,
-        body: data,
-        startY: 150,
-        headStyles: {
-          fillColor: [26, 54, 93],
-          textColor: 255
-        },
-        alternateRowStyles: {
-          fillColor: [240, 240, 240]
-        },
-        styles: {
-          cellPadding: 5,
-          fontSize: 10
-        }
-      });
-
-      // Footer
-      const date = new Date().toLocaleDateString();
-      doc.setFontSize(10);
-      doc.text(`Generated on: ${date}`, 14, doc.lastAutoTable.finalY + 15);
-      doc.text('© 2025 St. Mary\'s High School', 160, doc.lastAutoTable.finalY + 15);
-
-      doc.save(`fee_report_${formFilter}_${termFilter}_${yearFilter}.pdf`);
-    }
-
-    function exportFeeReportExcel() {
-      // Create a workbook
-      const wb = XLSX.utils.book_new();
-      
-      // Prepare data
-      const headers = ['Student', 'Form', 'Stream', 'Fee Amount (K)', 'Amount Paid (K)', 'Balance (K)', 'Status', 'Payment Date', 'Method'];
-      const data = [headers];
-      
-      feeRecords.forEach(record => {
-        const student = allStudents.find(s => s.id === record.studentId);
-        if (!student) return;
-        
-        const status = getPaymentStatus(record);
-        const balance = record.feeAmount - record.amountPaid;
-        
-        data.push([
-          `${student.firstname} ${student.surname}`,
-          student.form || '',
-          student.stream || '',
-          record.feeAmount,
-          record.amountPaid,
-          Math.max(0, balance),
-          status.charAt(0).toUpperCase() + status.slice(1),
-          record.paymentDate || '',
-          record.paymentMethod
-        ]);
-      });
-      
-      // Create worksheet
-      const ws = XLSX.utils.aoa_to_sheet(data);
-      
-      // Add worksheet to workbook
-      XLSX.utils.book_append_sheet(wb, ws, "Fee Payments");
-      
-      // Generate and download Excel file
-      XLSX.writeFile(wb, `fee_payments_${new Date().toISOString().slice(0,10)}.xlsx`);
-    }
-
-    // Edit fee record
-    window.editFeeRecord = async function(paymentId) {
-      const payment = feeRecords.find(r => r.id === paymentId);
-      if (!payment) return;
-      
-      const student = allStudents.find(s => s.id === payment.studentId);
-      if (!student) return;
-      
-      // Switch to payment tab
-      document.querySelectorAll('.fee-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.fee-tab-content').forEach(c => c.classList.remove('active'));
-      document.querySelector('.fee-tab[data-tab="fee-payment"]').classList.add('active');
-      document.getElementById('fee-payment').classList.add('active');
-      
-      // Populate form
-      document.getElementById('paymentStudent').value = payment.studentId;
-      document.getElementById('paymentTerm').value = payment.term;
-      document.getElementById('paymentYear').value = payment.year;
-      document.getElementById('feeAmount').value = payment.feeAmount;
-      document.getElementById('amountPaid').value = payment.amountPaid;
-      document.getElementById('paymentMethod').value = payment.paymentMethod;
-      document.getElementById('receiptNumber').value = payment.receiptNumber || '';
-      document.getElementById('paymentNotes').value = payment.paymentNotes || '';
-      
-      // Scroll to form
-      document.getElementById('feePaymentForm').scrollIntoView({ behavior: 'smooth' });
-    };
-
-    // Delete fee record
-    window.deleteFeeRecord = async function(paymentId) {
-      if (!confirm('Are you sure you want to delete this fee record? This action cannot be undone.')) return;
-      
-      try {
-        // In a real app, you would delete from Firebase here
-        // await deleteDoc(doc(db, "feePayments", paymentId));
-        
-        // For demo purposes, just remove from local array
-        feeRecords = feeRecords.filter(r => r.id !== paymentId);
-        updateFeeTable();
-        updateFeeSummaryCards();
-        updateFeeTrendsChart();
-        
-        alert('Fee record deleted successfully!');
-      } catch (err) {
-        console.error("Error deleting fee record:", err);
-        alert("Error deleting fee record. Please try again.");
-      }
-    };
-
-    // View receipt
-    window.viewReceipt = function(paymentId) {
-      showReceipt(paymentId);
-    };
-
-    // Display students as cards
-    function displayStudents(students) {
-      studentList.innerHTML = "";
-      if (!students.length) {
-        studentList.innerHTML = `<div class="notification" style="padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; text-align: center;">
-          <i class="fas fa-info-circle"></i> No students found matching your criteria
-        </div>`;
-        return;
-      }
-      students.forEach((s) => {
-        const card = document.createElement("div");
-        card.className = "student-card";
-        card.innerHTML = `
-          <h3>${s.firstname || ""} ${s.surname || ""}</h3>
-          <p>${s.email || ""}</p>
-          <p><small>${s.form || "No form"} ${s.stream ? "• " + s.stream : ""}</small></p>
-          ${s.feesPaid !== undefined ? 
-            `<div class="fee-status ${s.feesPaid ? 'paid' : (s.feesBalance && s.feesBalance < s.feeAmount ? 'partial' : 'unpaid')}">
-              ${s.feesPaid ? 'Fully Paid' : (s.feesBalance && s.feesBalance < s.feeAmount ? 'Partial Payment' : 'Unpaid')}
-            </div>` : ''}
-        `;
-        card.addEventListener("click", () => openMarksForm(s));
-        studentList.appendChild(card);
-      });
-    }
-
-    // Update side menu totals
-    function updateSideMenu() {
-      const overall = allStudents.length;
-      document.getElementById("overallTotal").textContent = overall;
-
-      // Group by form -> streams
-      const formsCount = {};
-      allStudents.forEach((st) => {
-        const f = st.form || "Unknown";
-        const str = st.stream || "Not set";
-        if (!formsCount[f]) {
-          formsCount[f] = { total: 0, streams: {} };
-        }
-        formsCount[f].total++;
-        if (!formsCount[f].streams[str]) {
-          formsCount[f].streams[str] = 0;
-        }
-        formsCount[f].streams[str]++;
-      });
-
-      // Sort forms
-      const formTotalsEl = document.getElementById("formTotals");
-      formTotalsEl.innerHTML = "";
-      const sortedForms = Object.keys(formsCount).sort((a, b) => {
-        const numA = parseInt(a.replace("Form ", "")) || 0;
-        const numB = parseInt(b.replace("Form ", "")) || 0;
-        return numA - numB;
-      });
-
-      sortedForms.forEach((f) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<strong>${f}:</strong> ${formsCount[f].total}`;
-        const streamsUl = document.createElement("ul");
-        Object.keys(formsCount[f].streams).forEach((st) => {
-          const stLi = document.createElement("li");
-          stLi.textContent = `${st}: ${formsCount[f].streams[st]}`;
-          streamsUl.appendChild(stLi);
-        });
-        li.appendChild(streamsUl);
-        formTotalsEl.appendChild(li);
-      });
-    }
-
-    // Filter logic
-    window.filterStudents = () => {
-      const search = document.getElementById("searchStudent").value.toLowerCase();
-      document.querySelectorAll(".student-card").forEach((card) => {
-        card.style.display = card.textContent.toLowerCase().includes(search) ? "" : "none";
-      });
-    };
-    window.filterByForm = () => {
-      const formVal = document.getElementById("formSelect").value;
-      const streamSel = document.getElementById("streamSelect");
-      let filtered = [...allStudents];
-      if (!formVal) {
-        streamSel.style.display = "none";
-        streamSel.innerHTML = `<option value="">Select Stream/Class</option>`;
-        displayStudents(filtered);
-        return;
-      }
-      streamSel.style.display = "inline-block";
-      if (formVal === "Form 5" || formVal === "Form 6") {
-        streamSel.innerHTML = `<option value="">Select Stream/Class</option>
-          <option value="Arts">Arts</option>
-          <option value="Commercials">Commercials</option>
-          <option value="Sciences">Sciences</option>`;
-      } else {
-        streamSel.innerHTML = `<option value="">Select Stream/Class</option>
-          <option value="G">G</option>
-          <option value="W">W</option>
-          <option value="Z">Z</option>
-          <option value="E">E</option>
-          <option value="U">U</option>`;
-      }
-      filtered = filtered.filter((s) => s.form === formVal);
-      const selectedStream = streamSel.value;
-      if (selectedStream) {
-        filtered = filtered.filter((s) => s.stream === selectedStream);
-      }
-      displayStudents(filtered);
-    };
-    window.filterByStream = () => {
-      const formVal = document.getElementById("formSelect").value;
-      const streamVal = document.getElementById("streamSelect").value;
-      let filtered = [...allStudents];
-      if (formVal) {
-        filtered = filtered.filter((s) => s.form === formVal);
-      }
-      if (streamVal) {
-        filtered = filtered.filter((s) => s.stream === streamVal);
-      }
-      displayStudents(filtered);
-    };
-
-    // Open marks form
-    window.openMarksForm = (student) => {
-      document.getElementById("selectedStudent").textContent = `${student.firstname || ""} ${student.surname || ""}`;
-      marksForm.style.display = "block";
-      marksForm.dataset.studentId = student.id;
-      document.getElementById("feesPaid").checked = (student.feesPaid !== undefined) ? student.feesPaid : true;
-      document.getElementById("feesBalance").value = student.feesBalance || "";
-      if(student.feesPaid === false) {
-        document.getElementById("feesBalanceGroup").style.display = "block";
-      } else {
-        document.getElementById("feesBalanceGroup").style.display = "none";
-      }
-      document.getElementById("yearInput").value = student.year || "";
-      document.getElementById("termInput").value = student.term || "";
-      document.getElementById("teacherName").value = student.teacherName || "";
-      document.getElementById("teacherComments").value = student.teacherComments || "";
-      const subjectFields = document.getElementById("subjectFields");
-      subjectFields.innerHTML = "";
-      const subs = student.marks || {};
-      const keys = Object.keys(subs);
-      for (let i = 0; i < 10; i++) {
-        const subName = keys[i] || "";
-        const marksVal = keys[i] ? subs[keys[i]].marks : "";
-        const gradeVal = keys[i] ? subs[keys[i]].grade : "";
-        subjectFields.innerHTML += `
-          <div class="form-group">
-            <label>Subject ${i + 1}</label>
-            <input type="text" id="subject${i}" value="${subName}" placeholder="Enter subject name" />
-            <input type="number" id="marks${i}" value="${marksVal}" placeholder="Enter marks" oninput="updateGrade(${i})"/>
-            <select id="grade${i}">
-              <option value="A" ${gradeVal === "A" ? "selected" : ""}>A (90-100)</option>
-              <option value="B" ${gradeVal === "B" ? "selected" : ""}>B (80-89)</option>
-              <option value="C" ${gradeVal === "C" ? "selected" : ""}>C (70-79)</option>
-              <option value="D" ${gradeVal === "D" ? "selected" : ""}>D (60-69)</option>
-              <option value="F" ${gradeVal === "F" ? "selected" : ""}>F (Below 60)</option>
-            </select>
-          </div>
-        `;
-      }
-    };
-
-    // Toggle fees balance input based on feesPaid checkbox
-    document.getElementById("feesPaid").addEventListener("change", function() {
-      if(this.checked) {
-        document.getElementById("feesBalanceGroup").style.display = "none";
-      } else {
-        document.getElementById("feesBalanceGroup").style.display = "block";
-      }
-    });
-
-    // Auto-grade
-    window.updateGrade = (i) => {
-      const marksInput = document.getElementById(`marks${i}`);
-      const gradeSelect = document.getElementById(`grade${i}`);
-      const val = Number(marksInput.value);
-      let grade = "F";
-      if (!isNaN(val)) {
-        if (val >= 90) grade = "A";
-        else if (val >= 80) grade = "B";
-        else if (val >= 70) grade = "C";
-        else if (val >= 60) grade = "D";
-      }
-      gradeSelect.value = grade;
-    };
-
-    // Save marks
-    marksForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const studentId = marksForm.dataset.studentId;
-      let newMarks = {};
-      for (let i = 0; i < 10; i++) {
-        const sub = document.getElementById(`subject${i}`).value.trim();
-        const m = document.getElementById(`marks${i}`).value;
-        const g = document.getElementById(`grade${i}`).value;
-        if (sub && m) {
-          newMarks[sub] = { marks: Number(m), grade: g };
-        }
-      }
-      const yearVal = document.getElementById("yearInput").value.trim();
-      const termVal = document.getElementById("termInput").value;
-      const feesPaid = document.getElementById("feesPaid").checked;
-      const feesBalance = document.getElementById("feesBalance").value;
-      const teacherName = document.getElementById("teacherName").value.trim();
-      const teacherComments = document.getElementById("teacherComments").value.trim();
-      try {
-        await setDoc(doc(db, "students", studentId), {
-          marks: newMarks,
-          year: yearVal,
-          term: termVal,
-          feesPaid: feesPaid,
-          feesBalance: feesPaid ? 0 : Number(feesBalance),
-          teacherName: teacherName,
-          teacherComments: teacherComments
-        }, { merge: true });
-        alert("Marks saved successfully!");
-        marksForm.reset();
-        marksForm.style.display = "none";
-        displayReportCard(studentId);
-      } catch (err) {
-        console.error("Error saving marks:", err);
-        alert("Error saving marks. Please try again.");
-      }
-    });
-
-    // Display report card
-    async function displayReportCard(studentId) {
-      try {
-        const snap = await getDoc(doc(db, "students", studentId));
-        if (snap.exists()) {
-          const data = snap.data();
-          const { name, surname } = extractNameSurname(data.email || "");
-          document.getElementById("reportName").textContent = name;
-          document.getElementById("reportSurname").textContent = surname;
-          document.getElementById("reportEmail").textContent = data.email || "";
-          document.getElementById("reportYear").textContent = data.year || "";
-          document.getElementById("reportTerm").textContent = data.term || "";
-          if (data.marks) {
-            reportCard.style.display = "block";
-            reportCardBody.innerHTML = "";
-            let total = 0, count = 0;
-            for (const [subj, info] of Object.entries(data.marks)) {
-              reportCardBody.innerHTML += `
-                <tr>
-                  <td>${subj}</td>
-                  <td>${info.marks}</td>
-                  <td>${info.grade}</td>
-                  <td>
-                    <button class="edit-btn" onclick="editSubject('${studentId}', '${subj}')"><i class="fas fa-edit"></i> Edit</button>
-                    <button class="delete-btn" onclick="deleteSubject('${studentId}', '${subj}')"><i class="fas fa-trash"></i> Delete</button>
-                  </td>
-                </tr>
-              `;
-              total += info.marks;
-              count++;
-            }
-            const avg = count ? (total / count).toFixed(2) : 0;
-            reportCardBody.innerHTML += `
-              <tr><td colspan="4" style="font-weight: bold; background: rgba(214, 158, 46, 0.1);">Average Marks: ${avg}</td></tr>
-            `;
-            updateChart(data.marks);
-          } else {
-            reportCard.style.display = "none";
-          }
-        }
-      } catch (err) {
-        console.error("Error displaying report card:", err);
-        alert("Error displaying report card. Please try again.");
-      }
-    }
-
-    // Update chart
-    function updateChart(marksData) {
-      const ctx = document.getElementById("performanceChart").getContext("2d");
-      const subs = Object.keys(marksData);
-      const vals = subs.map((sub) => marksData[sub].marks);
-      if (performanceChart) {
-        performanceChart.destroy();
-      }
-      performanceChart = new Chart(ctx, {
-        type: "bar",
+      // Payment methods chart
+      const methodsCtx = document.getElementById('paymentMethodsChart').getContext('2d');
+      const methodsChart = new Chart(methodsCtx, {
+        type: 'doughnut',
         data: {
-          labels: subs,
-          datasets: [
-            {
-              label: "Marks",
-              data: vals,
-              backgroundColor: "rgba(214, 158, 46, 0.5)",
-              borderColor: "rgba(214, 158, 46, 1)",
-              borderWidth: 1
-            }
-          ]
+          labels: ['Cash', 'Ecocash', 'OneMoney', 'Bank Transfer', 'Swipe'],
+          datasets: [{
+            data: [35, 25, 20, 15, 5],
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+              'rgba(255, 99, 132, 0.7)'
+            ],
+            borderWidth: 1
+          }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: { 
-              beginAtZero: true,
-              max: 100,
-              ticks: {
-                callback: function(value) {
-                  return value + '%';
-                }
-              }
-            }
-          },
           plugins: {
             legend: {
-              display: false
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return context.parsed.y + '%';
-                               }
-              }
+              position: 'right'
             }
           }
         }
       });
     }
 
-    // Delete subject
-    window.deleteSubject = async (studentId, subj) => {
-      if (!confirm(`Are you sure you want to delete ${subj}? This action cannot be undone.`)) return;
-      try {
-        const snap = await getDoc(doc(db, "students", studentId));
-        if (snap.exists()) {
-          const data = snap.data();
-          if (data.marks && data.marks[subj]) {
-            delete data.marks[subj];
-            await setDoc(doc(db, "students", studentId), {
-              marks: data.marks
-            }, { merge: true });
-            alert(`${subj} deleted successfully!`);
-            displayReportCard(studentId);
-          }
-        }
-      } catch (err) {
-        console.error("Error deleting subject:", err);
-        alert("Error deleting subject. Please try again.");
+    // Initialize DataTables
+    function initDataTables() {
+      studentsTable = new DataTable('#studentsTable', {
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100]
+      });
+
+      paymentsTable = new DataTable('#paymentsTable', {
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        order: [[1, 'desc']]
+      });
+
+      feeStructureTable = new DataTable('#feeStructureTable', {
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100]
+      });
+    }
+
+    // Update dashboard statistics
+    function updateDashboardStats() {
+      // Calculate total collected
+      const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
+      document.getElementById('totalCollected').textContent = `$${totalCollected.toLocaleString()}`;
+      
+      // Total students
+      document.getElementById('totalStudents').textContent = allStudents.length;
+      
+      // Fully paid students
+      const fullyPaid = allStudents.filter(student => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        return paidAmount >= totalFees;
+      }).length;
+      document.getElementById('fullyPaid').textContent = fullyPaid;
+      
+      // Total outstanding
+      let totalOutstanding = 0;
+      allStudents.forEach(student => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        totalOutstanding += Math.max(0, totalFees - paidAmount);
+      });
+      document.getElementById('totalOutstanding').textContent = `$${totalOutstanding.toLocaleString()}`;
+      
+      // Populate recent payments
+      populateRecentPayments();
+    }
+
+    // Calculate total fees for a student
+    function calculateTotalFees(student) {
+      // This would normally come from the fee structure based on student's class
+      // For demo purposes, we'll use a fixed amount
+      return 1000; // $1000 per term
+    }
+
+    // Calculate paid amount for a student
+    function calculatePaidAmount(studentId) {
+      return allPayments
+        .filter(payment => payment.studentId === studentId)
+        .reduce((sum, payment) => sum + payment.amount, 0);
+    }
+
+    // Populate student dropdown
+    function populateStudentDropdown() {
+      const select = document.getElementById('paymentStudent');
+      select.innerHTML = '<option value="">Select Student</option>';
+      
+      allStudents.forEach(student => {
+        const option = document.createElement('option');
+        option.value = student.id;
+        option.textContent = `${student.firstname} ${student.surname} (${student.admissionNumber}) - ${student.form} ${student.stream || ''}`;
+        select.appendChild(option);
+      });
+    }
+
+    // Load student details when selected
+    function loadStudentDetails() {
+      const studentId = document.getElementById('paymentStudent').value;
+      if (!studentId) {
+        document.getElementById('studentPaymentDetails').style.display = 'none';
+        return;
+      }
+      
+      const student = allStudents.find(s => s.id === studentId);
+      if (student) {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        const balance = totalFees - paidAmount;
+        
+        document.getElementById('studentClassDisplay').textContent = `${student.form} ${student.stream || ''}`;
+        document.getElementById('totalFeesDisplay').textContent = `$${totalFees.toLocaleString()}`;
+        document.getElementById('paidFeesDisplay').textContent = `$${paidAmount.toLocaleString()}`;
+        document.getElementById('balanceFeesDisplay').textContent = `$${balance.toLocaleString()}`;
+        
+        document.getElementById('studentPaymentDetails').style.display = 'block';
+      }
+    }
+
+    // Populate students table
+    function populateStudentsTable() {
+      const tbody = document.getElementById('studentsBody');
+      tbody.innerHTML = '';
+      
+      allStudents.forEach(student => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        const balance = totalFees - paidAmount;
+        const status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${student.admissionNumber || 'N/A'}</td>
+          <td>${student.firstname} ${student.surname}</td>
+          <td>${student.form} ${student.stream || ''}</td>
+          <td>$${totalFees.toLocaleString()}</td>
+          <td>$${paidAmount.toLocaleString()}</td>
+          <td>$${balance.toLocaleString()}</td>
+          <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+          <td>
+            <button class="btn btn-sm btn-secondary" onclick="showStudentPaymentHistory('${student.id}')"><i class="fas fa-history"></i></button>
+            <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')"><i class="fas fa-money-bill-wave"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      // Refresh DataTable
+      if (studentsTable) {
+        studentsTable.destroy();
+        studentsTable = new DataTable('#studentsTable', {
+          responsive: true,
+          pageLength: 10,
+          lengthMenu: [10, 25, 50, 100]
+        });
+      }
+    }
+
+    // Populate payments table
+    function populatePaymentsTable() {
+      const tbody = document.getElementById('paymentsBody');
+      tbody.innerHTML = '';
+      
+      allPayments.forEach(payment => {
+        const student = allStudents.find(s => s.id === payment.studentId);
+        const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
+        const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${payment.receiptNumber || 'N/A'}</td>
+          <td>${payment.date ? new Date(payment.date.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+          <td>${studentName}</td>
+          <td>${studentClass}</td>
+          <td>$${payment.amount.toLocaleString()} ${payment.currency}</td>
+          <td>${payment.method}</td>
+          <td>${payment.recordedBy || 'System'}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary"><i class="fas fa-print"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deletePayment('${payment.id}')"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      // Refresh DataTable
+      if (paymentsTable) {
+        paymentsTable.destroy();
+        paymentsTable = new DataTable('#paymentsTable', {
+          responsive: true,
+          pageLength: 10,
+          lengthMenu: [10, 25, 50, 100],
+          order: [[1, 'desc']]
+        });
+      }
+    }
+
+    // Populate fee structure table
+    function populateFeeStructureTable() {
+      const tbody = document.getElementById('feeStructureBody');
+      tbody.innerHTML = '';
+      
+      feeStructure.forEach(fee => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${fee.class || 'All Classes'}</td>
+          <td>${fee.item}</td>
+          <td>$${fee.amountUSD.toLocaleString()}</td>
+          <td>ZWL$${fee.amountZWL.toLocaleString()}</td>
+          <td>${fee.term || 'All Terms'}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-danger" onclick="deleteFeeItem('${fee.id}')"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      // Refresh DataTable
+      if (feeStructureTable) {
+        feeStructureTable.destroy();
+        feeStructureTable = new DataTable('#feeStructureTable', {
+          responsive: true,
+          pageLength: 10,
+          lengthMenu: [10, 25, 50, 100]
+        });
+      }
+    }
+
+    // Populate recent payments
+    function populateRecentPayments() {
+      const tbody = document.getElementById('recentPaymentsBody');
+      tbody.innerHTML = '';
+      
+      const recentPayments = allPayments.slice(0, 5); // Get last 5 payments
+      
+      recentPayments.forEach(payment => {
+        const student = allStudents.find(s => s.id === payment.studentId);
+        const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
+        const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${payment.date ? new Date(payment.date.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+          <td>${studentName}</td>
+          <td>${studentClass}</td>
+          <td>$${payment.amount.toLocaleString()} ${payment.currency}</td>
+          <td>${payment.method}</td>
+          <td><span class="status-badge status-paid">Paid</span></td>
+          <td>
+            <button class="btn btn-sm btn-secondary"><i class="fas fa-print"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Show payment modal
+    window.showPaymentModal = function(studentId = null) {
+      const modal = document.getElementById('paymentModal');
+      modal.style.display = 'block';
+      
+      if (studentId) {
+        document.getElementById('paymentStudent').value = studentId;
+        loadStudentDetails();
       }
     };
 
-    // Edit subject
-    window.editSubject = async (studentId, subj) => {
+    // Close modal
+    window.closeModal = function(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    };
+
+    // Record payment
+    window.recordPayment = async function() {
+      const studentId = document.getElementById('paymentStudent').value;
+      const amount = parseFloat(document.getElementById('paymentAmount').value);
+      const currency = document.getElementById('paymentCurrency').value;
+      const method = document.getElementById('paymentMethod').value;
+      const reference = document.getElementById('paymentReference').value;
+      const notes = document.getElementById('paymentNotes').value;
+      
+      if (!studentId || !amount || isNaN(amount) || amount <= 0) {
+        alert('Please select a student and enter a valid amount');
+        return;
+      }
+      
       try {
-        const snap = await getDoc(doc(db, "students", studentId));
-        if (snap.exists()) {
-          const data = snap.data();
-          data.id = studentId;
-          openMarksForm(data);
-          setTimeout(() => {
-            for (let i = 0; i < 10; i++) {
-              const si = document.getElementById(`subject${i}`);
-              if (si && si.value === subj) {
-                si.focus();
-                si.style.border = "2px solid var(--secondary)";
-                setTimeout(() => (si.style.border = ""), 2000);
-                break;
-              }
-            }
-          }, 100);
-        }
+        // Create payment record
+        const paymentData = {
+          studentId,
+          amount,
+          currency,
+          method,
+          receiptNumber: reference || `REC-${Date.now()}`,
+          notes,
+          date: serverTimestamp(),
+          recordedBy: currentUser.name,
+          status: 'completed'
+        };
+        
+        // Add to Firebase
+        const docRef = await addDoc(collection(db, "payments"), paymentData);
+        console.log("Payment recorded with ID: ", docRef.id);
+        
+        // Add to local array and update UI
+        paymentData.id = docRef.id;
+        allPayments.unshift(paymentData);
+        
+        // Update UI
+        updateDashboardStats();
+        populatePaymentsTable();
+        populateStudentsTable();
+        
+        // Close modal and reset form
+        closeModal('paymentModal');
+        document.getElementById('paymentAmount').value = '';
+        document.getElementById('paymentReference').value = '';
+        document.getElementById('paymentNotes').value = '';
+        
+        alert('Payment recorded successfully!');
       } catch (err) {
-        console.error("Error editing subject:", err);
-        alert("Error editing subject. Please try again.");
+        console.error("Error recording payment:", err);
+        alert("Error recording payment. Please try again.");
       }
     };
 
-    // Export to PDF
-    window.exportPDF = () => {
+    // Show fee structure modal
+    window.showFeeStructureModal = function() {
+      document.getElementById('feeStructureModal').style.display = 'block';
+    };
+
+    // Save fee item
+    window.saveFeeItem = async function() {
+      const feeClass = document.getElementById('feeClass').value;
+      const feeTerm = document.getElementById('feeTerm').value;
+      const feeItem = document.getElementById('feeItem').value;
+      const amountUSD = parseFloat(document.getElementById('feeAmountUSD').value);
+      const amountZWL = parseFloat(document.getElementById('feeAmountZWL').value);
+      const description = document.getElementById('feeDescription').value;
+      
+      if (!feeClass || !feeItem || isNaN(amountUSD) || isNaN(amountZWL)) {
+        alert('Please fill all required fields with valid values');
+        return;
+      }
+      
+      try {
+        // Create fee structure item
+        const feeData = {
+          class: feeClass,
+          term: feeTerm,
+          item: feeItem,
+          amountUSD,
+          amountZWL,
+          description,
+          createdAt: serverTimestamp()
+        };
+        
+        // Add to Firebase
+        const docRef = await addDoc(collection(db, "feeStructure"), feeData);
+        console.log("Fee item added with ID: ", docRef.id);
+        
+        // Add to local array and update UI
+        feeData.id = docRef.id;
+        feeStructure.push(feeData);
+        populateFeeStructureTable();
+        
+        // Close modal and reset form
+        closeModal('feeStructureModal');
+        document.getElementById('feeItem').value = '';
+        document.getElementById('feeAmountUSD').value = '';
+        document.getElementById('feeAmountZWL').value = '';
+        document.getElementById('feeDescription').value = '';
+        
+        alert('Fee item added successfully!');
+      } catch (err) {
+        console.error("Error adding fee item:", err);
+        alert("Error adding fee item. Please try again.");
+      }
+    };
+
+    // Delete fee item
+    window.deleteFeeItem = async function(feeId) {
+      if (!confirm('Are you sure you want to delete this fee item? This action cannot be undone.')) return;
+      
+      try {
+        // Delete from Firebase
+        await deleteDoc(doc(db, "feeStructure", feeId));
+        
+        // Remove from local array and update UI
+        feeStructure = feeStructure.filter(fee => fee.id !== feeId);
+        populateFeeStructureTable();
+        
+        alert('Fee item deleted successfully!');
+      } catch (err) {
+        console.error("Error deleting fee item:", err);
+        alert("Error deleting fee item. Please try again.");
+      }
+    };
+
+    // Delete payment
+    window.deletePayment = async function(paymentId) {
+      if (!confirm('Are you sure you want to delete this payment record? This action cannot be undone.')) return;
+      
+      try {
+        // Delete from Firebase
+        await deleteDoc(doc(db, "payments", paymentId));
+        
+        // Remove from local array and update UI
+        allPayments = allPayments.filter(payment => payment.id !== paymentId);
+        updateDashboardStats();
+        populatePaymentsTable();
+        populateStudentsTable();
+        
+        alert('Payment record deleted successfully!');
+      } catch (err) {
+        console.error("Error deleting payment:", err);
+        alert("Error deleting payment. Please try again.");
+      }
+    };
+
+    // Show student payment history
+    window.showStudentPaymentHistory = function(studentId) {
+      const student = allStudents.find(s => s.id === studentId);
+      if (!student) return;
+      
+      const payments = allPayments.filter(p => p.studentId === studentId);
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(studentId);
+      const balance = totalFees - paidAmount;
+      
+      // Create modal content
+      let content = `
+        <h3>Payment History for ${student.firstname} ${student.surname}</h3>
+        <p><strong>Class:</strong> ${student.form} ${student.stream || ''}</p>
+        <p><strong>Total Fees:</strong> $${totalFees.toLocaleString()}</p>
+        <p><strong>Total Paid:</strong> $${paidAmount.toLocaleString()}</p>
+        <p><strong>Balance:</strong> $${balance.toLocaleString()}</p>
+        <div class="data-table" style="margin-top: 1.5rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Receipt No.</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      
+      payments.forEach(payment => {
+        content += `
+          <tr>
+            <td>${payment.date ? new Date(payment.date.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+            <td>${payment.receiptNumber || 'N/A'}</td>
+            <td>$${payment.amount.toLocaleString()} ${payment.currency}</td>
+            <td>${payment.method}</td>
+            <td>${payment.notes || ''}</td>
+          </tr>
+        `;
+      });
+      
+      content += `
+            </tbody>
+          </table>
+        </div>
+        <div class="form-actions" style="margin-top: 1.5rem;">
+          <button class="btn btn-primary" onclick="printPaymentHistory()"><i class="fas fa-print"></i> Print Statement</button>
+        </div>
+      `;
+      
+      // Show in preview (for demo)
+      document.getElementById('previewContent').innerHTML = content;
+      document.getElementById('reportPreview').style.display = 'block';
+      showPage('reportsPage');
+    };
+
+    // Show user modal
+    window.showUserModal = function() {
+      document.getElementById('userModal').style.display = 'block';
+    };
+
+    // Save user
+    window.saveUser = function() {
+      const name = document.getElementById('userName').value;
+      const email = document.getElementById('userEmail').value;
+      const role = document.getElementById('userRole').value;
+      const password = document.getElementById('userPassword').value;
+      const confirmPassword = document.getElementById('userConfirmPassword').value;
+      
+      if (!name || !email || !role || !password || !confirmPassword) {
+        alert('Please fill all required fields');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      // In a real app, you would create the user in Firebase Auth here
+      alert('User created successfully! (Demo only - not saved)');
+      closeModal('userModal');
+    };
+
+    // Load settings
+    function loadSettings() {
+      document.getElementById('currencyPref').value = settings.currency;
+      document.getElementById('exchangeRate').value = settings.exchangeRate;
+      document.getElementById('paymentMethods').value = settings.paymentMethods.join(', ');
+    }
+
+    // Save settings
+    window.saveSettings = function() {
+      const currency = document.getElementById('currencyPref').value;
+      const exchangeRate = parseFloat(document.getElementById('exchangeRate').value);
+      const paymentMethods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
+      
+      if (!currency || isNaN(exchangeRate) || exchangeRate <= 0 || paymentMethods.length === 0) {
+        alert('Please fill all settings with valid values');
+        return;
+      }
+      
+      // Update local settings
+      settings.currency = currency;
+      settings.exchangeRate = exchangeRate;
+      settings.paymentMethods = paymentMethods;
+      
+      // In a real app, you would save to Firebase here
+      alert('Settings saved successfully! (Demo only - not saved)');
+    };
+
+    // Generate report
+    window.generateReport = function() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      const name = document.getElementById("reportName").textContent;
-      const surname = document.getElementById("reportSurname").textContent;
-      const email = document.getElementById("reportEmail").textContent;
-      const year = document.getElementById("reportYear").textContent;
-      const term = document.getElementById("reportTerm").textContent;
       
       // Add school logo
       doc.addImage('https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg', 'JPEG', 10, 10, 30, 30);
@@ -2497,29 +1805,49 @@ button:active {
       doc.setTextColor(26, 54, 93);
       doc.text('St. Mary\'s High School', 50, 20);
       doc.setFontSize(12);
-      doc.text('Academic Report Card', 50, 28);
+      doc.text('Fees Payment Report', 50, 28);
       
-      // Student info
+      // Report date
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 160, 15);
+      
+      // Summary stats
       doc.setFontSize(14);
       doc.setTextColor(0, 0, 0);
-      doc.text(`Name: ${name} ${surname}`, 14, 50);
-      doc.text(`Email: ${email}`, 14, 60);
-      doc.text(`Academic Year: ${year} • Term: ${term}`, 14, 70);
+      doc.text('Summary Statistics', 14, 50);
       
-      // Table data
-      let rows = [];
-      document.querySelectorAll("#reportCardBody tr").forEach((tr) => {
-        const cells = [...tr.querySelectorAll("td")].map((td) => td.textContent);
-        if (cells.length === 4) { // Skip the average row
-          rows.push(cells);
-        }
+      const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
+      const totalOutstanding = allStudents.reduce((sum, student) => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        return sum + Math.max(0, totalFees - paidAmount);
+      }, 0);
+      
+      doc.setFontSize(12);
+      doc.text(`Total Collected: $${totalCollected.toLocaleString()}`, 14, 60);
+      doc.text(`Total Outstanding: $${totalOutstanding.toLocaleString()}`, 14, 70);
+      doc.text(`Number of Students: ${allStudents.length}`, 14, 80);
+      
+      // Recent payments table
+      doc.setFontSize(14);
+      doc.text('Recent Payments', 14, 100);
+      
+      const recentPayments = allPayments.slice(0, 10); // Last 10 payments
+      let rows = recentPayments.map(payment => {
+        const student = allStudents.find(s => s.id === payment.studentId);
+        const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown';
+        return [
+          payment.date ? new Date(payment.date.seconds * 1000).toLocaleDateString() : 'N/A',
+          studentName,
+          `$${payment.amount.toLocaleString()} ${payment.currency}`,
+          payment.method
+        ];
       });
       
-      // Add table
       doc.autoTable({
-        head: [["Subject", "Marks", "Grade", "Actions"]],
+        head: [['Date', 'Student', 'Amount', 'Method']],
         body: rows,
-        startY: 80,
+        startY: 110,
         headStyles: {
           fillColor: [26, 54, 93],
           textColor: 255
@@ -2533,59 +1861,48 @@ button:active {
         }
       });
       
-      // Footer
-      const date = new Date().toLocaleDateString();
-      doc.setFontSize(10);
-      doc.text(`Generated on: ${date}`, 14, doc.lastAutoTable.finalY + 15);
-      doc.text('© 2025 St. Mary\'s High School', 160, doc.lastAutoTable.finalY + 15);
-      
-      doc.save(`${name}_${surname}_report_card.pdf`);
+      // Save the PDF
+      doc.save('fees_report.pdf');
     };
 
-    // Cancel button functionality
-    window.cancelSelection = () => {
-      marksForm.reset();
-      marksForm.style.display = "none";
+    // Export payments to Excel
+    window.exportPayments = function() {
+      // In a real app, you would use a library like SheetJS to export to Excel
+      // For this demo, we'll just show an alert
+      alert('Payments exported successfully! (Demo only - no file generated)');
     };
 
-    // Hamburger toggle
-    const hamburgerBtn = document.getElementById("hamburgerBtn");
-    const sideMenu = document.getElementById("sideMenu");
-    hamburgerBtn.addEventListener("click", () => {
-      sideMenu.classList.toggle("shown");
+    // Refresh data
+    window.refreshData = async function() {
+      await loadAllData();
+      alert('Data refreshed successfully!');
+    };
+
+    // Print payment history
+    window.printPaymentHistory = function() {
+      window.print();
+    };
+
+    // Hamburger menu toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    hamburgerBtn.addEventListener('click', () => {
+      sideMenu.classList.toggle('shown');
     });
 
-    // Theme toggle
-    const themeToggleButton = document.getElementById("themeToggleButton");
-    themeToggleButton.addEventListener("click", () => {
-      if (document.body.getAttribute("data-theme") === "light") {
-        document.body.removeAttribute("data-theme");
-        themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.setAttribute("data-theme", "light");
-        themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
-        localStorage.setItem("theme", "light");
-      }
-    });
-
-    // Check for saved theme preference
-    if (localStorage.getItem("theme") === "light") {
-      document.body.setAttribute("data-theme", "light");
-      themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+    // Initialize the app
+    async function initializeApp() {
+      await loadAllData();
+      initNavigation();
+      initTabs();
+      initThemeToggle();
+      initCharts();
+      initDataTables();
+      loadSettings();
     }
 
-    // Utility function to extract name and surname from email
-    function extractNameSurname(email) {
-      const parts = email.split("@")[0].split(".");
-      return {
-        name: parts[0] ? parts[0].charAt(0).toUpperCase() + parts[0].slice(1) : "",
-        surname: parts[1] ? parts[1].charAt(0).toUpperCase() + parts[1].slice(1) : ""
-      };
-    }
-
-    // Load
-    fetchStudents();
+    // Start the app
+    initializeApp();
   </script>
 </body>
 </html>
