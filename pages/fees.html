@@ -16,6 +16,9 @@
   <!-- jsPDF and autoTable plugin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  
+  <!-- Add this before DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <!-- DataTables -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -278,6 +281,10 @@
       background: rgba(246, 173, 85, 0.2);
       color: #f6ad55;
     }
+    .status-notset {
+      background: rgba(160, 174, 192, 0.2);
+      color: #a0aec0;
+    }
     /* Forms */
     .form-card {
       background: var(--glass);
@@ -504,6 +511,39 @@
       opacity: 0;
       transition: opacity 0.5s ease;
     }
+    /* Modal */
+        .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      overflow-y: auto;
+    }
+    .modal-content {
+      max-width: 600px;
+      margin: 5% auto;
+      position: relative;
+      background: var(--glass);
+      padding: 2rem;
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--card-shadow);
+    }
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
     /* Responsive Adjustments */
     @media (max-width: 767px) {
       .main-container {
@@ -525,6 +565,10 @@
         top: 80px;
         right: 15px;
         left: 15px;
+      }
+      .modal-content {
+        margin: 2% auto;
+        width: 95%;
       }
     }
   </style>
@@ -666,6 +710,7 @@
               <option value="paid">Paid</option>
               <option value="unpaid">Unpaid</option>
               <option value="partial">Partial</option>
+              <option value="notset">Not Set</option>
             </select>
           </div>
           <input type="text" id="studentSearch" placeholder="Search students..." onkeyup="filterStudents()" style="padding: 0.9rem 1.2rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: var(--glass); color: var(--text-color);">
@@ -876,886 +921,847 @@
       <div class="form-card">
         <h2><i class="fas fa-user-shield"></i> User Management</h2>
         <div class="data-table">
-          <table id="usersTable">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Last Login</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="usersBody">
-              <tr>
-                <td>Admin User</td>
-                <td>admin@stmarys.edu</td>
-                <td>Administrator</td>
-                <td>Today, 09:45 AM</td>
-                <td>
-                  <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
-                  <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="form-actions" style="justify-content: flex-end; margin-top: 1rem;">
-          <button class="btn btn-primary" onclick="showUserModal()"><i class="fas fa-plus"></i> Add User</button>
-        </div>
+          <table id="">
+          	          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Last Login</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersBody">
+            <tr>
+              <td>Admin User</td>
+              <td>admin@stmarys.edu</td>
+              <td>Administrator</td>
+              <td>Today, 09:45 AM</td>
+              <td>
+                <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions" style="justify-content: flex-end; margin-top: 1rem;">
+        <button class="btn btn-primary" onclick="showUserModal()"><i class="fas fa-plus"></i> Add User</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
-    <div class="social-icons"><a href="#" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-      <a href="#" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-      <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('paymentModal')">&times;</button>
+    <h2><i class="fas fa-money-bill-wave"></i> Record New Payment</h2>
+    <div class="form-group">
+      <label for="paymentStudent">Student</label>
+      <select id="paymentStudent" class="form-control" onchange="loadStudentDetails()">
+        <option value="">Select Student</option>
+      </select>
     </div>
-  </footer>
-
-  <!-- Payment Modal -->
-  <div id="paymentModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto;">
-    <div class="form-card" style="max-width: 600px; margin: 5% auto; position: relative;">
-      <button onclick="closeModal('paymentModal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer;">&times;</button>
-      <h2><i class="fas fa-money-bill-wave"></i> Record New Payment</h2>
-      <div class="form-group">
-        <label for="paymentStudent">Student</label>
-        <select id="paymentStudent" class="form-control" onchange="loadStudentDetails()">
-          <option value="">Select Student</option>
-        </select>
-      </div>
-      <div id="studentPaymentDetails" style="display: none; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-          <div>
-            <p><strong>Class:</strong> <span id="studentClassDisplay"></span></p>
-            <p><strong>Total Fees:</strong> <span id="totalFeesDisplay"></span></p>
-          </div>
-          <div>
-            <p><strong>Paid:</strong> <span id="paidFeesDisplay"></span></p>
-            <p><strong>Balance:</strong> <span id="balanceFeesDisplay"></span></p>
-          </div>
+    <div id="studentPaymentDetails" style="display: none; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div>
+          <p><strong>Class:</strong> <span id="studentClassDisplay"></span></p>
+          <p><strong>Total Fees:</strong> <span id="totalFeesDisplay"></span></p>
+        </div>
+        <div>
+          <p><strong>Paid:</strong> <span id="paidFeesDisplay"></span></p>
+          <p><strong>Balance:</strong> <span id="balanceFeesDisplay"></span></p>
         </div>
       </div>
-      <div class="form-group currency-input">
-        <label for="paymentAmount">Amount</label>
-        <input type="number" id="paymentAmount" class="form-control" placeholder="Enter amount">
-      </div>
-      <div class="form-group">
-        <label for="paymentCurrency">Currency</label>
-        <select id="paymentCurrency" class="form-control">
-          <option value="USD">USD</option>
-          <option value="ZWL">ZWL</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="paymentMethod">Payment Method</label>
-        <select id="paymentMethod" class="form-control">
-          <option value="Cash">Cash</option>
-          <option value="Ecocash">Ecocash</option>
-          <option value="OneMoney">OneMoney</option>
-          <option value="Bank Transfer">Bank Transfer</option>
-          <option value="Swipe">Swipe</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="paymentReference">Reference/Receipt No.</label>
-        <input type="text" id="paymentReference" class="form-control" placeholder="Enter reference number">
-      </div>
-      <div class="form-group">
-        <label for="paymentNotes">Notes</label>
-        <textarea id="paymentNotes" class="form-control" rows="3" placeholder="Any additional notes"></textarea>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-primary" onclick="recordPayment()"><i class="fas fa-save"></i> Record Payment</button>
-        <button class="btn btn-secondary" onclick="closeModal('paymentModal')"><i class="fas fa-times"></i> Cancel</button>
-      </div>
+    </div>
+    <div class="form-group currency-input">
+      <label for="paymentAmount">Amount</label>
+      <input type="number" id="paymentAmount" class="form-control" placeholder="Enter amount">
+    </div>
+    <div class="form-group">
+      <label for="paymentCurrency">Currency</label>
+      <select id="paymentCurrency" class="form-control">
+        <option value="USD">USD</option>
+        <option value="ZWL">ZWL</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="paymentMethod">Payment Method</label>
+      <select id="paymentMethod" class="form-control">
+        <option value="Cash">Cash</option>
+        <option value="Ecocash">Ecocash</option>
+        <option value="OneMoney">OneMoney</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+        <option value="Swipe">Swipe</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="paymentReference">Reference/Receipt No.</label>
+      <input type="text" id="paymentReference" class="form-control" placeholder="Enter reference number">
+    </div>
+    <div class="form-group">
+      <label for="paymentNotes">Notes</label>
+      <textarea id="paymentNotes" class="form-control" rows="3" placeholder="Any additional notes"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="recordPayment()"><i class="fas fa-save"></i> Record Payment</button>
+      <button class="btn btn-secondary" onclick="closeModal('paymentModal')"><i class="fas fa-times"></i> Cancel</button>
     </div>
   </div>
+</div>
 
-  <!-- Fee Structure Modal -->
-  <div id="feeStructureModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto;">
-    <div class="form-card" style="max-width: 600px; margin: 5% auto; position: relative;">
-      <button onclick="closeModal('feeStructureModal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer;">&times;</button>
-      <h2><i class="fas fa-list-alt"></i> Add Fee Item</h2>
-      <div class="form-group">
-        <label for="feeClass">Class</label>
-        <select id="feeClass" class="form-control">
-          <option value="">Select Class</option>
-          <option value="All Classes">All Classes</option>
-          <option value="Form 1">Form 1</option>
-          <option value="Form 2">Form 2</option>
-          <option value="Form 3">Form 3</option>
-          <option value="Form 4">Form 4</option>
-          <option value="Form 5">Form 5</option>
-          <option value="Form 6">Form 6</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="feeTerm">Term</label>
-        <select id="feeTerm" class="form-control">
-          <option value="All Terms">All Terms</option>
-          <option value="Term 1">Term 1</option>
-          <option value="Term 2">Term 2</option>
-          <option value="Term 3">Term 3</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="feeItem">Fee Item Name</label>
-        <input type="text" id="feeItem" class="form-control" placeholder="e.g., Tuition, Building Fund, Sports">
-      </div>
-      <div class="form-group currency-input">
-        <label for="feeAmountUSD">Amount (USD)</label>
-        <input type="number" id="feeAmountUSD" class="form-control" placeholder="Enter amount in USD">
-      </div>
-      <div class="form-group currency-input">
-        <label for="feeAmountZWL">Amount (ZWL)</label>
-        <input type="number" id="feeAmountZWL" class="form-control" placeholder="Enter amount in ZWL">
-      </div>
-      <div class="form-group">
-        <label for="feeDescription">Description</label>
-        <textarea id="feeDescription" class="form-control" rows="3" placeholder="Description of this fee item"></textarea>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-primary" onclick="saveFeeItem()"><i class="fas fa-save"></i> Save Fee Item</button>
-        <button class="btn btn-secondary" onclick="closeModal('feeStructureModal')"><i class="fas fa-times"></i> Cancel</button>
-      </div>
+<!-- Fee Structure Modal -->
+<div id="feeStructureModal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('feeStructureModal')">&times;</button>
+    <h2><i class="fas fa-list-alt"></i> Add Fee Item</h2>
+    <div class="form-group">
+      <label for="feeClass">Class</label>
+      <select id="feeClass" class="form-control">
+        <option value="">Select Class</option>
+        <option value="All Classes">All Classes</option>
+        <option value="Form 1">Form 1</option>
+        <option value="Form 2">Form 2</option>
+        <option value="Form 3">Form 3</option>
+        <option value="Form 4">Form 4</option>
+        <option value="Form 5">Form 5</option>
+        <option value="Form 6">Form 6</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="feeTerm">Term</label>
+      <select id="feeTerm" class="form-control">
+        <option value="All Terms">All Terms</option>
+        <option value="Term 1">Term 1</option>
+        <option value="Term 2">Term 2</option>
+        <option value="Term 3">Term 3</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="feeItem">Fee Item Name</label>
+      <input type="text" id="feeItem" class="form-control" placeholder="e.g., Tuition, Building Fund, Sports">
+    </div>
+    <div class="form-group currency-input">
+      <label for="feeAmountUSD">Amount (USD)</label>
+      <input type="number" id="feeAmountUSD" class="form-control" placeholder="Enter amount in USD">
+    </div>
+    <div class="form-group currency-input">
+      <label for="feeAmountZWL">Amount (ZWL)</label>
+      <input type="number" id="feeAmountZWL" class="form-control" placeholder="Enter amount in ZWL">
+    </div>
+    <div class="form-group">
+      <label for="feeDescription">Description</label>
+      <textarea id="feeDescription" class="form-control" rows="3" placeholder="Description of this fee item"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveFeeItem()"><i class="fas fa-save"></i> Save Fee Item</button>
+      <button class="btn btn-secondary" onclick="closeModal('feeStructureModal')"><i class="fas fa-times"></i> Cancel</button>
     </div>
   </div>
+</div>
 
-  <!-- User Management Modal -->
-  <div id="userModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; overflow-y: auto;">
-    <div class="form-card" style="max-width: 600px; margin: 5% auto; position: relative;">
-      <button onclick="closeModal('userModal')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer;">&times;</button>
-      <h2><i class="fas fa-user-plus"></i> Add New User</h2>
-      <div class="form-group">
-        <label for="userName">Full Name</label>
-        <input type="text" id="userName" class="form-control" placeholder="Enter full name">
-      </div>
-      <div class="form-group">
-        <label for="userEmail">Email</label>
-        <input type="email" id="userEmail" class="form-control" placeholder="Enter email address">
-      </div>
-      <div class="form-group">
-        <label for="userRole">Role</label>
-        <select id="userRole" class="form-control">
-          <option value="admin">Administrator</option>
-          <option value="bursar">Bursar</option>
-          <option value="teacher">Teacher</option>
-          <option value="viewer">Viewer</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="userPassword">Password</label>
-        <input type="password" id="userPassword" class="form-control" placeholder="Enter password">
-      </div>
-      <div class="form-group">
-        <label for="userConfirmPassword">Confirm Password</label>
-        <input type="password" id="userConfirmPassword" class="form-control" placeholder="Confirm password">
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-primary" onclick="saveUser()"><i class="fas fa-save"></i> Save User</button>
-        <button class="btn btn-secondary" onclick="closeModal('userModal')"><i class="fas fa-times"></i> Cancel</button>
-      </div>
+<!-- User Management Modal -->
+<div id="userModal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal('userModal')">&times;</button>
+    <h2><i class="fas fa-user-plus"></i> Add New User</h2>
+    <div class="form-group">
+      <label for="userName">Full Name</label>
+      <input type="text" id="userName" class="form-control" placeholder="Enter full name">
+    </div>
+    <div class="form-group">
+      <label for="userEmail">Email</label>
+      <input type="email" id="userEmail" class="form-control" placeholder="Enter email address">
+    </div>
+    <div class="form-group">
+      <label for="userRole">Role</label>
+      <select id="userRole" class="form-control">
+        <option value="admin">Administrator</option>
+        <option value="bursar">Bursar</option>
+        <option value="teacher">Teacher</option>
+        <option value="viewer">Viewer</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="userPassword">Password</label>
+      <input type="password" id="userPassword" class="form-control" placeholder="Enter password">
+    </div>
+    <div class="form-group">
+      <label for="userConfirmPassword">Confirm Password</label>
+      <input type="password" id="userConfirmPassword" class="form-control" placeholder="Confirm password">
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveUser()"><i class="fas fa-save"></i> Save User</button>
+      <button class="btn btn-secondary" onclick="closeModal('userModal')"><i class="fas fa-times"></i> Cancel</button>
     </div>
   </div>
+</div>
 
-  <!-- Loading Overlay -->
-  <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; justify-content: center; align-items: center;">
-    <div style="background: var(--glass); padding: 2rem; border-radius: 8px; display: flex; align-items: center; gap: 15px;">
-      <i class="fas fa-spinner fa-spin"></i> Loading...
-    </div>
+<!-- Payment History Modal -->
+<div id="paymentHistoryModal" class="modal">
+  <div class="modal-content" style="max-width: 800px;">
+    <button class="close-modal" onclick="closeModal('paymentHistoryModal')">&times;</button>
+    <h2><i class="fas fa-history"></i> Payment History</h2>
+    <div id="paymentHistoryContent"></div>
   </div>
+</div>
 
-  <!-- Theme Toggle Button -->
-  <button id="themeToggleButton" title="Toggle Dark/Light Mode">
-    <i class="fas fa-moon"></i>
-  </button>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="modal" style="display: flex; justify-content: center; align-items: center;">
+  <div style="background: var(--glass); padding: 2rem; border-radius: 8px; display: flex; align-items: center; gap: 15px;">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+  </div>
+</div>
 
-  <!-- Firebase and App Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      getDoc,
-      doc,
-      setDoc,
-      addDoc,
-      updateDoc,
-      deleteDoc,
-      query,
-      where,
-      orderBy,
-      serverTimestamp,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<!-- Theme Toggle Button -->
+<button id="themeToggleButton" title="Toggle Dark/Light Mode">
+  <i class="fas fa-moon"></i>
+</button>
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
-      authDomain: "deee-9ab53.firebaseapp.com",
-      projectId: "deee-9ab53",
-      storageBucket: "deee-9ab53.appspot.com",
-      messagingSenderId: "399732664479",
-      appId: "1:399732664479:web:b84ac30e8266cc51761aaa",
-      measurementId: "G-524ZPBX42B"
-    };
+<!-- Firebase and App Script -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    getDoc,
+    doc,
+    setDoc,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    query,
+    where,
+    orderBy,
+    serverTimestamp,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
+    authDomain: "deee-9ab53.firebaseapp.com",
+    projectId: "deee-9ab53",
+    storageBucket: "deee-9ab53.appspot.com",
+    messagingSenderId: "399732664479",
+    appId: "1:399732664479:web:b84ac30e8266cc51761aaa",
+    measurementId: "G-524ZPBX42B"
+  };
 
-    // Global variables
-    let allStudents = [];
-    let allPayments = [];
-    let feeStructure = [];
-    let currentUser = {
-      name: "Admin User",
-      email: "admin@stmarys.edu",
-      role: "admin"
-    };
-    let settings = {
-      currency: "USD",
-      exchangeRate: 500,
-      paymentMethods: ["Cash", "Ecocash", "OneMoney", "Bank Transfer", "Swipe"]
-    };
-    let monthlyPaymentsChart, paymentMethodsChart;
-    let studentsTable, paymentsTable, feeStructureTable;
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-    // DOM Ready
-    document.addEventListener('DOMContentLoaded', async function() {
-      // Initialize UI components
-      initNavigation();
-      initTabs();
-      initThemeToggle();
-      
-      // Load all data
-      await loadInitialData();
-      
-      // Set up real-time listeners
-      setupRealTimeListeners();
-      
-      // Initialize DataTables
-      initDataTables();
-      
-      // Load settings
-      loadSettings();
-      
-      // Initialize charts
-      initCharts();
+  // Global variables
+  let allStudents = [];
+  let allPayments = [];
+  let feeStructure = [];
+  let currentUser = {
+    name: "Admin User",
+    email: "admin@stmarys.edu",
+    role: "admin"
+  };
+  let settings = {
+    currency: "USD",
+    exchangeRate: 500,
+    paymentMethods: ["Cash", "Ecocash", "OneMoney", "Bank Transfer", "Swipe"]
+  };
+  let monthlyPaymentsChart, paymentMethodsChart;
+  let studentsTable, paymentsTable, feeStructureTable;
+
+  // DOM Ready
+  document.addEventListener('DOMContentLoaded', async function() {
+    // Initialize UI components
+    initNavigation();
+    initTabs();
+    initThemeToggle();
+    
+    // Load all data
+    await loadInitialData();
+    
+    // Set up real-time listeners
+    setupRealTimeListeners();
+    
+    // Initialize DataTables
+    initDataTables();
+    
+    // Load settings
+    loadSettings();
+    
+    // Initialize charts
+    initCharts();
+  });
+
+  // Initialize navigation
+  function initNavigation() {
+    document.getElementById('dashboardLink').addEventListener('click', () => showPage('dashboardPage'));
+    document.getElementById('studentsLink').addEventListener('click', () => showPage('studentsPage'));
+    document.getElementById('paymentsLink').addEventListener('click', () => showPage('paymentsPage'));
+    document.getElementById('feeStructureLink').addEventListener('click', () => showPage('feeStructurePage'));
+    document.getElementById('reportsLink').addEventListener('click', () => showPage('reportsPage'));
+    document.getElementById('settingsLink').addEventListener('click', () => showPage('settingsPage'));
+    
+    // Show dashboard by default
+    showPage('dashboardPage');
+  }
+
+  // Show specific page
+  function showPage(pageId) {
+    document.querySelectorAll('.page-content').forEach(page => {
+      page.classList.remove('active');
     });
+    document.getElementById(pageId).classList.add('active');
+    
+    // Update active nav link
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+      link.classList.remove('active');
+    });
+    document.getElementById(`${pageId.replace('Page', '')}Link`).classList.add('active');
+  }
 
-    // Initialize navigation
-    function initNavigation() {
-      document.getElementById('dashboardLink').addEventListener('click', () => showPage('dashboardPage'));
-      document.getElementById('studentsLink').addEventListener('click', () => showPage('studentsPage'));
-      document.getElementById('paymentsLink').addEventListener('click', () => showPage('paymentsPage'));
-      document.getElementById('feeStructureLink').addEventListener('click', () => showPage('feeStructurePage'));
-      document.getElementById('reportsLink').addEventListener('click', () => showPage('reportsPage'));
-      document.getElementById('settingsLink').addEventListener('click', () => showPage('settingsPage'));
-      
-      // Show dashboard by default
-      showPage('dashboardPage');
-    }
-
-    // Show specific page
-    function showPage(pageId) {
-      document.querySelectorAll('.page-content').forEach(page => {
-        page.classList.remove('active');
-      });
-      document.getElementById(pageId).classList.add('active');
-      
-      // Update active nav link
-      document.querySelectorAll('.nav-menu a').forEach(link => {
-        link.classList.remove('active');
-      });
-      document.getElementById(`${pageId.replace('Page', '')}Link`).classList.add('active');
-    }
-
-    // Initialize tabs
-    function initTabs() {
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-          const tabId = this.getAttribute('data-tab');
-          const tabContainer = this.closest('.tabs').parentElement;
-          
-          // Update active tab
-          this.closest('.tabs').querySelectorAll('.tab').forEach(t => {
-            t.classList.remove('active');
-          });
-          this.classList.add('active');
-          
-          // Show corresponding content
-          tabContainer.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-          });
-          document.getElementById(tabId).classList.add('active');
+  // Initialize tabs
+  function initTabs() {
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        const tabId = this.getAttribute('data-tab');
+        const tabContainer = this.closest('.tabs').parentElement;
+        
+        // Update active tab
+        this.closest('.tabs').querySelectorAll('.tab').forEach(t => {
+          t.classList.remove('active');
         });
+        this.classList.add('active');
+        
+        // Show corresponding content
+        tabContainer.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
       });
-    }
+    });
+  }
 
-    // Initialize theme toggle
-    function initThemeToggle() {
-      const themeToggleButton = document.getElementById('themeToggleButton');
-      themeToggleButton.addEventListener('click', () => {
-        if (document.body.getAttribute('data-theme') === 'light') {
-          document.body.removeAttribute('data-theme');
-          themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.body.setAttribute('data-theme', 'light');
-          themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
-          localStorage.setItem('theme', 'light');
-        }
-      });
-
-      // Check for saved theme preference
-      if (localStorage.getItem('theme') === 'light') {
+  // Initialize theme toggle
+  function initThemeToggle() {
+    const themeToggleButton = document.getElementById('themeToggleButton');
+    themeToggleButton.addEventListener('click', () => {
+      if (document.body.getAttribute('data-theme') === 'light') {
+        document.body.removeAttribute('data-theme');
+        themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+        localStorage.setItem('theme', 'dark');
+      } else {
         document.body.setAttribute('data-theme', 'light');
         themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+        localStorage.setItem('theme', 'light');
       }
-    }
+    });
 
-    // Show loading indicator
-    function showLoading(show, message = "Loading...") {
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      if (show) {
-        loadingOverlay.querySelector('div').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
-        loadingOverlay.style.display = 'flex';
-      } else {
-        loadingOverlay.style.display = 'none';
-      }
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.setAttribute('data-theme', 'light');
+      themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
     }
+  }
 
-    // Show notification
-    function showNotification(message, type = 'success') {
-      const notification = document.createElement('div');
-      notification.className = `notification ${type} show`;
-      notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}
-      `;
-      document.body.appendChild(notification);
+  // Show loading indicator
+  function showLoading(show, message = "Loading...") {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (show) {
+      loadingOverlay.querySelector('div').innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
+      loadingOverlay.style.display = 'flex';
+    } else {
+      loadingOverlay.style.display = 'none';
+    }
+  }
+
+  // Show notification
+  function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type} show`;
+    notification.innerHTML = `
+      <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.classList.add('fade-out');
+      setTimeout(() => notification.remove(), 500);
+    }, 3000);
+  }
+
+  // Show modal
+  window.showModal = function(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+  };
+
+  // Close modal
+  window.closeModal = function(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  };
+
+  // Load initial data
+  async function loadInitialData() {
+    showLoading(true, "Loading school data...");
+    
+    try {
+      // Load students
+      const studentsQuery = query(collection(db, "students"), orderBy("surname"));
+      const studentsSnapshot = await getDocs(studentsQuery);
+      allStudents = studentsSnapshot.docs.map(doc => ({ 
+        id: doc.id, 
+        ...doc.data(),
+        admissionNumber: doc.data().admissionNumber || generateAdmissionNumber(doc.data().form)
+      }));
       
-      setTimeout(() => {
-        notification.classList.add('fade-out');
-        setTimeout(() => notification.remove(), 500);
-      }, 3000);
-    }
-
-    // Load initial data
-    async function loadInitialData() {
-      showLoading(true, "Loading school data...");
-      
-      try {
-        // Load students
-        const studentsQuery = query(collection(db, "students"), orderBy("surname"));
-        const studentsSnapshot = await getDocs(studentsQuery);
-        allStudents = studentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        // Load payments
-        const paymentsQuery = query(collection(db, "payments"), orderBy("date", "desc"));
-        const paymentsSnapshot = await getDocs(paymentsQuery);
-        allPayments = paymentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        // Load fee structure
-        const feesSnapshot = await getDocs(collection(db, "feeStructure"));
-        feeStructure = feesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        // Update UI
-        updateDashboardStats();
-        populateStudentDropdown();
-        populateStudentsTable();
-        populatePaymentsTable();
-        populateFeeStructureTable();
-        populateRecentPayments();
-        
-        showNotification("Data loaded successfully", "success");
-      } catch (err) {
-        console.error("Error loading initial data:", err);
-        showNotification("Error loading data. Please try again.", "error");
-      } finally {
-        showLoading(false);
-      }
-    }
-
-    // Set up real-time listeners
-    function setupRealTimeListeners() {
-      // Students listener
-      const studentsQuery = query(collection(db, "students"), 
-
-        orderBy("surname"));
-      onSnapshot(studentsQuery, (snapshot) => {
-        allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        updateDashboardStats();
-        populateStudentDropdown();
-        populateStudentsTable();
-      });
-      
-      // Payments listener
+      // Load payments
       const paymentsQuery = query(collection(db, "payments"), orderBy("date", "desc"));
-      onSnapshot(paymentsQuery, (snapshot) => {
-        allPayments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        updateDashboardStats();
-        populatePaymentsTable();
-        populateRecentPayments();
-      });
+      const paymentsSnapshot = await getDocs(paymentsQuery);
+      allPayments = paymentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
-      // Fee structure listener
-      onSnapshot(collection(db, "feeStructure"), (snapshot) => {
-        feeStructure = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        populateFeeStructureTable();
-      });
+      // Load fee structure
+      const feesSnapshot = await getDocs(collection(db, "feeStructure"));
+      feeStructure = feesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Update UI
+      updateDashboardStats();
+      populateStudentDropdown();
+      populateStudentsTable();
+      populatePaymentsTable();
+      populateFeeStructureTable();
+      populateRecentPayments();
+      
+      showNotification("Data loaded successfully", "success");
+    } catch (err) {
+      console.error("Error loading initial data:", err);
+      showNotification("Error loading data. Please try again.", "error");
+    } finally {
+      showLoading(false);
     }
+  }
 
-    // Initialize charts
-    function initCharts() {
-      // Monthly payments chart
-      const monthlyCtx = document.getElementById('monthlyPaymentsChart').getContext('2d');
-      monthlyPaymentsChart = new Chart(monthlyCtx, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          datasets: [{
-            label: 'Payments',
-            data: [1200, 1900, 1500, 2000, 1800, 2200, 2400, 2100, 1900, 2300, 2500, 2800],
-            backgroundColor: 'rgba(214, 158, 46, 0.2)',
-            borderColor: 'rgba(214, 158, 46, 1)',
-            borderWidth: 2,
-            tension: 0.4,
-            fill: true
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: function(value) {
-                  return '$' + value;
-                }
-              }
-            }
-          }
-        }
-      });
+  // Generate admission number
+  function generateAdmissionNumber(form) {
+    const formNumber = form.replace('Form ', '');
+    const year = new Date().getFullYear().toString().slice(-2);
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    return `${formNumber}${year}${randomNum}`;
+  }
 
-      // Payment methods chart
-      const methodsCtx = document.getElementById('paymentMethodsChart').getContext('2d');
-      paymentMethodsChart = new Chart(methodsCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Cash', 'Ecocash', 'OneMoney', 'Bank Transfer', 'Swipe'],
-          datasets: [{
-            data: [35, 25, 20, 15, 5],
-            backgroundColor: [
-              'rgba(75, 192, 192, 0.7)',
-              'rgba(54, 162, 235, 0.7)',
-              'rgba(255, 206, 86, 0.7)',
-              'rgba(153, 102, 255, 0.7)',
-              'rgba(255, 99, 132, 0.7)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'right'
-            }
-          }
-        }
-      });
+// Set up real-time listeners
+function setupRealTimeListeners() {
+  // Students listener
+  const studentsQuery = query(collection(db, "students"), orderBy("surname"));
+  onSnapshot(studentsQuery, (snapshot) => {
+    allStudents = snapshot.docs.map(doc => ({ 
+      id: doc.id, 
+      ...doc.data(),
+      admissionNumber: doc.data().admissionNumber || generateAdmissionNumber(doc.data().form)
+    }));  // Added missing parenthesis here
+    
+    updateDashboardStats();
+    populateStudentDropdown();
+    populateStudentsTable();
+  });
+  
+  // Rest of the function...
+
+  // Payments listener
+  const paymentsQuery = query(collection(db, "payments"), orderBy("date", "desc"));
+  onSnapshot(paymentsQuery, (snapshot) => {
+    allPayments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    updateDashboardStats();
+    populatePaymentsTable();
+    populateRecentPayments();
+  });
+  
+  // Fee structure listener
+  onSnapshot(collection(db, "feeStructure"), (snapshot) => {
+    feeStructure = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    populateFeeStructureTable();
+  });
+}
+
+// Initialize DataTables
+function initDataTables() {
+  studentsTable = new DataTable('#studentsTable', {
+    responsive: true,
+    pageLength: 10,
+    lengthMenu: [10, 25, 50, 100]
+  });
+
+  paymentsTable = new DataTable('#paymentsTable', {
+    responsive: true,
+    pageLength: 10,
+    lengthMenu: [10, 25, 50, 100],
+    order: [[1, 'desc']]
+  });
+
+  feeStructureTable = new DataTable('#feeStructureTable', {
+    responsive: true,
+    pageLength: 10,
+    lengthMenu: [10, 25, 50, 100]
+  });
+}
+
+// Update dashboard statistics
+function updateDashboardStats() {
+  try {
+    // Calculate total collected
+    const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    document.getElementById('totalCollected').textContent = `$${totalCollected.toLocaleString()}`;
+    
+    // Total students
+    document.getElementById('totalStudents').textContent = allStudents.length;
+    
+    // Fully paid students
+    const fullyPaid = allStudents.filter(student => {
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(student.id);
+      return paidAmount >= totalFees;
+    }).length;
+    document.getElementById('fullyPaid').textContent = fullyPaid;
+    
+    // Total outstanding
+    let totalOutstanding = 0;
+    allStudents.forEach(student => {
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(student.id);
+      totalOutstanding += Math.max(0, totalFees - paidAmount);
+    });
+    document.getElementById('totalOutstanding').textContent = `$${totalOutstanding.toLocaleString()}`;
+    
+    // Update trends (demo values)
+    document.getElementById('collectionTrend').textContent = '12%';
+    document.getElementById('studentsTrend').textContent = '5%';
+    document.getElementById('paidTrend').textContent = '8%';
+    document.getElementById('outstandingTrend').textContent = '15%';
+  } catch (err) {
+    console.error("Error updating dashboard stats:", err);
+  }
+}
+
+// Calculate total fees for a student based on fee structure
+function calculateTotalFees(student) {
+  if (!student || !student.form) return 0;
+  
+  try {
+    // Get all fee items that apply to this student
+    const applicableFees = feeStructure.filter(fee => {
+      return (fee.class === student.form || fee.class === "All Classes") && 
+             (fee.term === student.term || fee.term === "All Terms");
+    });
+    
+    // Sum up all applicable fees
+    return applicableFees.reduce((sum, fee) => sum + fee.amountUSD, 0);
+  } catch (err) {
+    console.error("Error calculating total fees:", err);
+    return 0;
+  }
+}
+
+// Calculate paid amount for a student
+function calculatePaidAmount(studentId) {
+  if (!studentId) return 0;
+  
+  try {
+    return allPayments
+      .filter(payment => payment.studentId === studentId)
+      .reduce((sum, payment) => sum + (payment.currency === 'USD' ? payment.amount : payment.amount / settings.exchangeRate), 0);
+  } catch (err) {
+    console.error("Error calculating paid amount:", err);
+    return 0;
+  }
+}
+
+// Populate student dropdown with search functionality
+function populateStudentDropdown() {
+  const select = document.getElementById('paymentStudent');
+  const searchInput = document.getElementById('studentSearch');
+  
+  // Clear existing options
+  select.innerHTML = '<option value="">Select Student</option>';
+  
+  // Add all students
+  allStudents.forEach(student => {
+    const option = document.createElement('option');
+    option.value = student.id;
+    option.textContent = `${student.firstname} ${student.surname} (${student.admissionNumber || 'N/A'}) - ${student.form} ${student.stream || ''}`;
+    select.appendChild(option);
+  });
+}
+
+// Load student details when selected
+function loadStudentDetails() {
+  const studentId = document.getElementById('paymentStudent').value;
+  if (!studentId) {
+    document.getElementById('studentPaymentDetails').style.display = 'none';
+    return;
+  }
+  
+  const student = allStudents.find(s => s.id === studentId);
+  if (student) {
+    const totalFees = calculateTotalFees(student);
+    const paidAmount = calculatePaidAmount(student.id);
+    const balance = totalFees - paidAmount;
+    
+    document.getElementById('studentClassDisplay').textContent = `${student.form} ${student.stream || ''}`;
+    document.getElementById('totalFeesDisplay').textContent = `$${totalFees.toLocaleString()}`;
+    document.getElementById('paidFeesDisplay').textContent = `$${paidAmount.toLocaleString()}`;
+    document.getElementById('balanceFeesDisplay').textContent = `$${balance.toLocaleString()}`;
+    
+    document.getElementById('studentPaymentDetails').style.display = 'block';
+  }
+}
+
+// Enhanced filter students function
+window.filterStudents = function() {
+  const classFilter = document.getElementById('studentFilterClass').value;
+  const streamFilter = document.getElementById('studentFilterStream').value;
+  const statusFilter = document.getElementById('studentFilterStatus').value;
+  const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+  
+  // Update stream dropdown based on class selection
+  updateStreamDropdown(classFilter);
+  
+  const tbody = document.getElementById('studentsBody');
+  tbody.innerHTML = '';
+  
+  const filteredStudents = allStudents.filter(student => {
+    // Apply class filter
+    if (classFilter && student.form !== classFilter) return false;
+    
+    // Apply stream filter
+    if (streamFilter && student.stream !== streamFilter) return false;
+    
+    // Apply search filter
+    const studentName = `${student.firstname} ${student.surname}`.toLowerCase();
+    const admissionNo = student.admissionNumber ? student.admissionNumber.toLowerCase() : '';
+    if (searchTerm && !studentName.includes(searchTerm) && !admissionNo.includes(searchTerm)) return false;
+    
+    // Apply status filter
+    const totalFees = calculateTotalFees(student);
+    const paidAmount = calculatePaidAmount(student.id);
+    const balance = totalFees - paidAmount;
+    let status = 'notset';
+    
+    if (totalFees > 0) {
+      status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
     }
-
-    // Initialize DataTables
-    function initDataTables() {
-      studentsTable = new DataTable('#studentsTable', {
-        responsive: true,
-        pageLength: 10,
-        lengthMenu: [10, 25, 50, 100]
-      });
-
-      paymentsTable = new DataTable('#paymentsTable', {
-        responsive: true,
-        pageLength: 10,
-        lengthMenu: [10, 25, 50, 100],
-        order: [[1, 'desc']]
-      });
-
-      feeStructureTable = new DataTable('#feeStructureTable', {
-        responsive: true,
-        pageLength: 10,
-        lengthMenu: [10, 25, 50, 100]
-      });
+    
+    if (statusFilter && status !== statusFilter) return false;
+    
+    return true;
+  });
+  
+  // Populate table with filtered students
+  filteredStudents.forEach(student => {
+    const totalFees = calculateTotalFees(student);
+    const paidAmount = calculatePaidAmount(student.id);
+    const balance = totalFees - paidAmount;
+    let status = 'notset';
+    
+    if (totalFees > 0) {
+      status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
     }
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${student.admissionNumber || 'N/A'}</td>
+      <td>${student.firstname} ${student.surname}</td>
+      <td>${student.form} ${student.stream || ''}</td>
+      <td>$${totalFees.toLocaleString()}</td>
+      <td>$${paidAmount.toLocaleString()}</td>
+      <td>$${balance.toLocaleString()}</td>
+      <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="showPaymentHistory('${student.id}')">
+          <i class="fas fa-history"></i>
+        </button>
+        <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
+          <i class="fas fa-money-bill-wave"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  
+  // Refresh DataTable if it exists
+  if (studentsTable) {
+    studentsTable.destroy();
+    studentsTable = new DataTable('#studentsTable', {
+      responsive: true,
+      pageLength: 10,
+      lengthMenu: [10, 25, 50, 100]
+    });
+  }
+};
 
-    // Update dashboard statistics
-    function updateDashboardStats() {
-      try {
-        // Calculate total collected
-        const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
-        document.getElementById('totalCollected').textContent = `$${totalCollected.toLocaleString()}`;
-        
-        // Total students
-        document.getElementById('totalStudents').textContent = allStudents.length;
-        
-        // Fully paid students
-        const fullyPaid = allStudents.filter(student => {
-          const totalFees = calculateTotalFees(student);
-          const paidAmount = calculatePaidAmount(student.id);
-          return paidAmount >= totalFees;
-        }).length;
-        document.getElementById('fullyPaid').textContent = fullyPaid;
-        
-        // Total outstanding
-        let totalOutstanding = 0;
-        allStudents.forEach(student => {
-          const totalFees = calculateTotalFees(student);
-          const paidAmount = calculatePaidAmount(student.id);
-          totalOutstanding += Math.max(0, totalFees - paidAmount);
-        });
-        document.getElementById('totalOutstanding').textContent = `$${totalOutstanding.toLocaleString()}`;
-        
-        // Update trends (demo values)
-        document.getElementById('collectionTrend').textContent = '12%';
-        document.getElementById('studentsTrend').textContent = '5%';
-        document.getElementById('paidTrend').textContent = '8%';
-        document.getElementById('outstandingTrend').textContent = '15%';
-      } catch (err) {
-        console.error("Error updating dashboard stats:", err);
-      }
+// Update stream dropdown based on selected class
+function updateStreamDropdown(selectedClass) {
+  const streamSelect = document.getElementById('studentFilterStream');
+  streamSelect.innerHTML = '<option value="">All Streams</option>';
+  
+  if (!selectedClass) return;
+  
+  // For Forms 5 and 6, show Arts/Commercials/Sciences
+  if (selectedClass === "Form 5" || selectedClass === "Form 6") {
+    ['Arts', 'Commercials', 'Sciences'].forEach(stream => {
+      const option = document.createElement('option');
+      option.value = stream;
+      option.textContent = stream;
+      streamSelect.appendChild(option);
+    });
+  } 
+  // For other forms, show standard streams
+  else {
+    ['G', 'W', 'Z', 'E', 'U'].forEach(stream => {
+      const option = document.createElement('option');
+      option.value = stream;
+      option.textContent = stream;
+      streamSelect.appendChild(option);
+    });
+  }
+}
+
+// Populate students table
+function populateStudentsTable() {
+  const tbody = document.getElementById('studentsBody');
+  tbody.innerHTML = '';
+  
+  allStudents.forEach(student => {
+    const totalFees = calculateTotalFees(student);
+    const paidAmount = calculatePaidAmount(student.id);
+    const balance = totalFees - paidAmount;
+    let status = 'notset';
+    
+    if (totalFees > 0) {
+      status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
     }
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${student.admissionNumber || 'N/A'}</td>
+      <td>${student.firstname} ${student.surname}</td>
+      <td>${student.form} ${student.stream || ''}</td>
+      <td>$${totalFees.toLocaleString()}</td>
+      <td>$${paidAmount.toLocaleString()}</td>
+      <td>$${balance.toLocaleString()}</td>
+      <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="showPaymentHistory('${student.id}')">
+          <i class="fas fa-history"></i>
+        </button>
+        <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
+          <i class="fas fa-money-bill-wave"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  
+  // Refresh DataTable
+  if (studentsTable) {
+    studentsTable.destroy();
+    studentsTable = new DataTable('#studentsTable', {
+      responsive: true,
+      pageLength: 10,
+      lengthMenu: [10, 25, 50, 100]
+    });
+  }
+}
 
-    // Calculate total fees for a student based on fee structure
-    function calculateTotalFees(student) {
-      if (!student || !student.form) return 0;
-      
-      try {
-        // Get all fee items that apply to this student
-        const applicableFees = feeStructure.filter(fee => {
-          return (fee.class === student.form || fee.class === "All Classes") && 
-                 (fee.term === student.term || fee.term === "All Terms");
-        });
-        
-        // Sum up all applicable fees
-        return applicableFees.reduce((sum, fee) => sum + fee.amountUSD, 0);
-      } catch (err) {
-        console.error("Error calculating total fees:", err);
-        return 0;
-      }
-    }
+// Populate payments table
+function populatePaymentsTable() {
+  const tbody = document.getElementById('paymentsBody');
+  tbody.innerHTML = '';
+  
+  allPayments.forEach(payment => {
+    const student = allStudents.find(s => s.id === payment.studentId);
+    const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
+    const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${payment.receiptNumber || 'N/A'}</td>
+      <td>${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}</td>
+      <td>${studentName}</td>
+      <td>${studentClass}</td>
+      <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
+      <td>${payment.method}</td>
+      <td>${payment.recordedBy || 'System'}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
+          <i class="fas fa-print"></i>
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="deletePayment('${payment.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  
+  // Refresh DataTable
+  if (paymentsTable) {
+    paymentsTable.destroy();
+    paymentsTable = new DataTable('#paymentsTable', {
+      responsive: true,
+      pageLength: 10,
+      lengthMenu: [10, 25, 50, 100],
+      order: [[1, 'desc']]
+    });
+  }
+}
 
-    // Calculate paid amount for a student
-    function calculatePaidAmount(studentId) {
-      if (!studentId) return 0;
-      
-      try {
-        return allPayments
-          .filter(payment => payment.studentId === studentId)
-          .reduce((sum, payment) => sum + (payment.currency === 'USD' ? payment.amount : payment.amount / settings.exchangeRate), 0);
-      } catch (err) {
-        console.error("Error calculating paid amount:", err);
-        return 0;
-      }
-    }
+// Populate fee structure table
+function populateFeeStructureTable() {
+  const tbody = document.getElementById('feeStructureBody');
+  tbody.innerHTML = '';
+  
+  feeStructure.forEach(fee => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${fee.class || 'All Classes'}</td>
+      <td>${fee.item}</td>
+      <td>$${fee.amountUSD.toLocaleString()}</td>
+      <td>ZWL$${fee.amountZWL.toLocaleString()}</td>
+      <td>${fee.term || 'All Terms'}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="editFeeItem('${fee.id}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="deleteFeeItem('${fee.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  
+  // Refresh DataTable
+  if (feeStructureTable) {
+    feeStructureTable.destroy();
+    feeStructureTable = new DataTable('#feeStructureTable', {
+      responsive: true,
+      pageLength: 10,
+      lengthMenu: [10, 25, 50, 100]
+    });
+  }
+}
 
-    // Populate student dropdown with search functionality
-    function populateStudentDropdown() {
-      const select = document.getElementById('paymentStudent');
-      const searchInput = document.getElementById('studentSearch');
-      
-      // Store original options for filtering
-      if (!select._originalOptions) {
-        select._originalOptions = [];
-        allStudents.forEach(student => {
-          select._originalOptions.push({
-            value: student.id,
-            text: `${student.firstname} ${student.surname} (${student.admissionNumber || 'N/A'}) - ${student.form} ${student.stream || ''}`
-          });
-        });
-      }
-      
-      // Apply filters based on search input
-      const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
-      const filteredOptions = select._originalOptions.filter(option => 
-        option.text.toLowerCase().includes(searchTerm)
-      );
-      
-      // Repopulate dropdown
-      select.innerHTML = '<option value="">Select Student</option>';
-      filteredOptions.forEach(option => {
-        const opt = document.createElement('option');
-        opt.value = option.value;
-        opt.textContent = option.text;
-        select.appendChild(opt);
-      });
-    }
-
-    // Load student details when selected
-    function loadStudentDetails() {
-      const studentId = document.getElementById('paymentStudent').value;
-      if (!studentId) {
-        document.getElementById('studentPaymentDetails').style.display = 'none';
-        return;
-      }
-      
-      const student = allStudents.find(s => s.id === studentId);
-      if (student) {
-        const totalFees = calculateTotalFees(student);
-        const paidAmount = calculatePaidAmount(student.id);
-        const balance = totalFees - paidAmount;
-        
-        document.getElementById('studentClassDisplay').textContent = `${student.form} ${student.stream || ''}`;
-        document.getElementById('totalFeesDisplay').textContent = `$${totalFees.toLocaleString()}`;
-        document.getElementById('paidFeesDisplay').textContent = `$${paidAmount.toLocaleString()}`;
-        document.getElementById('balanceFeesDisplay').textContent = `$${balance.toLocaleString()}`;
-        
-        document.getElementById('studentPaymentDetails').style.display = 'block';
-      }
-    }
-
-    // Enhanced filter students function
-    window.filterStudents = function() {
-      const classFilter = document.getElementById('studentFilterClass').value;
-      const streamFilter = document.getElementById('studentFilterStream').value;
-      const statusFilter = document.getElementById('studentFilterStatus').value;
-      const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
-      
-      // Update stream dropdown based on class selection
-      updateStreamDropdown(classFilter);
-      
-      const tbody = document.getElementById('studentsBody');
-      tbody.innerHTML = '';
-      
-      const filteredStudents = allStudents.filter(student => {
-        // Apply class filter
-        if (classFilter && student.form !== classFilter) return false;
-        
-        // Apply stream filter
-        if (streamFilter && student.stream !== streamFilter) return false;
-        
-        // Apply search filter
-        const studentName = `${student.firstname} ${student.surname}`.toLowerCase();
-        const admissionNo = student.admissionNumber ? student.admissionNumber.toLowerCase() : '';
-        if (searchTerm && !studentName.includes(searchTerm) && !admissionNo.includes(searchTerm)) return false;
-        
-        return true;
-      });
-      
-      // Populate table with filtered students
-      filteredStudents.forEach(student => {
-        const totalFees = calculateTotalFees(student);
-        const paidAmount = calculatePaidAmount(student.id);
-        const balance = totalFees - paidAmount;
-        const status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
-        
-        // Apply status filter if set
-        if (statusFilter && status !== statusFilter) return;
-        
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${student.admissionNumber || 'N/A'}</td>
-          <td>${student.firstname} ${student.surname}</td>
-          <td>${student.form} ${student.stream || ''}</td>
-          <td>$${totalFees.toLocaleString()}</td>
-          <td>$${paidAmount.toLocaleString()}</td>
-          <td>$${balance.toLocaleString()}</td>
-          <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
-          <td>
-            <button class="btn btn-sm btn-secondary" onclick="showStudentPaymentHistory('${student.id}')">
-              <i class="fas fa-history"></i>
-            </button>
-            <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
-              <i class="fas fa-money-bill-wave"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-      
-      // Refresh DataTable if it exists
-      if (studentsTable) {
-        studentsTable.destroy();
-        studentsTable = new DataTable('#studentsTable', {
-          responsive: true,
-          pageLength: 10,
-          lengthMenu: [10, 25, 50, 100]
-        });
-      }
-    };
-
-    // Update stream dropdown based on selected class
-    function updateStreamDropdown(selectedClass) {
-      const streamSelect = document.getElementById('studentFilterStream');
-      streamSelect.innerHTML = '<option value="">All Streams</option>';
-      
-      if (!selectedClass) return;
-      
-      // For Forms 5 and 6, show Arts/Commercials/Sciences
-      if (selectedClass === "Form 5" || selectedClass === "Form 6") {
-        ['Arts', 'Commercials', 'Sciences'].forEach(stream => {
-          const option = document.createElement('option');
-          option.value = stream;
-          option.textContent = stream;
-          streamSelect.appendChild(option);
-        });
-      } 
-      // For other forms, show standard streams
-      else {
-        ['G', 'W', 'Z', 'E', 'U'].forEach(stream => {
-          const option = document.createElement('option');
-          option.value = stream;
-          option.textContent = stream;
-          streamSelect.appendChild(option);
-        });
-      }
-    }
-
-    // Populate students table
-    function populateStudentsTable() {
-      const tbody = document.getElementById('studentsBody');
-      tbody.innerHTML = '';
-      
-      allStudents.forEach(student => {
-        const totalFees = calculateTotalFees(student);
-        const paidAmount = calculatePaidAmount(student.id);
-        const balance = totalFees - paidAmount;
-        const status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
-        
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${student.admissionNumber || 'N/A'}</td>
-          <td>${student.firstname} ${student.surname}</td>
-          <td>${student.form} ${student.stream || ''}</td>
-          <td>$${totalFees.toLocaleString()}</td>
-          <td>$${paidAmount.toLocaleString()}</td>
-          <td>$${balance.toLocaleString()}</td>
-          <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
-          <td>
-            <button class="btn btn-sm btn-secondary" onclick="showStudentPaymentHistory('${student.id}')">
-              <i class="fas fa-history"></i>
-            </button>
-            <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
-              <i class="fas fa-money-bill-wave"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-      
-      // Refresh DataTable
-      if (studentsTable) {
-        studentsTable.destroy();
-        studentsTable = new DataTable('#studentsTable', {
-          responsive: true,
-          pageLength: 10,
-          lengthMenu: [10, 25, 50, 100]
-        });
-      }
-    }
-
-    // Populate payments table
-    function populatePaymentsTable() {
-      const tbody = document.getElementById('paymentsBody');
-      tbody.innerHTML = '';
-      
-      allPayments.forEach(payment => {
-        const student = allStudents.find(s => s.id === payment.studentId);
-        const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
-        const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
-        
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${payment.receiptNumber || 'N/A'}</td>
-          <td>${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}</td>
-          <td>${studentName}</td>
-          <td>${studentClass}</td>
-          <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
-          <td>${payment.method}</td>
-          <td>${payment.recordedBy || 'System'}</td>
-          <td>
-            <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
-              <i class="fas fa-print"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="deletePayment('${payment.id}')">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-      
-      // Refresh DataTable
-      if (paymentsTable) {
-        paymentsTable.destroy();
-        paymentsTable = new DataTable('#paymentsTable', {
-          responsive: true,
-          pageLength: 10,
-          lengthMenu: [10, 25, 50, 100],
-          order: [[1, 'desc']]
-        });
-      }
-    }
-
-    // Populate fee structure table
-    function populateFeeStructureTable() {
-      const tbody = document.getElementById('feeStructureBody');
-      tbody.innerHTML = '';
-      
-      feeStructure.forEach(fee => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${fee.class || 'All Classes'}</td>
-          <td>${fee.item}</td>
-          <td>$${fee.amountUSD.toLocaleString()}</td>
-          <td>ZWL$${fee.amountZWL.toLocaleString()}</td>
-          <td>${fee.term || 'All Terms'}</td>
-          <td>
-            <button class="btn btn-sm btn-secondary" onclick="editFeeItem('${fee.id}')">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="deleteFeeItem('${fee.id}')">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-      
-      // Refresh DataTable
-      if (feeStructureTable) {
-        feeStructureTable.destroy();
-        feeStructureTable = new DataTable('#feeStructureTable', {
-          responsive: true,
-          pageLength: 10,
-          lengthMenu: [10, 25, 50, 100]
-        });
-      }
-    }
-
-    // Populate recent payments
-    function populateRecentPayments() {
-      const tbody = document.getElementById('recentPaymentsBody');
-      tbody.innerHTML = '';
-      
-      const recentPayments = allPayments.slice(0, 5); // Get last 5 payments
-      
-      recentPayments.forEach(payment => {
-        const student = allStudents.find(s => s.id === payment.studentId);
-        const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
-            const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
+// Populate recent payments
+function populateRecentPayments() {
+  const tbody = document.getElementById('recentPaymentsBody');
+  tbody.innerHTML = '';
+  
+  const recentPayments = allPayments.slice(0, 5); // Get last 5 payments
+  
+  recentPayments.forEach(payment => {
+    const student = allStudents.find(s => s.id === payment.studentId);
+    const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
+    const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
     
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -1777,18 +1783,12 @@
 
 // Show payment modal
 window.showPaymentModal = function(studentId = null) {
-  const modal = document.getElementById('paymentModal');
-  modal.style.display = 'block';
+  showModal('paymentModal');
   
   if (studentId) {
     document.getElementById('paymentStudent').value = studentId;
     loadStudentDetails();
   }
-};
-
-// Close modal
-window.closeModal = function(modalId) {
-  document.getElementById(modalId).style.display = 'none';
 };
 
 // Record payment
@@ -1820,7 +1820,7 @@ window.recordPayment = async function() {
       amount,
       currency,
       method,
-      receiptNumber: reference || `REC-${Date.now()}`,
+            receiptNumber: reference || `REC-${Date.now()}`,
       notes,
       date: serverTimestamp(),
       recordedBy: currentUser.name,
@@ -1863,8 +1863,7 @@ window.recordPayment = async function() {
 
 // Show fee structure modal
 window.showFeeStructureModal = function(feeId = null) {
-  const modal = document.getElementById('feeStructureModal');
-  modal.style.display = 'block';
+  showModal('feeStructureModal');
   
   if (feeId) {
     // Editing existing fee item
@@ -1876,11 +1875,11 @@ window.showFeeStructureModal = function(feeId = null) {
       document.getElementById('feeAmountUSD').value = feeItem.amountUSD || '';
       document.getElementById('feeAmountZWL').value = feeItem.amountZWL || '';
       document.getElementById('feeDescription').value = feeItem.description || '';
-      modal.dataset.editId = feeId;
+      document.getElementById('feeStructureModal').dataset.editId = feeId;
     }
   } else {
     // Adding new fee item
-    modal.dataset.editId = '';
+    document.getElementById('feeStructureModal').dataset.editId = '';
   }
 };
 
@@ -1982,8 +1981,8 @@ window.deletePayment = async function(paymentId) {
   }
 };
 
-// Show student payment history
-window.showStudentPaymentHistory = async function(studentId) {
+// Show payment history
+window.showPaymentHistory = async function(studentId) {
   showLoading(true, "Loading payment history...");
   
   try {
@@ -2085,10 +2084,9 @@ window.showStudentPaymentHistory = async function(studentId) {
       </div>
     `;
 
-    // Show in preview
-    document.getElementById('previewContent').innerHTML = content;
-    document.getElementById('reportPreview').style.display = 'block';
-    showPage('reportsPage');
+    // Show in modal
+    document.getElementById('paymentHistoryContent').innerHTML = content;
+    showModal('paymentHistoryModal');
     
   } catch (err) {
     console.error("Error loading payment history:", err);
@@ -2226,78 +2224,79 @@ window.generateReport = function() {
     ];
   });
   
-  doc.autoTable({         head: [['Date', 'Student', 'Amount', 'Method']],
-        body: rows,
-        startY: 110,
-        headStyles: {
-          fillColor: [26, 54, 93],
-          textColor: 255
-        },
-        alternateRowStyles: {
-          fillColor: [240, 240, 240]
-        },
-        styles: {
-          cellPadding: 5,
-          fontSize: 10
-        }
-      });
-      
-      // Save the PDF
-      doc.save('fees_report.pdf');
-    };
-
-    // Export payments to Excel
-    window.exportPayments = function() {
-      // In a real app, you would use a library like SheetJS to export to Excel
-      showNotification("Payments exported successfully!", "success");
-    };
-
-    // Refresh data
-    window.refreshData = async function() {
-      await loadInitialData();
-      showNotification("Data refreshed successfully!", "success");
-    };
-
-    // Show user modal
-    window.showUserModal = function() {
-      document.getElementById('userModal').style.display = 'block';
-    };
-
-    // Save user
-    window.saveUser = function() {
-      const name = document.getElementById('userName').value;
-      const email = document.getElementById('userEmail').value;
-      const role = document.getElementById('userRole').value;
-      const password = document.getElementById('userPassword').value;
-      const confirmPassword = document.getElementById('userConfirmPassword').value;
-      
-      if (!name || !email || !role || !password || !confirmPassword) {
-        showNotification("Please fill all required fields", "error");
-        return;
-      }
-      
-      if (password !== confirmPassword) {
-        showNotification("Passwords do not match", "error");
-        return;
-      }
-      
-      // In a real app, you would create the user in Firebase Auth here
-      showNotification("User created successfully!", "success");
-      closeModal('userModal');
-    };
-
-    // Load settings
-    function loadSettings() {
-      document.getElementById('currencyPref').value = settings.currency;
-      document.getElementById('exchangeRate').value = settings.exchangeRate;
-      document.getElementById('paymentMethods').value = settings.paymentMethods.join(', ');
+  doc.autoTable({
+    head: [['Date', 'Student', 'Amount', 'Method']],
+    body: rows,
+    startY: 110,
+    headStyles: {
+      fillColor: [26, 54, 93],
+      textColor: 255
+    },
+    alternateRowStyles: {
+      fillColor: [240, 240, 240]
+    },
+    styles: {
+      cellPadding: 5,
+      fontSize: 10
     }
+  });
+  
+  // Save the PDF
+  doc.save('fees_report.pdf');
+};
 
-    // Save settings
-    window.saveSettings = function() {
-      const currency = document.getElementById('currencyPref').value;
-      const exchangeRate = parseFloat(document.getElementById('exchangeRate').value);
-      const paymentMethods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
+// Export payments to Excel
+window.exportPayments = function() {
+  // In a real app, you would use a library like SheetJS to export to Excel
+  showNotification("Payments exported successfully!", "success");
+};
+
+// Refresh data
+window.refreshData = async function() {
+  await loadInitialData();
+  showNotification("Data refreshed successfully!", "success");
+};
+
+// Show user modal
+window.showUserModal = function() {
+  showModal('userModal');
+};
+
+// Save user
+window.saveUser = function() {
+  const name = document.getElementById('userName').value;
+  const email = document.getElementById('userEmail').value;
+  const role = document.getElementById('userRole').value;
+  const password = document.getElementById('userPassword').value;
+  const confirmPassword = document.getElementById('userConfirmPassword').value;
+  
+  if (!name || !email || !role || !password || !confirmPassword) {
+    showNotification("Please fill all required fields", "error");
+    return;
+  }
+  
+  if (password !== confirmPassword) {
+    showNotification("Passwords do not match", "error");
+    return;
+  }
+  
+  // In a real app, you would create the user in Firebase Auth here
+  showNotification("User created successfully!", "success");
+  closeModal('userModal');
+};
+
+// Load settings
+function loadSettings() {
+  document.getElementById('currencyPref').value = settings.currency;
+  document.getElementById('exchangeRate').value = settings.exchangeRate;
+  document.getElementById('paymentMethods').value = settings.paymentMethods.join(', ');
+}
+
+// Save settings
+window.saveSettings = function() {
+  const currency = document.getElementById('currencyPref').value;
+  const exchangeRate = parseFloat(document.getElementById('exchangeRate').value);
+        const paymentMethods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
       
       if (!currency || isNaN(exchangeRate) || exchangeRate <= 0 || paymentMethods.length === 0) {
         showNotification("Please fill all settings with valid values", "error");
@@ -2312,6 +2311,73 @@ window.generateReport = function() {
       // In a real app, you would save to Firebase here
       showNotification("Settings saved successfully!", "success");
     };
+
+    // Initialize charts
+    function initCharts() {
+      // Monthly payments chart
+      const monthlyCtx = document.getElementById('monthlyPaymentsChart').getContext('2d');
+      monthlyPaymentsChart = new Chart(monthlyCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Payments',
+            data: [1200, 1900, 1500, 2000, 1800, 2200, 2400, 2100, 1900, 2300, 2500, 2800],
+            backgroundColor: 'rgba(214, 158, 46, 0.2)',
+            borderColor: 'rgba(214, 158, 46, 1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '$' + value;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Payment methods chart
+      const methodsCtx = document.getElementById('paymentMethodsChart').getContext('2d');
+      paymentMethodsChart = new Chart(methodsCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Cash', 'Ecocash', 'OneMoney', 'Bank Transfer', 'Swipe'],
+          datasets: [{
+            data: [35, 25, 20, 15, 5],
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+              'rgba(255, 99, 132, 0.7)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'right'
+            }
+          }
+        }
+      });
+    }
 
     // Hamburger menu toggle
     const hamburgerBtn = document.getElementById('hamburgerBtn');
