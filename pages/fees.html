@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,11 +17,9 @@
   <!-- jsPDF and autoTable plugin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-  
-  <!-- Add this before DataTables -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <!-- DataTables -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
   <style>
@@ -512,7 +511,7 @@
       transition: opacity 0.5s ease;
     }
     /* Modal */
-        .modal {
+    .modal {
       display: none;
       position: fixed;
       top: 0;
@@ -543,6 +542,22 @@
       color: var(--text-color);
       font-size: 1.5rem;
       cursor: pointer;
+    }
+    /* Payment Plan Styles */
+    .payment-plan-container {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+    }
+    .payment-plan-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+    }
+    .payment-plan-item:last-child {
+      border-bottom: none;
     }
     /* Responsive Adjustments */
     @media (max-width: 767px) {
@@ -600,7 +615,6 @@
       <li><a href="#" id="paymentsLink"><i class="fas fa-money-bill-wave"></i> Payments</a></li>
       <li><a href="#" id="feeStructureLink"><i class="fas fa-list-alt"></i> Fee Structure</a></li>
       <li><a href="#" id="reportsLink"><i class="fas fa-chart-bar"></i> Reports</a></li>
-      <li><a href="#" id="settingsLink"><i class="fas fa-cog"></i> Settings</a></li>
     </ul>
   </aside>
 
@@ -714,6 +728,7 @@
             </select>
           </div>
           <input type="text" id="studentSearch" placeholder="Search students..." onkeyup="filterStudents()" style="padding: 0.9rem 1.2rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: var(--glass); color: var(--text-color);">
+          <button class="btn btn-primary" onclick="downloadClassList()"><i class="fas fa-download"></i> Download List</button>
         </div>
       </div>
 
@@ -800,7 +815,6 @@
                 <th>Class</th>
                 <th>Fee Item</th>
                 <th>Amount (USD)</th>
-                <th>Amount (ZWL)</th>
                 <th>Term</th>
                 <th>Actions</th>
               </tr>
@@ -888,90 +902,29 @@
         </div>
       </div>
     </div>
-
-    <!-- Settings Page -->
-    <div id="settingsPage" class="page-content">
-      <div class="page-title">
-        <h1><i class="fas fa-cog"></i> System Settings</h1>
-      </div>
-
-      <div class="form-card">
-        <h2><i class="fas fa-money-bill-wave"></i> Payment Settings</h2>
-        <div class="form-group">
-          <label for="currencyPref">Default Currency</label>
-          <select id="currencyPref" class="form-control">
-            <option value="USD">US Dollars (USD)</option>
-            <option value="ZWL">Zimbabwe Dollars (ZWL)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="exchangeRate">USD to ZWL Exchange Rate</label>
-          <input type="number" id="exchangeRate" class="form-control" placeholder="Enter current exchange rate">
-        </div>
-        <div class="form-group">
-          <label for="paymentMethods">Payment Methods</label>
-          <textarea id="paymentMethods" class="form-control" rows="3" placeholder="Enter payment methods, separated by commas"></textarea>
-          <small>Example: Cash, Ecocash, OneMoney, Bank Transfer, Swipe</small>
-        </div>
-        <div class="form-actions">
-          <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
-        </div>
-      </div>
-
-      <div class="form-card">
-        <h2><i class="fas fa-user-shield"></i> User Management</h2>
-        <div class="data-table">
-          <table id="">
-          	          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Last Login</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="usersBody">
-            <tr>
-              <td>Admin User</td>
-              <td>admin@stmarys.edu</td>
-              <td>Administrator</td>
-              <td>Today, 09:45 AM</td>
-              <td>
-                <button class="btn btn-sm btn-secondary"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="form-actions" style="justify-content: flex-end; margin-top: 1rem;">
-        <button class="btn btn-primary" onclick="showUserModal()"><i class="fas fa-plus"></i> Add User</button>
-      </div>
-    </div>
   </div>
-</div>
 
-<!-- Payment Modal -->
-<div id="paymentModal" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('paymentModal')">&times;</button>
-    <h2><i class="fas fa-money-bill-wave"></i> Record New Payment</h2>
-    <div class="form-group">
-      <label for="paymentStudent">Student</label>
-      <select id="paymentStudent" class="form-control" onchange="loadStudentDetails()">
-        <option value="">Select Student</option>
-      </select>
-    </div>
-    <div id="studentPaymentDetails" style="display: none; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <div>
-          <p><strong>Class:</strong> <span id="studentClassDisplay"></span></p>
-          <p><strong>Total Fees:</strong> <span id="totalFeesDisplay"></span></p>
+  <!-- Payment Modal -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal('paymentModal')">&times;</button>
+      <h2><i class="fas fa-money-bill-wave"></i> Record New Payment</h2>
+      <div class="form-group">
+        <label for="paymentStudent">Student</label>
+        <select id="paymentStudent" class="form-control" onchange="loadStudentDetails()">
+          <option value="">Select Student</option>
+        </select>
+      </div>
+      <div id="studentPaymentDetails" style="display: none; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <p><strong>Class:</strong> <span id="studentClassDisplay"></span></p>
+            <p><strong>Total Fees:</strong> <span id="totalFees"></p>
+                      <p><strong>Paid:</strong> <span id="paidFeesDisplay"></span></p>
         </div>
         <div>
-          <p><strong>Paid:</strong> <span id="paidFeesDisplay"></span></p>
           <p><strong>Balance:</strong> <span id="balanceFeesDisplay"></span></p>
+          <p><strong>Status:</strong> <span id="paymentStatusDisplay"></span></p>
         </div>
       </div>
     </div>
@@ -1003,6 +956,10 @@
     <div class="form-group">
       <label for="paymentNotes">Notes</label>
       <textarea id="paymentNotes" class="form-control" rows="3" placeholder="Any additional notes"></textarea>
+    </div>
+    <div class="payment-plan-container" id="paymentPlanContainer" style="display: none;">
+      <h4><i class="fas fa-calendar-check"></i> Payment Plan</h4>
+      <div id="paymentPlanDetails"></div>
     </div>
     <div class="form-actions">
       <button class="btn btn-primary" onclick="recordPayment()"><i class="fas fa-save"></i> Record Payment</button>
@@ -1046,54 +1003,9 @@
       <label for="feeAmountUSD">Amount (USD)</label>
       <input type="number" id="feeAmountUSD" class="form-control" placeholder="Enter amount in USD">
     </div>
-    <div class="form-group currency-input">
-      <label for="feeAmountZWL">Amount (ZWL)</label>
-      <input type="number" id="feeAmountZWL" class="form-control" placeholder="Enter amount in ZWL">
-    </div>
-    <div class="form-group">
-      <label for="feeDescription">Description</label>
-      <textarea id="feeDescription" class="form-control" rows="3" placeholder="Description of this fee item"></textarea>
-    </div>
     <div class="form-actions">
       <button class="btn btn-primary" onclick="saveFeeItem()"><i class="fas fa-save"></i> Save Fee Item</button>
       <button class="btn btn-secondary" onclick="closeModal('feeStructureModal')"><i class="fas fa-times"></i> Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- User Management Modal -->
-<div id="userModal" class="modal">
-  <div class="modal-content">
-    <button class="close-modal" onclick="closeModal('userModal')">&times;</button>
-    <h2><i class="fas fa-user-plus"></i> Add New User</h2>
-    <div class="form-group">
-      <label for="userName">Full Name</label>
-      <input type="text" id="userName" class="form-control" placeholder="Enter full name">
-    </div>
-    <div class="form-group">
-      <label for="userEmail">Email</label>
-      <input type="email" id="userEmail" class="form-control" placeholder="Enter email address">
-    </div>
-    <div class="form-group">
-      <label for="userRole">Role</label>
-      <select id="userRole" class="form-control">
-        <option value="admin">Administrator</option>
-        <option value="bursar">Bursar</option>
-        <option value="teacher">Teacher</option>
-        <option value="viewer">Viewer</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="userPassword">Password</label>
-      <input type="password" id="userPassword" class="form-control" placeholder="Enter password">
-    </div>
-    <div class="form-group">
-      <label for="userConfirmPassword">Confirm Password</label>
-      <input type="password" id="userConfirmPassword" class="form-control" placeholder="Confirm password">
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-primary" onclick="saveUser()"><i class="fas fa-save"></i> Save User</button>
-      <button class="btn btn-secondary" onclick="closeModal('userModal')"><i class="fas fa-times"></i> Cancel</button>
     </div>
   </div>
 </div>
@@ -1159,9 +1071,8 @@
   let allPayments = [];
   let feeStructure = [];
   let currentUser = {
-    name: "Admin User",
-    email: "admin@stmarys.edu",
-    role: "admin"
+    name: "System Admin",
+    email: "admin@stmarys.edu"
   };
   let settings = {
     currency: "USD",
@@ -1187,9 +1098,6 @@
     // Initialize DataTables
     initDataTables();
     
-    // Load settings
-    loadSettings();
-    
     // Initialize charts
     initCharts();
   });
@@ -1201,10 +1109,16 @@
     document.getElementById('paymentsLink').addEventListener('click', () => showPage('paymentsPage'));
     document.getElementById('feeStructureLink').addEventListener('click', () => showPage('feeStructurePage'));
     document.getElementById('reportsLink').addEventListener('click', () => showPage('reportsPage'));
-    document.getElementById('settingsLink').addEventListener('click', () => showPage('settingsPage'));
     
     // Show dashboard by default
     showPage('dashboardPage');
+    
+    // Hamburger menu toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    hamburgerBtn.addEventListener('click', () => {
+      sideMenu.classList.toggle('shown');
+    });
   }
 
   // Show specific page
@@ -1358,15 +1272,13 @@ function setupRealTimeListeners() {
       id: doc.id, 
       ...doc.data(),
       admissionNumber: doc.data().admissionNumber || generateAdmissionNumber(doc.data().form)
-    }));  // Added missing parenthesis here
+    }));
     
     updateDashboardStats();
     populateStudentDropdown();
     populateStudentsTable();
   });
   
-  // Rest of the function...
-
   // Payments listener
   const paymentsQuery = query(collection(db, "payments"), orderBy("date", "desc"));
   onSnapshot(paymentsQuery, (snapshot) => {
@@ -1376,6 +1288,8 @@ function setupRealTimeListeners() {
     populateRecentPayments();
   });
   
+
+
   // Fee structure listener
   onSnapshot(collection(db, "feeStructure"), (snapshot) => {
     feeStructure = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -1383,933 +1297,1018 @@ function setupRealTimeListeners() {
   });
 }
 
-// Initialize DataTables
-function initDataTables() {
-  studentsTable = new DataTable('#studentsTable', {
-    responsive: true,
-    pageLength: 10,
-    lengthMenu: [10, 25, 50, 100]
-  });
-
-  paymentsTable = new DataTable('#paymentsTable', {
-    responsive: true,
-    pageLength: 10,
-    lengthMenu: [10, 25, 50, 100],
-    order: [[1, 'desc']]
-  });
-
-  feeStructureTable = new DataTable('#feeStructureTable', {
-    responsive: true,
-    pageLength: 10,
-    lengthMenu: [10, 25, 50, 100]
-  });
-}
-
-// Update dashboard statistics
-function updateDashboardStats() {
-  try {
-    // Calculate total collected
-    const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
-    document.getElementById('totalCollected').textContent = `$${totalCollected.toLocaleString()}`;
-    
-    // Total students
-    document.getElementById('totalStudents').textContent = allStudents.length;
-    
-    // Fully paid students
-    const fullyPaid = allStudents.filter(student => {
-      const totalFees = calculateTotalFees(student);
-      const paidAmount = calculatePaidAmount(student.id);
-      return paidAmount >= totalFees;
-    }).length;
-    document.getElementById('fullyPaid').textContent = fullyPaid;
-    
-    // Total outstanding
-    let totalOutstanding = 0;
-    allStudents.forEach(student => {
-      const totalFees = calculateTotalFees(student);
-      const paidAmount = calculatePaidAmount(student.id);
-      totalOutstanding += Math.max(0, totalFees - paidAmount);
-    });
-    document.getElementById('totalOutstanding').textContent = `$${totalOutstanding.toLocaleString()}`;
-    
-    // Update trends (demo values)
-    document.getElementById('collectionTrend').textContent = '12%';
-    document.getElementById('studentsTrend').textContent = '5%';
-    document.getElementById('paidTrend').textContent = '8%';
-    document.getElementById('outstandingTrend').textContent = '15%';
-  } catch (err) {
-    console.error("Error updating dashboard stats:", err);
-  }
-}
-
-// Calculate total fees for a student based on fee structure
-function calculateTotalFees(student) {
-  if (!student || !student.form) return 0;
-  
-  try {
-    // Get all fee items that apply to this student
-    const applicableFees = feeStructure.filter(fee => {
-      return (fee.class === student.form || fee.class === "All Classes") && 
-             (fee.term === student.term || fee.term === "All Terms");
-    });
-    
-    // Sum up all applicable fees
-    return applicableFees.reduce((sum, fee) => sum + fee.amountUSD, 0);
-  } catch (err) {
-    console.error("Error calculating total fees:", err);
-    return 0;
-  }
-}
-
-// Calculate paid amount for a student
-function calculatePaidAmount(studentId) {
-  if (!studentId) return 0;
-  
-  try {
-    return allPayments
-      .filter(payment => payment.studentId === studentId)
-      .reduce((sum, payment) => sum + (payment.currency === 'USD' ? payment.amount : payment.amount / settings.exchangeRate), 0);
-  } catch (err) {
-    console.error("Error calculating paid amount:", err);
-    return 0;
-  }
-}
-
-// Populate student dropdown with search functionality
-function populateStudentDropdown() {
-  const select = document.getElementById('paymentStudent');
-  const searchInput = document.getElementById('studentSearch');
-  
-  // Clear existing options
-  select.innerHTML = '<option value="">Select Student</option>';
-  
-  // Add all students
-  allStudents.forEach(student => {
-    const option = document.createElement('option');
-    option.value = student.id;
-    option.textContent = `${student.firstname} ${student.surname} (${student.admissionNumber || 'N/A'}) - ${student.form} ${student.stream || ''}`;
-    select.appendChild(option);
-  });
-}
-
-// Load student details when selected
-function loadStudentDetails() {
-  const studentId = document.getElementById('paymentStudent').value;
-  if (!studentId) {
-    document.getElementById('studentPaymentDetails').style.display = 'none';
-    return;
-  }
-  
-  const student = allStudents.find(s => s.id === studentId);
-  if (student) {
-    const totalFees = calculateTotalFees(student);
-    const paidAmount = calculatePaidAmount(student.id);
-    const balance = totalFees - paidAmount;
-    
-    document.getElementById('studentClassDisplay').textContent = `${student.form} ${student.stream || ''}`;
-    document.getElementById('totalFeesDisplay').textContent = `$${totalFees.toLocaleString()}`;
-    document.getElementById('paidFeesDisplay').textContent = `$${paidAmount.toLocaleString()}`;
-    document.getElementById('balanceFeesDisplay').textContent = `$${balance.toLocaleString()}`;
-    
-    document.getElementById('studentPaymentDetails').style.display = 'block';
-  }
-}
-
-// Enhanced filter students function
-window.filterStudents = function() {
-  const classFilter = document.getElementById('studentFilterClass').value;
-  const streamFilter = document.getElementById('studentFilterStream').value;
-  const statusFilter = document.getElementById('studentFilterStatus').value;
-  const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
-  
-  // Update stream dropdown based on class selection
-  updateStreamDropdown(classFilter);
-  
-  const tbody = document.getElementById('studentsBody');
-  tbody.innerHTML = '';
-  
-  const filteredStudents = allStudents.filter(student => {
-    // Apply class filter
-    if (classFilter && student.form !== classFilter) return false;
-    
-    // Apply stream filter
-    if (streamFilter && student.stream !== streamFilter) return false;
-    
-    // Apply search filter
-    const studentName = `${student.firstname} ${student.surname}`.toLowerCase();
-    const admissionNo = student.admissionNumber ? student.admissionNumber.toLowerCase() : '';
-    if (searchTerm && !studentName.includes(searchTerm) && !admissionNo.includes(searchTerm)) return false;
-    
-    // Apply status filter
-    const totalFees = calculateTotalFees(student);
-    const paidAmount = calculatePaidAmount(student.id);
-    const balance = totalFees - paidAmount;
-    let status = 'notset';
-    
-    if (totalFees > 0) {
-      status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
-    }
-    
-    if (statusFilter && status !== statusFilter) return false;
-    
-    return true;
-  });
-  
-  // Populate table with filtered students
-  filteredStudents.forEach(student => {
-    const totalFees = calculateTotalFees(student);
-    const paidAmount = calculatePaidAmount(student.id);
-    const balance = totalFees - paidAmount;
-    let status = 'notset';
-    
-    if (totalFees > 0) {
-      status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
-    }
-    
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${student.admissionNumber || 'N/A'}</td>
-      <td>${student.firstname} ${student.surname}</td>
-      <td>${student.form} ${student.stream || ''}</td>
-      <td>$${totalFees.toLocaleString()}</td>
-      <td>$${paidAmount.toLocaleString()}</td>
-      <td>$${balance.toLocaleString()}</td>
-      <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
-      <td>
-        <button class="btn btn-sm btn-secondary" onclick="showPaymentHistory('${student.id}')">
-          <i class="fas fa-history"></i>
-        </button>
-        <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
-          <i class="fas fa-money-bill-wave"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-  
-  // Refresh DataTable if it exists
-  if (studentsTable) {
-    studentsTable.destroy();
+  // Initialize DataTables
+  function initDataTables() {
     studentsTable = new DataTable('#studentsTable', {
       responsive: true,
       pageLength: 10,
       lengthMenu: [10, 25, 50, 100]
     });
-  }
-};
 
-// Update stream dropdown based on selected class
-function updateStreamDropdown(selectedClass) {
-  const streamSelect = document.getElementById('studentFilterStream');
-  streamSelect.innerHTML = '<option value="">All Streams</option>';
-  
-  if (!selectedClass) return;
-  
-  // For Forms 5 and 6, show Arts/Commercials/Sciences
-  if (selectedClass === "Form 5" || selectedClass === "Form 6") {
-    ['Arts', 'Commercials', 'Sciences'].forEach(stream => {
-      const option = document.createElement('option');
-      option.value = stream;
-      option.textContent = stream;
-      streamSelect.appendChild(option);
-    });
-  } 
-  // For other forms, show standard streams
-  else {
-    ['G', 'W', 'Z', 'E', 'U'].forEach(stream => {
-      const option = document.createElement('option');
-      option.value = stream;
-      option.textContent = stream;
-      streamSelect.appendChild(option);
-    });
-  }
-}
-
-// Populate students table
-function populateStudentsTable() {
-  const tbody = document.getElementById('studentsBody');
-  tbody.innerHTML = '';
-  
-  allStudents.forEach(student => {
-    const totalFees = calculateTotalFees(student);
-    const paidAmount = calculatePaidAmount(student.id);
-    const balance = totalFees - paidAmount;
-    let status = 'notset';
-    
-    if (totalFees > 0) {
-      status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
-    }
-    
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${student.admissionNumber || 'N/A'}</td>
-      <td>${student.firstname} ${student.surname}</td>
-      <td>${student.form} ${student.stream || ''}</td>
-      <td>$${totalFees.toLocaleString()}</td>
-      <td>$${paidAmount.toLocaleString()}</td>
-      <td>$${balance.toLocaleString()}</td>
-      <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
-      <td>
-        <button class="btn btn-sm btn-secondary" onclick="showPaymentHistory('${student.id}')">
-          <i class="fas fa-history"></i>
-        </button>
-        <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
-          <i class="fas fa-money-bill-wave"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-  
-  // Refresh DataTable
-  if (studentsTable) {
-    studentsTable.destroy();
-    studentsTable = new DataTable('#studentsTable', {
-      responsive: true,
-      pageLength: 10,
-      lengthMenu: [10, 25, 50, 100]
-    });
-  }
-}
-
-// Populate payments table
-function populatePaymentsTable() {
-  const tbody = document.getElementById('paymentsBody');
-  tbody.innerHTML = '';
-  
-  allPayments.forEach(payment => {
-    const student = allStudents.find(s => s.id === payment.studentId);
-    const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
-    const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
-    
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${payment.receiptNumber || 'N/A'}</td>
-      <td>${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}</td>
-      <td>${studentName}</td>
-      <td>${studentClass}</td>
-      <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
-      <td>${payment.method}</td>
-      <td>${payment.recordedBy || 'System'}</td>
-      <td>
-        <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
-          <i class="fas fa-print"></i>
-        </button>
-        <button class="btn btn-sm btn-danger" onclick="deletePayment('${payment.id}')">
-          <i class="fas fa-trash"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-  
-  // Refresh DataTable
-  if (paymentsTable) {
-    paymentsTable.destroy();
     paymentsTable = new DataTable('#paymentsTable', {
       responsive: true,
       pageLength: 10,
       lengthMenu: [10, 25, 50, 100],
       order: [[1, 'desc']]
     });
-  }
-}
 
-// Populate fee structure table
-function populateFeeStructureTable() {
-  const tbody = document.getElementById('feeStructureBody');
-  tbody.innerHTML = '';
-  
-  feeStructure.forEach(fee => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${fee.class || 'All Classes'}</td>
-      <td>${fee.item}</td>
-      <td>$${fee.amountUSD.toLocaleString()}</td>
-      <td>ZWL$${fee.amountZWL.toLocaleString()}</td>
-      <td>${fee.term || 'All Terms'}</td>
-      <td>
-        <button class="btn btn-sm btn-secondary" onclick="editFeeItem('${fee.id}')">
-          <i class="fas fa-edit"></i>
-        </button>
-        <button class="btn btn-sm btn-danger" onclick="deleteFeeItem('${fee.id}')">
-          <i class="fas fa-trash"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-  
-  // Refresh DataTable
-  if (feeStructureTable) {
-    feeStructureTable.destroy();
     feeStructureTable = new DataTable('#feeStructureTable', {
       responsive: true,
       pageLength: 10,
       lengthMenu: [10, 25, 50, 100]
     });
   }
-}
 
-// Populate recent payments
-function populateRecentPayments() {
-  const tbody = document.getElementById('recentPaymentsBody');
-  tbody.innerHTML = '';
-  
-  const recentPayments = allPayments.slice(0, 5); // Get last 5 payments
-  
-  recentPayments.forEach(payment => {
-    const student = allStudents.find(s => s.id === payment.studentId);
-    const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
-    const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
-    
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}</td>
-      <td>${studentName}</td>
-      <td>${studentClass}</td>
-      <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
-      <td>${payment.method}</td>
-      <td><span class="status-badge status-paid">Paid</span></td>
-      <td>
-        <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
-          <i class="fas fa-print"></i>
-        </button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// Show payment modal
-window.showPaymentModal = function(studentId = null) {
-  showModal('paymentModal');
-  
-  if (studentId) {
-    document.getElementById('paymentStudent').value = studentId;
-    loadStudentDetails();
-  }
-};
-
-// Record payment
-window.recordPayment = async function() {
-  const studentId = document.getElementById('paymentStudent').value;
-  const amount = parseFloat(document.getElementById('paymentAmount').value);
-  const currency = document.getElementById('paymentCurrency').value;
-  const method = document.getElementById('paymentMethod').value;
-  const reference = document.getElementById('paymentReference').value;
-  const notes = document.getElementById('paymentNotes').value;
-  
-  // Validate inputs
-  if (!studentId) {
-    showNotification("Please select a student", "error");
-    return;
-  }
-  
-  if (isNaN(amount) || amount <= 0) {
-    showNotification("Please enter a valid amount greater than zero", "error");
-    return;
-  }
-  
-  showLoading(true, "Recording payment...");
-  
-  try {
-    // Create payment record
-    const paymentData = {
-      studentId,
-      amount,
-      currency,
-      method,
-            receiptNumber: reference || `REC-${Date.now()}`,
-      notes,
-      date: serverTimestamp(),
-      recordedBy: currentUser.name,
-      status: 'completed'
-    };
-    
-    // Add to Firebase
-    const docRef = await addDoc(collection(db, "payments"), paymentData);
-    
-    // Update student's paid status if needed
-    const student = allStudents.find(s => s.id === studentId);
-    const totalFees = calculateTotalFees(student);
-    const paidAmount = calculatePaidAmount(studentId) + (currency === 'USD' ? amount : amount / settings.exchangeRate);
-    
-    if (paidAmount >= totalFees) {
-      await updateDoc(doc(db, "students", studentId), {
-        feesPaid: true,
-        feesBalance: 0
-      });
-    } else {
-      await updateDoc(doc(db, "students", studentId), {
-        feesBalance: totalFees - paidAmount
-      });
-    }
-    
-    showNotification("Payment recorded successfully!", "success");
-    closeModal('paymentModal');
-    
-    // Reset form
-    document.getElementById('paymentAmount').value = '';
-    document.getElementById('paymentReference').value = '';
-    document.getElementById('paymentNotes').value = '';
-  } catch (err) {
-    console.error("Error recording payment:", err);
-    showNotification("Error recording payment. Please try again.", "error");
-  } finally {
-    showLoading(false);
-  }
-};
-
-// Show fee structure modal
-window.showFeeStructureModal = function(feeId = null) {
-  showModal('feeStructureModal');
-  
-  if (feeId) {
-    // Editing existing fee item
-    const feeItem = feeStructure.find(f => f.id === feeId);
-    if (feeItem) {
-      document.getElementById('feeClass').value = feeItem.class || '';
-      document.getElementById('feeTerm').value = feeItem.term || '';
-      document.getElementById('feeItem').value = feeItem.item || '';
-      document.getElementById('feeAmountUSD').value = feeItem.amountUSD || '';
-      document.getElementById('feeAmountZWL').value = feeItem.amountZWL || '';
-      document.getElementById('feeDescription').value = feeItem.description || '';
-      document.getElementById('feeStructureModal').dataset.editId = feeId;
-    }
-  } else {
-    // Adding new fee item
-    document.getElementById('feeStructureModal').dataset.editId = '';
-  }
-};
-
-// Save fee item
-window.saveFeeItem = async function() {
-  const feeClass = document.getElementById('feeClass').value;
-  const feeTerm = document.getElementById('feeTerm').value;
-  const feeItem = document.getElementById('feeItem').value;
-  const amountUSD = parseFloat(document.getElementById('feeAmountUSD').value);
-  const amountZWL = parseFloat(document.getElementById('feeAmountZWL').value);
-  const description = document.getElementById('feeDescription').value;
-  const editId = document.getElementById('feeStructureModal').dataset.editId;
-  
-  if (!feeClass || !feeItem || isNaN(amountUSD) || isNaN(amountZWL)) {
-    showNotification("Please fill all required fields with valid values", "error");
-    return;
-  }
-  
-  showLoading(true, "Saving fee item...");
-  
-  try {
-    // Create fee structure item
-    const feeData = {
-      class: feeClass,
-      term: feeTerm,
-      item: feeItem,
-      amountUSD,
-      amountZWL,
-      description,
-      updatedAt: serverTimestamp()
-    };
-    
-    if (editId) {
-      // Update existing fee item
-      await updateDoc(doc(db, "feeStructure", editId), feeData);
-      showNotification("Fee item updated successfully!", "success");
-    } else {
-      // Add new fee item
-      feeData.createdAt = serverTimestamp();
-      const docRef = await addDoc(collection(db, "feeStructure"), feeData);
-      showNotification("Fee item added successfully!", "success");
-    }
-    
-    closeModal('feeStructureModal');
-    
-    // Reset form
-    document.getElementById('feeClass').value = '';
-    document.getElementById('feeTerm').value = '';
-    document.getElementById('feeItem').value = '';
-    document.getElementById('feeAmountUSD').value = '';
-    document.getElementById('feeAmountZWL').value = '';
-    document.getElementById('feeDescription').value = '';
-  } catch (err) {
-    console.error("Error saving fee item:", err);
-    showNotification("Error saving fee item. Please try again.", "error");
-  } finally {
-    showLoading(false);
-  }
-};
-
-// Edit fee item
-window.editFeeItem = function(feeId) {
-  showFeeStructureModal(feeId);
-};
-
-// Delete fee item
-window.deleteFeeItem = async function(feeId) {
-  if (!confirm('Are you sure you want to delete this fee item? This action cannot be undone.')) return;
-  
-  showLoading(true, "Deleting fee item...");
-  
-  try {
-    // Delete from Firebase
-    await deleteDoc(doc(db, "feeStructure", feeId));
-    showNotification("Fee item deleted successfully!", "success");
-  } catch (err) {
-    console.error("Error deleting fee item:", err);
-    showNotification("Error deleting fee item. Please try again.", "error");
-  } finally {
-    showLoading(false);
-  }
-};
-
-// Delete payment
-window.deletePayment = async function(paymentId) {
-  if (!confirm('Are you sure you want to delete this payment record? This action cannot be undone.')) return;
-  
-  showLoading(true, "Deleting payment...");
-  
-  try {
-    // Delete from Firebase
-    await deleteDoc(doc(db, "payments", paymentId));
-    showNotification("Payment record deleted successfully!", "success");
-  } catch (err) {
-    console.error("Error deleting payment:", err);
-    showNotification("Error deleting payment. Please try again.", "error");
-  } finally {
-    showLoading(false);
-  }
-};
-
-// Show payment history
-window.showPaymentHistory = async function(studentId) {
-  showLoading(true, "Loading payment history...");
-  
-  try {
-    const student = allStudents.find(s => s.id === studentId);
-    if (!student) {
-      showNotification("Student not found", "error");
-      return;
-    }
-    
-    // Get all payments for this student
-    const paymentsQuery = query(
-      collection(db, "payments"),
-      where("studentId", "==", studentId),
-      orderBy("date", "desc")
-    );
-    
-    const paymentsSnapshot = await getDocs(paymentsQuery);
-    const payments = paymentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
-    // Calculate totals
-    const totalFees = calculateTotalFees(student);
-    const paidAmount = payments.reduce((sum, payment) => 
-      sum + (payment.currency === 'USD' ? payment.amount : payment.amount / settings.exchangeRate), 0);
-    const balance = totalFees - paidAmount;
-
-    // Create modal content
-    let content = `
-      <div class="student-payment-history">
-        <div class="student-header">
-          <h3>Payment History for ${student.firstname} ${student.surname}</h3>
-          <p><strong>Admission No.:</strong> ${student.admissionNumber || 'N/A'}</p>
-          <p><strong>Class:</strong> ${student.form} ${student.stream || ''}</p>
-        </div>
-        
-        <div class="summary-cards">
-          <div class="summary-card">
-            <h4>Total Fees</h4>
-            <div class="amount">$${totalFees.toLocaleString()}</div>
-          </div>
-          <div class="summary-card">
-            <h4>Total Paid</h4>
-            <div class="amount">$${paidAmount.toLocaleString()}</div>
-          </div>
-          <div class="summary-card">
-            <h4>Balance</h4>
-            <div class="amount">$${balance.toLocaleString()}</div>
-          </div>
-        </div>
-        
-        <div class="payment-table-container">
-          <table class="payment-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Receipt No.</th>
-                <th>Amount</th>
-                <th>Method</th>
-                <th>Notes</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-    `;
-
-    payments.forEach(payment => {
-      const paymentDate = payment.date?.toDate ? payment.date.toDate() : new Date();
-      content += `
-        <tr>
-          <td>${paymentDate.toLocaleDateString()}</td>
-          <td>${payment.receiptNumber || 'N/A'}</td>
-          <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
-          <td>${payment.method}</td>
-          <td>${payment.notes || ''}</td>
-          <td>
-            <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
-              <i class="fas fa-print"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="deletePayment('${payment.id}')">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      `;
-    });
-
-    content += `
-            </tbody>
-          </table>
-        </div>
-        
-        <div class="action-buttons">
-          <button class="btn btn-primary" onclick="printPaymentHistory('${studentId}')">
-            <i class="fas fa-print"></i> Print Full Statement
-          </button>
-          <button class="btn btn-secondary" onclick="showPaymentModal('${studentId}')">
-            <i class="fas fa-money-bill-wave"></i> Record New Payment
-          </button>
-        </div>
-      </div>
-    `;
-
-    // Show in modal
-    document.getElementById('paymentHistoryContent').innerHTML = content;
-    showModal('paymentHistoryModal');
-    
-  } catch (err) {
-    console.error("Error loading payment history:", err);
-    showNotification("Error loading payment history", "error");
-  } finally {
-    showLoading(false);
-  }
-};
-
-// Print receipt function
-window.printReceipt = async function(paymentId) {
-  showLoading(true, "Generating receipt...");
-  
-  try {
-    const payment = allPayments.find(p => p.id === paymentId);
-    if (!payment) {
-      showNotification("Payment not found", "error");
-      return;
-    }
-    
-    const student = allStudents.find(s => s.id === payment.studentId);
-    
-    // Generate PDF receipt
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // Add school logo
-    doc.addImage('https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg', 'JPEG', 10, 10, 30, 30);
-    
-    // School header
-    doc.setFontSize(18);
-    doc.setTextColor(26, 54, 93);
-    doc.text('St. Mary\'s High School', 50, 20);
-    doc.setFontSize(12);
-    doc.text('Official Payment Receipt', 50, 28);
-    
-    // Receipt details
-    doc.setFontSize(10);
-    doc.text(`Receipt No.: ${payment.receiptNumber || 'N/A'}`, 160, 15);
-    doc.text(`Date: ${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}`, 160, 20);
-    
-    // Student info
-    doc.setFontSize(14);
-    doc.setTextColor(0, 0, 0);
-    doc.text('Student Information', 14, 50);
-    doc.setFontSize(12);
-    doc.text(`Name: ${student.firstname} ${student.surname}`, 14, 60);
-    doc.text(`Admission No.: ${student.admissionNumber || 'N/A'}`, 14, 70);
-    doc.text(`Class: ${student.form} ${student.stream || ''}`, 14, 80);
-    
-    // Payment details
-    doc.setFontSize(14);
-    doc.text('Payment Details', 14, 100);
-    doc.setFontSize(12);
-    doc.text(`Amount: ${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}`, 14, 110);
-    doc.text(`Method: ${payment.method}`, 14, 120);
-    doc.text(`Received By: ${payment.recordedBy || 'School Bursar'}`, 14, 130);
-    
-    if (payment.notes) {
-      doc.text(`Notes: ${payment.notes}`, 14, 140);
-    }
-    
-    // Footer
-    doc.setFontSize(10);
-    doc.text('Thank you for your payment!', 14, 180);
-    doc.text('This is an official receipt from St. Mary\'s High School', 14, 185);
-    
-    // Save the PDF
-    doc.save(`Receipt_${payment.receiptNumber || paymentId}.pdf`);
-    
-  } catch (err) {
-    console.error("Error generating receipt:", err);
-    showNotification("Error generating receipt", "error");
-  } finally {
-    showLoading(false);
-  }
-};
-
-// Print payment history
-window.printPaymentHistory = function(studentId) {
-  // In a real implementation, this would generate a PDF of the full payment history
-  showNotification("Printing payment history...", "success");
-  window.print();
-};
-
-// Generate report
-window.generateReport = function() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  
-  // Add school logo
-  doc.addImage('https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg', 'JPEG', 10, 10, 30, 30);
-  
-  // School header
-  doc.setFontSize(18);
-  doc.setTextColor(26, 54, 93);
-  doc.text('St. Mary\'s High School', 50, 20);
-  doc.setFontSize(12);
-  doc.text('Fees Payment Report', 50, 28);
-  
-  // Report date
-  doc.setFontSize(10);
-  doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 160, 15);
-  
-  // Summary stats
-  doc.setFontSize(14);
-  doc.setTextColor(0, 0, 0);
-  doc.text('Summary Statistics', 14, 50);
-  
-  const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
-  const totalOutstanding = allStudents.reduce((sum, student) => {
-    const totalFees = calculateTotalFees(student);
-    const paidAmount = calculatePaidAmount(student.id);
-    return sum + Math.max(0, totalFees - paidAmount);
-  }, 0);
-  
-  doc.setFontSize(12);
-  doc.text(`Total Collected: $${totalCollected.toLocaleString()}`, 14, 60);
-  doc.text(`Total Outstanding: $${totalOutstanding.toLocaleString()}`, 14, 70);
-  doc.text(`Number of Students: ${allStudents.length}`, 14, 80);
-  
-  // Recent payments table
-  doc.setFontSize(14);
-  doc.text('Recent Payments', 14, 100);
-  
-  const recentPayments = allPayments.slice(0, 10); // Last 10 payments
-  let rows = recentPayments.map(payment => {
-    const student = allStudents.find(s => s.id === payment.studentId);
-    const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown';
-    return [
-      payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A',
-      studentName,
-      `${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}`,
-      payment.method
-    ];
-  });
-  
-  doc.autoTable({
-    head: [['Date', 'Student', 'Amount', 'Method']],
-    body: rows,
-    startY: 110,
-    headStyles: {
-      fillColor: [26, 54, 93],
-      textColor: 255
-    },
-    alternateRowStyles: {
-      fillColor: [240, 240, 240]
-    },
-    styles: {
-      cellPadding: 5,
-      fontSize: 10
-    }
-  });
-  
-  // Save the PDF
-  doc.save('fees_report.pdf');
-};
-
-// Export payments to Excel
-window.exportPayments = function() {
-  // In a real app, you would use a library like SheetJS to export to Excel
-  showNotification("Payments exported successfully!", "success");
-};
-
-// Refresh data
-window.refreshData = async function() {
-  await loadInitialData();
-  showNotification("Data refreshed successfully!", "success");
-};
-
-// Show user modal
-window.showUserModal = function() {
-  showModal('userModal');
-};
-
-// Save user
-window.saveUser = function() {
-  const name = document.getElementById('userName').value;
-  const email = document.getElementById('userEmail').value;
-  const role = document.getElementById('userRole').value;
-  const password = document.getElementById('userPassword').value;
-  const confirmPassword = document.getElementById('userConfirmPassword').value;
-  
-  if (!name || !email || !role || !password || !confirmPassword) {
-    showNotification("Please fill all required fields", "error");
-    return;
-  }
-  
-  if (password !== confirmPassword) {
-    showNotification("Passwords do not match", "error");
-    return;
-  }
-  
-  // In a real app, you would create the user in Firebase Auth here
-  showNotification("User created successfully!", "success");
-  closeModal('userModal');
-};
-
-// Load settings
-function loadSettings() {
-  document.getElementById('currencyPref').value = settings.currency;
-  document.getElementById('exchangeRate').value = settings.exchangeRate;
-  document.getElementById('paymentMethods').value = settings.paymentMethods.join(', ');
-}
-
-// Save settings
-window.saveSettings = function() {
-  const currency = document.getElementById('currencyPref').value;
-  const exchangeRate = parseFloat(document.getElementById('exchangeRate').value);
-        const paymentMethods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
+  // Update dashboard statistics
+  function updateDashboardStats() {
+    try {
+      // Calculate total collected
+      const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
+      document.getElementById('totalCollected').textContent = `$${totalCollected.toLocaleString()}`;
       
-      if (!currency || isNaN(exchangeRate) || exchangeRate <= 0 || paymentMethods.length === 0) {
-        showNotification("Please fill all settings with valid values", "error");
+      // Total students
+      document.getElementById('totalStudents').textContent = allStudents.length;
+      
+      // Fully paid students
+      const fullyPaid = allStudents.filter(student => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        return paidAmount >= totalFees;
+      }).length;
+      document.getElementById('fullyPaid').textContent = fullyPaid;
+      
+      // Total outstanding
+      let totalOutstanding = 0;
+      allStudents.forEach(student => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        totalOutstanding += Math.max(0, totalFees - paidAmount);
+      });
+      document.getElementById('totalOutstanding').textContent = `$${totalOutstanding.toLocaleString()}`;
+      
+      // Update trends (demo values)
+      document.getElementById('collectionTrend').textContent = '12%';
+      document.getElementById('studentsTrend').textContent = '5%';
+      document.getElementById('paidTrend').textContent = '8%';
+      document.getElementById('outstandingTrend').textContent = '15%';
+    } catch (err) {
+      console.error("Error updating dashboard stats:", err);
+    }
+  }
+
+  // Calculate total fees for a student based on their level
+  function calculateTotalFees(student) {
+    if (!student || !student.form) return 0;
+    
+    // Determine if student is O-Level or A-Level
+    const isALevel = student.form === "Form 5" || student.form === "Form 6";
+    
+    // Return appropriate fee amount
+    return isALevel ? 120 : 100; // $120 for A-Level, $100 for O-Level
+  }
+
+  // Calculate paid amount for a student
+  function calculatePaidAmount(studentId) {
+    if (!studentId) return 0;
+    
+    try {
+      return allPayments
+        .filter(payment => payment.studentId === studentId)
+        .reduce((sum, payment) => sum + (payment.currency === 'USD' ? payment.amount : payment.amount / settings.exchangeRate), 0);
+    } catch (err) {
+      console.error("Error calculating paid amount:", err);
+      return 0;
+    }
+  }
+
+  // Populate student dropdown with search functionality
+  function populateStudentDropdown() {
+    const select = document.getElementById('paymentStudent');
+    const studentSelect = document.getElementById('studentSelect');
+    
+    // Clear existing options
+    select.innerHTML = '<option value="">Select Student</option>';
+    if (studentSelect) studentSelect.innerHTML = '<option value="">Select Student</option>';
+    
+    // Add all students
+    allStudents.forEach(student => {
+      const option = document.createElement('option');
+      option.value = student.id;
+      option.textContent = `${student.firstname} ${student.surname} (${student.admissionNumber || 'N/A'}) - ${student.form} ${student.stream || ''}`;
+      select.appendChild(option);
+      
+      if (studentSelect) {
+        const studentOption = option.cloneNode(true);
+        studentSelect.appendChild(studentOption);
+      }
+    });
+  }
+
+  // Load student details when selected
+  function loadStudentDetails() {
+    const studentId = document.getElementById('paymentStudent').value;
+    if (!studentId) {
+      document.getElementById('studentPaymentDetails').style.display = 'none';
+      document.getElementById('paymentPlanContainer').style.display = 'none';
+      return;
+    }
+    
+    const student = allStudents.find(s => s.id === studentId);
+    if (student) {
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(student.id);
+      const balance = totalFees - paidAmount;
+      let status = 'Not Set';
+      
+      if (totalFees > 0) {
+        status = balance <= 0 ? 'Paid in Full' : (paidAmount > 0 ? 'Partially Paid' : 'Unpaid');
+      }
+      
+      document.getElementById('studentClassDisplay').textContent = `${student.form} ${student.stream || ''}`;
+      document.getElementById('totalFeesDisplay').textContent = `$${totalFees.toLocaleString()}`;
+      document.getElementById('paidFeesDisplay').textContent = `$${paidAmount.toLocaleString()}`;
+      document.getElementById('balanceFeesDisplay').textContent = `$${balance.toLocaleString()}`;
+      document.getElementById('paymentStatusDisplay').textContent = status;
+      
+      document.getElementById('studentPaymentDetails').style.display = 'block';
+      
+      // Show payment plan if balance exists
+      if (balance > 0) {
+        showPaymentPlan(studentId, totalFees, paidAmount, balance);
+      } else {
+        document.getElementById('paymentPlanContainer').style.display = 'none';
+      }
+    }
+  }
+
+  // Show payment plan options
+  function showPaymentPlan(studentId, totalFees, paidAmount, balance) {
+    const container = document.getElementById('paymentPlanContainer');
+    const details = document.getElementById('paymentPlanDetails');
+    
+    container.style.display = 'block';
+    details.innerHTML = '';
+    
+    // Create payment plan options
+    const plans = [
+      { name: 'Full Payment Now', amount: balance, date: 'Immediate' },
+      { name: 'Two Installments', amount: balance / 2, date: 'Half now, half in 30 days' },
+      { name: 'Three Installments', amount: balance / 3, date: 'Monthly payments' }
+    ];
+    
+    plans.forEach(plan => {
+      const planItem = document.createElement('div');
+      planItem.className = 'payment-plan-item';
+      planItem.innerHTML = `
+        <div>
+          <strong>${plan.name}</strong>
+          <small>${plan.date}</small>
+        </div>
+        <div>$${plan.amount.toFixed(2)}</div>
+      `;
+      planItem.addEventListener('click', () => {
+        document.getElementById('paymentAmount').value = plan.amount.toFixed(2);
+      });
+      details.appendChild(planItem);
+    });
+  }
+
+  // Enhanced filter students function
+  window.filterStudents = function() {
+    const classFilter = document.getElementById('studentFilterClass').value;
+    const streamFilter = document.getElementById('studentFilterStream').value;
+    const statusFilter = document.getElementById('studentFilterStatus').value;
+    const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+    
+    // Update stream dropdown based on class selection
+    updateStreamDropdown(classFilter);
+    
+    const tbody = document.getElementById('studentsBody');
+    tbody.innerHTML = '';
+    
+    const filteredStudents = allStudents.filter(student => {
+      // Apply class filter
+      if (classFilter && student.form !== classFilter) return false;
+      
+      // Apply stream filter
+      if (streamFilter && student.stream !== streamFilter) return false;
+      
+      // Apply search filter
+      const studentName = `${student.firstname} ${student.surname}`.toLowerCase();
+      const admissionNo = student.admissionNumber ? student.admissionNumber.toLowerCase() : '';
+      if (searchTerm && !studentName.includes(searchTerm) && !admissionNo.includes(searchTerm)) return false;
+      
+      // Apply status filter
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(student.id);
+      const balance = totalFees - paidAmount;
+      let status = 'notset';
+      
+      if (totalFees > 0) {
+        status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
+      }
+      
+      if (statusFilter && status !== statusFilter) return false;
+      
+      return true;
+    });
+    
+    // Populate table with filtered students
+    filteredStudents.forEach(student => {
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(student.id);
+      const balance = totalFees - paidAmount;
+      let status = 'notset';
+      let statusText = 'Not Set';
+      
+      if (totalFees > 0) {
+        status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
+        statusText = balance <= 0 ? 'Paid in Full' : (paidAmount > 0 ? 'Partially Paid' : 'Unpaid');
+      }
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${student.admissionNumber || 'N/A'}</td>
+        <td>${student.firstname} ${student.surname}</td>
+        <td>${student.form} ${student.stream || ''}</td>
+        <td>$${totalFees.toLocaleString()}</td>
+        <td>$${paidAmount.toLocaleString()}</td>
+        <td>$${balance.toLocaleString()}</td>
+        <td><span class="status-badge status-${status}">${statusText}</span></td>
+        <td>
+          <button class="btn btn-sm btn-secondary" onclick="showPaymentHistory('${student.id}')">
+            <i class="fas fa-history"></i>
+          </button>
+          <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
+            <i class="fas fa-money-bill-wave"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    
+    // Refresh DataTable if it exists
+    if (studentsTable) {
+      studentsTable.destroy();
+      studentsTable = new DataTable('#studentsTable', {
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100]
+      });
+    }
+  };
+
+  // Update stream dropdown based on selected class
+  function updateStreamDropdown(selectedClass) {
+    const streamSelect = document.getElementById('studentFilterStream');
+    streamSelect.innerHTML = '<option value="">All Streams</option>';
+    
+    if (!selectedClass) return;
+    
+    // For Forms 5 and 6, show Arts/Commercials/Sciences
+    if (selectedClass === "Form 5" || selectedClass === "Form 6") {
+      ['Arts', 'Commercials', 'Sciences'].forEach(stream => {
+        const option = document.createElement('option');
+        option.value = stream;
+        option.textContent = stream;
+        streamSelect.appendChild(option);
+      });
+    } 
+    // For other forms, show standard streams
+    else {
+      ['G', 'W', 'Z', 'E', 'U'].forEach(stream => {
+        const option = document.createElement('option');
+        option.value = stream;
+        option.textContent = stream;
+        streamSelect.appendChild(option);
+      });
+    }
+  }
+
+  // Populate students table
+  function populateStudentsTable() {
+    const tbody = document.getElementById('studentsBody');
+    tbody.innerHTML = '';
+    
+    allStudents.forEach(student => {
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(student.id);
+      const balance = totalFees - paidAmount;
+      let status = 'notset';
+      let statusText = 'Not Set';
+      
+      if (totalFees > 0) {
+        status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
+        statusText = balance <= 0 ? 'Paid in Full' : (paidAmount > 0 ? 'Partially Paid' : 'Unpaid');
+      }
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${student.admissionNumber || 'N/A'}</td>
+        <td>${student.firstname} ${student.surname}</td>
+        <td>${student.form} ${student.stream || ''}</td>
+        <td>$${totalFees.toLocaleString()}</td>
+        <td>$${paidAmount.toLocaleString()}</td>
+        <td>$${balance.toLocaleString()}</td>
+        <td><span class="status-badge status-${status}">${statusText}</span></td>
+        <td>
+          <button class="btn btn-sm btn-secondary" onclick="showPaymentHistory('${student.id}')">
+            <i class="fas fa-history"></i>
+          </button>
+          <button class="btn btn-sm btn-primary" onclick="showPaymentModal('${student.id}')">
+            <i class="fas fa-money-bill-wave"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    
+    // Refresh DataTable
+    if (studentsTable) {
+      studentsTable.destroy();
+      studentsTable = new DataTable('#studentsTable', {
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100]
+      });
+    }
+  }
+
+  // Populate payments table
+  function populatePaymentsTable() {
+    const tbody = document.getElementById('paymentsBody');
+    tbody.innerHTML = '';
+    
+    allPayments.forEach(payment => {
+      const student = allStudents.find(s => s.id === payment.studentId);
+      const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
+      const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${payment.receiptNumber || 'N/A'}</td>
+        <td>${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}</td>
+        <td>${studentName}</td>
+        <td>${studentClass}</td>
+        <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
+        <td>${payment.method}</td>
+        <td>${payment.recordedBy || 'System'}</td>
+        <td>
+          <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
+            <i class="fas fa-print"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deletePayment('${payment.id}')">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    
+    // Refresh DataTable
+    if (paymentsTable) {
+      paymentsTable.destroy();
+      paymentsTable = new DataTable('#paymentsTable', {
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        order: [[1, 'desc']]
+      });
+    }
+  }
+
+  // Populate fee structure table
+  function populateFeeStructureTable() {
+    const tbody = document.getElementById('feeStructureBody');
+    tbody.innerHTML = '';
+    
+    feeStructure.forEach(fee => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${fee.class || 'All Classes'}</td>
+        <td>${fee.item}</td>
+        <td>$${fee.amountUSD.toLocaleString()}</td>
+        <td>${fee.term || 'All Terms'}</td>
+        <td>
+          <button class="btn btn-sm btn-secondary" onclick="editFeeItem('${fee.id}')">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deleteFeeItem('${fee.id}')">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    
+    // Refresh DataTable
+    if (feeStructureTable) {
+      feeStructureTable.destroy();
+      feeStructureTable = new DataTable('#feeStructureTable', {
+        responsive: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100]
+      });
+    }
+  }
+
+  // Populate recent payments
+  function populateRecentPayments() {
+    const tbody = document.getElementById('recentPaymentsBody');
+    tbody.innerHTML = '';
+    
+    const recentPayments = allPayments.slice(0, 5); // Get last 5 payments
+    
+    recentPayments.forEach(payment => {
+      const student = allStudents.find(s => s.id === payment.studentId);
+      const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown Student';
+      const studentClass = student ? `${student.form} ${student.stream || ''}` : 'N/A';
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}</td>
+        <td>${studentName}</td>
+        <td>${studentClass}</td>
+        <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
+        <td>${payment.method}</td>
+        <td><span class="status-badge status-paid">Paid</span></td>
+        <td>
+          <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
+            <i class="fas fa-print"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Show payment modal
+  window.showPaymentModal = function(studentId = null) {
+    showModal('paymentModal');
+    
+    if (studentId) {
+      document.getElementById('paymentStudent').value = studentId;
+      loadStudentDetails();
+    }
+  };
+
+  // Record payment
+  window.recordPayment = async function() {
+    const studentId = document.getElementById('paymentStudent').value;
+    const amount = parseFloat(document.getElementById('paymentAmount').value);
+    const currency = document.getElementById('paymentCurrency').value;
+    const method = document.getElementById('paymentMethod').value;
+    const reference = document.getElementById('paymentReference').value;
+    const notes = document.getElementById('paymentNotes').value;
+    
+    // Validate inputs
+    if (!studentId) {
+      showNotification("Please select a student", "error");
+      return;
+    }
+    
+    if (isNaN(amount) || amount <= 0) {
+      showNotification("Please enter a valid amount greater than zero", "error");
+      return;
+    }
+    
+    showLoading(true, "Recording payment...");
+    
+    try {
+      // Create payment record
+      const paymentData = {
+        studentId,
+        amount,
+        currency,
+        method,
+        receiptNumber: reference || `REC-${Date.now()}`,
+        notes,
+        date: serverTimestamp(),
+        recordedBy: currentUser.name,
+        status: 'completed'
+      };
+      
+      // Add to Firebase
+      const docRef = await addDoc(collection(db, "payments"), paymentData);
+      
+      // Update student's paid status if needed
+      const student = allStudents.find(s => s.id === studentId);
+      const totalFees = calculateTotalFees(student);
+      const paidAmount = calculatePaidAmount(studentId) + (currency === 'USD' ? amount : amount / settings.exchangeRate);
+      
+      if (paidAmount >= totalFees) {
+        await updateDoc(doc(db, "students", studentId), {
+          feesPaid: true,
+          feesBalance: 0
+        });
+      } else {
+        await updateDoc(doc(db, "students", studentId), {
+          feesBalance: totalFees - paidAmount
+        });
+      }
+      
+      showNotification("Payment recorded successfully!", "success");
+      closeModal('paymentModal');
+      
+      // Reset form
+      document.getElementById('paymentAmount').value = '';
+      document.getElementById('paymentReference').value = '';
+      document.getElementById('paymentNotes').value = '';
+    } catch (err) {
+      console.error("Error recording payment:", err);
+      showNotification("Error recording payment. Please try again.", "error");
+    } finally {
+      showLoading(false);
+    }
+  };
+
+  // Show fee structure modal
+  window.showFeeStructureModal = function(feeId = null) {
+    showModal('feeStructureModal');
+    
+    if (feeId) {
+      // Editing existing fee item
+      const feeItem = feeStructure.find(f => f.id === feeId);
+      if (feeItem) {
+        document.getElementById('feeClass').value = feeItem.class || '';
+        document.getElementById('feeTerm').value = feeItem.term || '';
+        document.getElementById('feeItem').value = feeItem.item || '';
+        document.getElementById('feeAmountUSD').value = feeItem.amountUSD || '';
+        document.getElementById('feeStructureModal').dataset.editId = feeId;
+      }
+    } else {
+      // Adding new fee item
+      document.getElementById('feeStructureModal').dataset.editId = '';
+    }
+  };
+
+  // Save fee item
+  window.saveFeeItem = async function() {
+    const feeClass = document.getElementById('feeClass').value;
+    const feeTerm = document.getElementById('feeTerm').value;
+    const feeItem = document.getElementById('feeItem').value;
+          const amountUSD = parseFloat(document.getElementById('feeAmountUSD').value);
+      const editId = document.getElementById('feeStructureModal').dataset.editId;
+      
+      if (!feeClass || !feeItem || isNaN(amountUSD)) {
+        showNotification("Please fill all required fields with valid values", "error");
         return;
       }
       
-      // Update local settings
-      settings.currency = currency;
-      settings.exchangeRate = exchangeRate;
-      settings.paymentMethods = paymentMethods;
+      showLoading(true, "Saving fee item...");
       
-      // In a real app, you would save to Firebase here
-      showNotification("Settings saved successfully!", "success");
+      try {
+        // Create fee structure item
+        const feeData = {
+          class: feeClass,
+          term: feeTerm,
+          item: feeItem,
+          amountUSD,
+          updatedAt: serverTimestamp()
+        };
+        
+        if (editId) {
+          // Update existing fee item
+          await updateDoc(doc(db, "feeStructure", editId), feeData);
+          showNotification("Fee item updated successfully!", "success");
+        } else {
+          // Add new fee item
+          feeData.createdAt = serverTimestamp();
+          const docRef = await addDoc(collection(db, "feeStructure"), feeData);
+          showNotification("Fee item added successfully!", "success");
+        }
+        
+        closeModal('feeStructureModal');
+        
+        // Reset form
+        document.getElementById('feeClass').value = '';
+        document.getElementById('feeTerm').value = '';
+        document.getElementById('feeItem').value = '';
+        document.getElementById('feeAmountUSD').value = '';
+      } catch (err) {
+        console.error("Error saving fee item:", err);
+        showNotification("Error saving fee item. Please try again.", "error");
+      } finally {
+        showLoading(false);
+      }
+    };
+
+    // Edit fee item
+    window.editFeeItem = function(feeId) {
+      showFeeStructureModal(feeId);
+    };
+
+    // Delete fee item
+    window.deleteFeeItem = async function(feeId) {
+      if (!confirm('Are you sure you want to delete this fee item? This action cannot be undone.')) return;
+      
+      showLoading(true, "Deleting fee item...");
+      
+      try {
+        // Delete from Firebase
+        await deleteDoc(doc(db, "feeStructure", feeId));
+        showNotification("Fee item deleted successfully!", "success");
+      } catch (err) {
+        console.error("Error deleting fee item:", err);
+        showNotification("Error deleting fee item. Please try again.", "error");
+      } finally {
+        showLoading(false);
+      }
+    };
+
+    // Delete payment
+    window.deletePayment = async function(paymentId) {
+      if (!confirm('Are you sure you want to delete this payment record? This action cannot be undone.')) return;
+      
+      showLoading(true, "Deleting payment...");
+      
+      try {
+        // Delete from Firebase
+        await deleteDoc(doc(db, "payments", paymentId));
+        showNotification("Payment record deleted successfully!", "success");
+      } catch (err) {
+        console.error("Error deleting payment:", err);
+        showNotification("Error deleting payment. Please try again.", "error");
+      } finally {
+        showLoading(false);
+      }
+    };
+
+    // Show payment history
+    window.showPaymentHistory = async function(studentId) {
+      showLoading(true, "Loading payment history...");
+      
+      try {
+        const student = allStudents.find(s => s.id === studentId);
+        if (!student) {
+          showNotification("Student not found", "error");
+          return;
+        }
+        
+        // Get all payments for this student
+        const paymentsQuery = query(
+          collection(db, "payments"),
+          where("studentId", "==", studentId),
+          orderBy("date", "desc")
+        );
+        
+        const paymentsSnapshot = await getDocs(paymentsQuery);
+        const payments = paymentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Calculate totals
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = payments.reduce((sum, payment) => 
+          sum + (payment.currency === 'USD' ? payment.amount : payment.amount / settings.exchangeRate), 0);
+        const balance = totalFees - paidAmount;
+
+        // Create modal content
+        let content = `
+          <div class="student-payment-history">
+            <div class="student-header">
+              <h3>Payment History for ${student.firstname} ${student.surname}</h3>
+              <p><strong>Admission No.:</strong> ${student.admissionNumber || 'N/A'}</p>
+              <p><strong>Class:</strong> ${student.form} ${student.stream || ''}</p>
+            </div>
+            
+            <div class="summary-cards">
+              <div class="summary-card">
+                <h4>Total Fees</h4>
+                <div class="amount">$${totalFees.toLocaleString()}</div>
+              </div>
+              <div class="summary-card">
+                <h4>Total Paid</h4>
+                <div class="amount">$${paidAmount.toLocaleString()}</div>
+              </div>
+              <div class="summary-card">
+                <h4>Balance</h4>
+                <div class="amount">$${balance.toLocaleString()}</div>
+              </div>
+            </div>
+            
+            <div class="payment-table-container">
+              <table class="payment-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Receipt No.</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+
+        payments.forEach(payment => {
+          const paymentDate = payment.date?.toDate ? payment.date.toDate() : new Date();
+          content += `
+            <tr>
+              <td>${paymentDate.toLocaleDateString()}</td>
+              <td>${payment.receiptNumber || 'N/A'}</td>
+              <td>${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}</td>
+              <td>${payment.method}</td>
+              <td>${payment.notes || ''}</td>
+              <td>
+                <button class="btn btn-sm btn-secondary" onclick="printReceipt('${payment.id}')">
+                  <i class="fas fa-print"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deletePayment('${payment.id}')">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        });
+
+        content += `
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn btn-primary" onclick="printPaymentHistory('${studentId}')">
+                <i class="fas fa-print"></i> Print Full Statement
+              </button>
+              <button class="btn btn-secondary" onclick="showPaymentModal('${studentId}')">
+                <i class="fas fa-money-bill-wave"></i> Record New Payment
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Show in modal
+        document.getElementById('paymentHistoryContent').innerHTML = content;
+        showModal('paymentHistoryModal');
+        
+      } catch (err) {
+        console.error("Error loading payment history:", err);
+        showNotification("Error loading payment history", "error");
+      } finally {
+        showLoading(false);
+      }
+    };
+
+    // Print receipt function
+    window.printReceipt = async function(paymentId) {
+      showLoading(true, "Generating receipt...");
+      
+      try {
+        const payment = allPayments.find(p => p.id === paymentId);
+        if (!payment) {
+          showNotification("Payment not found", "error");
+          return;
+        }
+        
+        const student = allStudents.find(s => s.id === payment.studentId);
+        
+        // Generate PDF receipt
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add school logo
+        doc.addImage('https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg', 'JPEG', 10, 10, 30, 30);
+        
+        // School header
+        doc.setFontSize(18);
+        doc.setTextColor(26, 54, 93);
+        doc.text('St. Mary\'s High School', 50, 20);
+        doc.setFontSize(12);
+        doc.text('Official Payment Receipt', 50, 28);
+        
+        // Receipt details
+        doc.setFontSize(10);
+        doc.text(`Receipt No.: ${payment.receiptNumber || 'N/A'}`, 160, 15);
+        doc.text(`Date: ${payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A'}`, 160, 20);
+        
+        // Student info
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Student Information', 14, 50);
+        doc.setFontSize(12);
+        doc.text(`Name: ${student.firstname} ${student.surname}`, 14, 60);
+        doc.text(`Admission No.: ${student.admissionNumber || 'N/A'}`, 14, 70);
+        doc.text(`Class: ${student.form} ${student.stream || ''}`, 14, 80);
+        
+        // Payment details
+        doc.setFontSize(14);
+        doc.text('Payment Details', 14, 100);
+        doc.setFontSize(12);
+        doc.text(`Amount: ${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}`, 14, 110);
+        doc.text(`Method: ${payment.method}`, 14, 120);
+        doc.text(`Received By: ${payment.recordedBy || 'School Bursar'}`, 14, 130);
+        
+        if (payment.notes) {
+          doc.text(`Notes: ${payment.notes}`, 14, 140);
+        }
+        
+        // Footer
+        doc.setFontSize(10);
+        doc.text('Thank you for your payment!', 14, 180);
+        doc.text('This is an official receipt from St. Mary\'s High School', 14, 185);
+        
+        // Save the PDF
+        doc.save(`Receipt_${payment.receiptNumber || paymentId}.pdf`);
+        
+      } catch (err) {
+        console.error("Error generating receipt:", err);
+        showNotification("Error generating receipt", "error");
+      } finally {
+        showLoading(false);
+      }
+    };
+
+    // Print payment history
+    window.printPaymentHistory = function(studentId) {
+      // In a real implementation, this would generate a PDF of the full payment history
+      showNotification("Printing payment history...", "success");
+      window.print();
+    };
+
+    // Generate report
+    window.generateReport = function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Add school logo
+      doc.addImage('https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg', 'JPEG', 10, 10, 30, 30);
+      
+      // School header
+      doc.setFontSize(18);
+      doc.setTextColor(26, 54, 93);
+      doc.text('St. Mary\'s High School', 50, 20);
+      doc.setFontSize(12);
+      doc.text('Fees Payment Report', 50, 28);
+      
+      // Report date
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 160, 15);
+      
+      // Summary stats
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Summary Statistics', 14, 50);
+      
+      const totalCollected = allPayments.reduce((sum, payment) => sum + payment.amount, 0);
+      const totalOutstanding = allStudents.reduce((sum, student) => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        return sum + Math.max(0, totalFees - paidAmount);
+      }, 0);
+      
+      doc.setFontSize(12);
+      doc.text(`Total Collected: $${totalCollected.toLocaleString()}`, 14, 60);
+      doc.text(`Total Outstanding: $${totalOutstanding.toLocaleString()}`, 14, 70);
+      doc.text(`Number of Students: ${allStudents.length}`, 14, 80);
+      
+      // Recent payments table
+      doc.setFontSize(14);
+      doc.text('Recent Payments', 14, 100);
+      
+      const recentPayments = allPayments.slice(0, 10); // Last 10 payments
+      let rows = recentPayments.map(payment => {
+        const student = allStudents.find(s => s.id === payment.studentId);
+        const studentName = student ? `${student.firstname} ${student.surname}` : 'Unknown';
+        return [
+          payment.date?.toDate ? payment.date.toDate().toLocaleDateString() : 'N/A',
+          studentName,
+          `${payment.currency === 'USD' ? '$' : 'ZWL$'}${payment.amount.toLocaleString()}`,
+          payment.method
+        ];
+      });
+      
+      doc.autoTable({
+        head: [['Date', 'Student', 'Amount', 'Method']],
+        body: rows,
+        startY: 110,
+        headStyles: {
+          fillColor: [26, 54, 93],
+          textColor: 255
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240]
+        },
+        styles: {
+          cellPadding: 5,
+          fontSize: 10
+        }
+      });
+      
+      // Save the PDF
+      doc.save('fees_report.pdf');
+    };
+
+    // Export payments to Excel
+    window.exportPayments = function() {
+      // In a real app, you would use a library like SheetJS to export to Excel
+      showNotification("Payments exported successfully!", "success");
+    };
+
+    // Download class list
+    window.downloadClassList = function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Add school logo
+      doc.addImage('https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg', 'JPEG', 10, 10, 30, 30);
+      
+      // School header
+      doc.setFontSize(18);
+      doc.setTextColor(26, 54, 93);
+      doc.text('St. Mary\'s High School', 50, 20);
+      doc.setFontSize(12);
+      doc.text('Class List with Fee Status', 50, 28);
+      
+      // Report date
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 160, 15);
+      
+      // Class filter
+      const classFilter = document.getElementById('studentFilterClass').value;
+      const className = classFilter || 'All Classes';
+      doc.setFontSize(14);
+      doc.text(`Class: ${className}`, 14, 50);
+      
+      // Prepare data for table
+      const filteredStudents = allStudents.filter(student => {
+        const classFilterVal = document.getElementById('studentFilterClass').value;
+        const streamFilterVal = document.getElementById('studentFilterStream').value;
+        const statusFilterVal = document.getElementById('studentFilterStatus').value;
+        const searchTerm = document.getElementById('studentSearch').value.toLowerCase();
+        
+        // Apply filters
+        if (classFilterVal && student.form !== classFilterVal) return false;
+        if (streamFilterVal && student.stream !== streamFilterVal) return false;
+        if (searchTerm) {
+          const studentName = `${student.firstname} ${student.surname}`.toLowerCase();
+          const admissionNo = student.admissionNumber ? student.admissionNumber.toLowerCase() : '';
+          if (!studentName.includes(searchTerm) && !admissionNo.includes(searchTerm)) return false;
+        }
+        
+        // Apply status filter
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        const balance = totalFees - paidAmount;
+        let status = 'notset';
+        
+        if (totalFees > 0) {
+          status = balance <= 0 ? 'paid' : (paidAmount > 0 ? 'partial' : 'unpaid');
+        }
+        
+        if (statusFilterVal && status !== statusFilterVal) return false;
+        
+        return true;
+      });
+      
+      // Create table data
+      const tableData = filteredStudents.map(student => {
+        const totalFees = calculateTotalFees(student);
+        const paidAmount = calculatePaidAmount(student.id);
+        const balance = totalFees - paidAmount;
+        let status = 'Not Set';
+        
+        if (totalFees > 0) {
+          status = balance <= 0 ? 'Paid in Full' : (paidAmount > 0 ? 'Partially Paid' : 'Unpaid');
+        }
+        
+        return [
+          student.admissionNumber || 'N/A',
+          `${student.firstname} ${student.surname}`,
+          `${student.form} ${student.stream || ''}`,
+          `$${totalFees.toLocaleString()}`,
+          `$${paidAmount.toLocaleString()}`,
+          `$${balance.toLocaleString()}`,
+          status
+        ];
+      });
+      
+      // Add table to PDF
+      doc.autoTable({
+        head: [['Adm No.', 'Student Name', 'Class', 'Total Fees', 'Paid', 'Balance', 'Status']],
+        body: tableData,
+        startY: 60,
+        headStyles: {
+          fillColor: [26, 54, 93],
+          textColor: 255
+        },
+        alternateRowStyles: {
+          fillColor: [240, 240, 240]
+        },
+        styles: {
+          cellPadding: 3,
+          fontSize: 8,
+          overflow: 'linebreak'
+        }
+      });
+      
+      // Save the PDF
+      doc.save(`class_list_${className.replace(' ', '_')}.pdf`);
+    };
+
+    // Refresh data
+    window.refreshData = async function() {
+      await loadInitialData();
+      showNotification("Data refreshed successfully!", "success");
     };
 
     // Initialize charts
@@ -2378,58 +2377,6 @@ window.saveSettings = function() {
         }
       });
     }
-
-    // Hamburger menu toggle
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const sideMenu = document.getElementById('sideMenu');
-    hamburgerBtn.addEventListener('click', () => {
-      sideMenu.classList.toggle('shown');
-    });
-
-    // Initialize the application
-    (function initializeApp() {
-      // Set up search functionality
-      const studentSearch = document.getElementById('studentSearch');
-      if (studentSearch) {
-        studentSearch.addEventListener('input', filterStudents);
-      }
-      
-      // Set up class filter change
-      const classFilter = document.getElementById('studentFilterClass');
-      if (classFilter) {
-        classFilter.addEventListener('change', filterStudents);
-      }
-      
-      // Set up stream filter change
-      const streamFilter = document.getElementById('studentFilterStream');
-      if (streamFilter) {
-        streamFilter.addEventListener('change', filterStudents);
-      }
-      
-      // Set up status filter change
-      const statusFilter = document.getElementById('studentFilterStatus');
-      if (statusFilter) {
-        statusFilter.addEventListener('change', filterStudents);
-      }
-      
-      // Set up report type change
-      const reportType = document.getElementById('reportType');
-      if (reportType) {
-        reportType.addEventListener('change', function() {
-          document.getElementById('studentSelectGroup').style.display = 
-            this.value === 'student' ? 'block' : 'none';
-        });
-      }
-      
-      // Set up report period change
-      const reportPeriod = document.getElementById('reportPeriod');
-      if (reportPeriod) {
-        reportPeriod.addEventListener('change', function() {
-          document.getElementById('customDateRange').style.display = 
-            this.value === 'custom' ? 'grid' : 'none';
-        });
-      }
-    })();
   </script>
 </body>
 </html>
