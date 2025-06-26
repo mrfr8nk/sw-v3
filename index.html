@@ -1292,8 +1292,10 @@
       .modal-image {
         margin-right: 0;
         margin-bottom: var(--space-lg);
-           /* Portal Buttons in Mobile Nav */
-      .portal-buttons-mobile {
+      }
+
+      /* Portal Buttons in Mobile Nav
+            .portal-buttons-mobile {
         display: flex;
         flex-direction: column;
         gap: var(--space-sm);
@@ -1350,7 +1352,7 @@
       </button>
       
       <ul class="nav-links" id="navLinks">
-       <!-- <li><a href="/" class="active"><i class="fas fa-home"></i> Home</a></li>-->
+        <li><a href="/" class="active"><i class="fas fa-home"></i> Home</a></li>
         <li><a href="/about"><i class="fas fa-info-circle"></i> About</a></li>
         <li><a href="/admissions"><i class="fas fa-user-graduate"></i> Admissions</a></li>
         <li><a href="/staff"><i class="fas fa-chalkboard-teacher"></i> Our Staff</a></li>
@@ -1368,10 +1370,10 @@
         </li>
         
         <!-- Portal Buttons for Mobile (will be shown in mobile menu) -->
-      <!--  <div class="portal-buttons-mobile">
+        <div class="portal-buttons-mobile">
           <a href="/dashboard" class="btn btn-outline"><i class="fas fa-user-graduate"></i> Student Portal</a>
-          <a href="/teacherssignup" class="btn btn-outline"><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</a>
-        </div>-->
+          <a href="/teachersdashboard" class="btn btn-outline"><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</a>
+        </div>
       </ul>
     </div>
   </header>
@@ -1404,14 +1406,14 @@
       </div>
       <div class="about-content">
         <div class="about-image">
-          <img src="https://i.postimg.cc/kXH63b4j/IMG-20250227-WA0009.jpg&auto=format&fit=crop&w=1470&q=80" alt="St. Mary's High School">
+          <img src="https://i.postimg.cc/kXH63b4j/IMG-20250227-WA0009.jpg" alt="St. Mary's High School">
         </div>
         <div class="about-text">
           <h3>A Legacy of Academic Excellence</h3>
-          <p>Founded in 1962, St. Mary's High School has been a cornerstone of educational excellence in our community for over 70 years. Our mission is to nurture the intellectual, spiritual, and personal growth of each student.</p>
+          <p>Founded in 1962, St. Mary's High School has been a cornerstone of educational excellence in our community for over 60 years. Our mission is to nurture the intellectual, spiritual, and personal growth of each student.</p>
           <p>With a student-teacher ratio of 12:1, we provide personalized attention to ensure every student reaches their full potential. Our graduates consistently gain admission to top universities and excel in their chosen fields.</p>
           <p>At St. Mary's, we believe education extends beyond the classroom. Our comprehensive programs in arts, athletics, and community service develop well-rounded individuals prepared to make a difference in the world.</p>
-          <a href="/about" class="btn btn-primary">View Passrates</a>
+          <a href="/about" class="btn btn-primary">Learn More</a>
         </div>
       </div>
     </div>
@@ -1430,8 +1432,8 @@
           </div>
           <div class="academic-content">
             <h3>Science</h3>
-            <p>Our STEM programs prepares students for careers in science, technology, engineering, and mathematics with equiped labs and partnerships with local universities.</p>
-            <a href="/" class="btn btn-outline">Explore STEM</a>
+            <p>Our STEM programs prepare students for careers in science, technology, engineering, and mathematics with state-of-the-art labs and partnerships with local universities.</p>
+            <a href="/academics/science" class="btn btn-outline">Explore STEM</a>
           </div>
         </div>
         
@@ -1442,7 +1444,7 @@
           <div class="academic-content">
             <h3>Arts & Humanities</h3>
             <p>From visual arts to performing arts and literature, our comprehensive humanities program fosters creativity and critical thinking skills essential for any career path.</p>
-            <a href="/" class="btn btn-outline">Explore Arts</a>
+            <a href="/academics/arts" class="btn btn-outline">Explore Arts</a>
           </div>
         </div>
         
@@ -1453,7 +1455,7 @@
           <div class="academic-content">
             <h3>Commercials</h3>
             <p>Our business program equips students with practical skills in economics, accounting, and entrepreneurship through real-world projects and partnerships with local businesses.</p>
-            <a href="/" class="btn btn-outline">Explore Business</a>
+            <a href="/academics/commercial" class="btn btn-outline">Explore Business</a>
           </div>
         </div>
       </div>
@@ -1479,7 +1481,7 @@
         <div class="faculty-card" data-category="admin">
           <div class="admin-badge">Principal</div>
           <div class="faculty-image">
-            <img src="https://i.postimg.cc/VNWk6rfP/IMG-20250227-WA0003.jpg&auto=format&fit=crop&w=687&q=80" alt="Principal">
+            <img src="https://i.postimg.cc/VNWk6rfP/IMG-20250227-WA0003.jpg" alt="Principal">
           </div>
           <div class="faculty-info">
             <h3>Mr. Nyabako</h3>
@@ -1498,7 +1500,7 @@
         <div class="faculty-card" data-category="admin">
           <div class="admin-badge">Vice Principal</div>
           <div class="faculty-image">
-            <img src="https://i.postimg.cc/SxB9NwG9/20250129-113912.avif&auto=format&fit=crop&w=687&q=80" alt="Vice Principal">
+            <img src="https://i.postimg.cc/SxB9NwG9/20250129-113912.avif" alt="Vice Principal">
           </div>
           <div class="faculty-info">
             <h3>Mr. Gocha</h3>
@@ -1517,7 +1519,7 @@
         <div class="faculty-card" data-category="senior">
           <div class="senior-badge">Head of Science</div>
           <div class="faculty-image">
-            <img src="https://i.postimg.cc/43kYnRpV/IMG-20250227-WA0007.jpg&auto=format&fit=crop&w=687&q=80" alt="Science Teacher">
+            <img src="https://i.postimg.cc/43kYnRpV/IMG-20250227-WA0007.jpg" alt="Science Teacher">
           </div>
           <div class="faculty-info">
             <h3>Mrs. Chiweshe</h3>
@@ -1532,8 +1534,8 @@
             </div>
           </div>
         </div>
-        
-        
+      </div>
+      
       <div class="text-center mt-5">
         <a href="/staff" class="btn btn-primary">View All Staff</a>
       </div>
@@ -1551,23 +1553,23 @@
           <img src="https://files.catbox.moe/x2yw1m.jpg" alt="Science Lab">
           <div class="gallery-overlay">
             <h3>Science Labs</h3>
-            <p>Students conducting experiments in our modern science laboratorys</p>
+            <p>Students conducting experiments in our modern science laboratories</p>
           </div>
         </div>
         
         <div class="gallery-item">
-          <img src="https://files.catbox.moe/fdcdgv.jpg" alt="Graduation">
+          <img src="https://files.catbox.moe/fdcdgv.jpg" alt="Computer Lab">
           <div class="gallery-overlay">
             <h3>Computer Lab</h3>
-            <p>Our Advanced IT lab</p>
+            <p>Our Advanced IT lab with the latest technology</p>
           </div>
         </div>
         
         <div class="gallery-item">
-          <img src="https://files.catbox.moe/unpca7.jpg" alt="Library">
+          <img src="https://files.catbox.moe/unpca7.jpg" alt="Classroom">
           <div class="gallery-overlay">
-            <h3>Interactive Clubs </h3>
-            <p>Students collaborating in our modern learning space</p>
+            <h3>Interactive Learning</h3>
+            <p>Students collaborating in our modern learning spaces</p>
           </div>
         </div>
         
@@ -1575,467 +1577,434 @@
           <img src="https://i.postimg.cc/hjDd7PSr/IMG-20250524-WA0002.jpg" alt="Sports">
           <div class="gallery-overlay">
             <h3>Athletics Program</h3>
-                      <p>Our championship-winning sports teams</p>
+            <p>Our championship-winning sports teams in action</p>
+          </div>
+        </div>
+        
+        <div class="gallery-item">
+          <img src="https://files.catbox.moe/3kffy1.jpg" alt="Leadership">
+          <div class="gallery-overlay">
+            <h3>Student Leadership</h3>
+            <p>Developing future leaders through our programs</p>
+          </div>
+        </div>
+        
+        <div class="gallery-item">
+          <img src="https://files.catbox.moe/yndyr1.jpg" alt="Campus">
+          <div class="gallery-overlay">
+            <h3>Beautiful Campus</h3>
+            <p>Our 25-acre learning environment</p>
+          </div>
         </div>
       </div>
-      
-      <div class="gallery-item">
-        <img src="https://files.catbox.moe/3kffy1.jpg" alt="Arts">
-        <div class="gallery-overlay">
-          <h3>Seasoned Leaders</h3>
-          <p>Students who lead & Follow</p>
-        </div>
-      </div>
-      
-      <div class="gallery-item">
-        <img src="https://files.catbox.moe/yndyr1.jpg" alt="Campus">
-        <div class="gallery-overlay">
-          <h3>Beautiful School Environmen</h3>
-          <p>Our 25-acre learning environment</p>
-        </div>
+      <div class="text-center mt-5">
+        <a href="/gallery" class="btn btn-primary">View Full Gallery</a>
       </div>
     </div>
-    <div class="text-center mt-5">
-      <a href="/gallery" class="btn btn-primary">View Full Gallery</a>
+  </section>
+
+  <!-- News Section -->
+  <section class="section news">
+    <div class="container">
+      <div class="section-title">
+        <h2>Latest News & Events</h2>
+      </div>
+      <div class="news-grid">
+        <div class="news-card fade-in">
+          <div class="news-image">
+            <img src="https://files.catbox.moe/41cewv.jpg" alt="Science Fair Winners">
+          </div>
+          <div class="news-content">
+            <div class="news-date">June 15, 2024</div>
+            <h3>Quiz Team Wins Provincial Championship</h3>
+            <p>Our Quiz Team took first place at the Old Mutual School Quiz competition with their innovative problem-solving skills.</p>
+            <a href="/news/quiz-championship" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        
+        <div class="news-card fade-in delay-1">
+          <div class="news-image">
+            <img src="https://files.catbox.moe/9hsuch.jpg" alt="Graduation Ceremony">
+          </div>
+          <div class="news-content">
+            <div class="news-date">September 10, 2024</div>
+            <h3>Speech & Prize Ceremony</h3>
+            <p>We celebrated our students' academic and athletic achievements at our annual awards ceremony.</p>
+            <a href="/news/awards-ceremony" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+        
+        <div class="news-card fade-in delay-2">
+          <div class="news-image">
+            <img src="https://files.catbox.moe/bryizn.jpg" alt="New Bus">
+          </div>
+          <div class="news-content">
+            <div class="news-date">March 10, 2025</div>
+            <h3>Our New School Bus</h3>
+            <p>The school has acquired a new state-of-the-art bus to enhance our transportation services for students.</p>
+            <a href="/news/new-bus" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-5">
+        <a href="/news" class="btn btn-primary">View All News</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section cta">
+    <div class="container">
+      <h2>Ready to Join the St. Mary's Family?</h2>
+      <p>Applications for the 2025-2026 school year are now being accepted.</p>
+      <div class="hero-buttons">
+        <a href="/admissions" class="btn btn-primary btn-lg">
+          <i class="fas fa-file-alt btn-icon"></i> Apply Now
+        </a>
+        <a href="/admissions" class="btn btn-secondary btn-lg">
+          <i class="fas fa-chart-line btn-icon"></i> View Pass Rates
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>St. Mary's High School</h3>
+          <p>Providing excellence in education since 1962. Our mission is to develop the whole person - mind, body, and spirit.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="/about"><i class="fas fa-info-circle"></i> About Us</a></li>
+            <li><a href="/academics"><i class="fas fa-book"></i> Academics</a></li>
+            <li><a href="/admissions"><i class="fas fa-user-graduate"></i> Admissions</a></li>
+            <li><a href="/news"><i class="fas fa-running"></i> News</a></li>
+            <li><a href="/schoolview"><i class="fas fa-paint-brush"></i> School View</a></li>
+            <li><a href="/staff"><i class="fas fa-chalkboard-teacher"></i> Our Staff</a></li>
+            <li><a href="/calendar"><i class="fas fa-calendar-alt"></i> School Calendar</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-col">
+          <h3>Contact Us</h3>
+          <div class="quick-contact">
+            <p><i class="fas fa-map-marker-alt"></i> Harare, Chitungwiza Zengeza 1</p>
+            <p><i class="fas fa-phone"></i> +263 719 647 303</p>
+            <p><i class="fas fa-envelope"></i> info@stmaryshs.edu</p>
+            <p><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 4:30 PM</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
+        <p class="mt-2">Made with <i class="fas fa-heart" style="color: #ff6b6b;"></i> by <a href="/credits" target="_blank" style="color: var(--accent);">Darrell Mucheri</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Theme Toggle -->
+  <div class="theme-toggle" id="themeToggle">
+    <i class="fas fa-moon"></i>
+  </div>
+
+  <!-- Faculty Modal -->
+  <div class="faculty-modal" id="facultyModal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <div class="modal-body">
+        <div class="modal-header">
+          <img src="" alt="Faculty Member" class="modal-image" id="modalImage">
+          <div class="modal-title">
+            <h3 id="modalName">Mr. Nyabako</h3>
+            <div class="modal-position" id="modalPosition">Head Master</div>
+            <span class="modal-department" id="modalDepartment">Administration</span>
+          </div>
+        </div>
+        
+        <div class="modal-bio">
+          <p id="modalBio">Mr. Nyabako has been the Head Master of St. Mary's High School since 2010. With over 25 years of experience in education, he has transformed the school into one of the top-performing institutions in the region.</p>
+        </div>
+        
+        <div class="modal-details">
+          <div class="detail-item">
+            <div class="detail-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="detail-content">
+              <h4>Education</h4>
+              <p id="modalEducation">M.Ed in Educational Leadership, University of Zimbabwe</p>
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="detail-content">
+              <h4>Experience</h4>
+              <p id="modalExperience">25+ years in educational administration</p>
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="detail-content">
+              <h4>Email</h4>
+              <p id="modalEmail">principal@stmaryshs.edu</p>
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-icon">
+              <i class="fas fa-phone"></i>
+            </div>
+            <div class="detail-content">
+              <h4>Phone</h4>
+              <p id="modalPhone">+263 719 647 303</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="faculty-contact">
+          <a href="#" id="modalEmailLink"><i class="fas fa-envelope"></i></a>
+          <a href="#" id="modalPhoneLink"><i class="fas fa-phone"></i></a>
+          <a href="#" id="modalScheduleLink"><i class="fas fa-calendar-alt"></i></a>
+        </div>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- News Section -->
-<section class="section news">
-  <div class="container">
-    <div class="section-title">
-      <h2>Latest News & Events</h2>
-    </div>
-    <div class="news-grid">
-      <div class="news-card fade-in">
-        <div class="news-image">
-          <img src="https://files.catbox.moe/41cewv.jpg" alt="Science Fair Winners">
-        </div>
-        <div class="news-content">
-          <div class="news-date">June 15, 2024</div>
-          <h3>Quiz Team Wins Provincial Championship</h3>
-          <p>Our Quiz Team took third place at the old mutual School Quiz competition with their innovative minds.</p>
-          <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-      
-      <div class="news-card fade-in delay-1">
-        <div class="news-image">
-          <img src="https://files.catbox.moe/9hsuch.jpg" alt="Graduation Ceremony">
-        </div>
-        <div class="news-content">
-          <div class="news-date">September 10 2024</div>
-          <h3>Speech & Price Ceremony</h3>
-          <p>We celebrated our students academic and athletic talents wit students who excelled</p>
-          <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-      
-      <div class="news-card fade-in delay-2">
-        <div class="news-image">
-          <img src="https://files.catbox.moe/bryizn.jpg" alt="New Library">
-        </div>
-        <div class="news-content">
-          <div class="news-date">March10, 2025</div>
-          <h3>Our New Bus</h3>
-          <p>Our new bus state-of-the-art learning facility is now open, featuring maker spaces, a media lab, and collaborative learning areas.</p>
-          <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-    </div>
-    <div class="text-center mt-5">
-      <a href="/news" class="btn btn-primary">View All News</a>
-    </div>
-  </div>
-</section>
+  <!-- Scripts -->
+  <script>
+    // Preloader
+    window.addEventListener('load', function() {
+      const preloader = document.getElementById('preloader');
+      preloader.style.transition = 'opacity 0.5s ease';
+      preloader.style.opacity = '0';
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    });
 
-<!-- CTA Section -->
-<section class="section cta">
-  <div class="container">
-    <h2>Ready to Join the St. Mary's Family?</h2>
-    <p>Applications for the 2025-2026 school year are now being accepted.</p>
-    <div class="hero-buttons">
-      <a href="/admissions" class="btn btn-primary btn-lg">
-        <i class="fas fa-file-alt btn-icon"></i> Apply Now
-      </a>
-      <a href="/admissions" class="btn btn-secondary btn-lg">
-        <i class="fas fa-chart-line btn-icon"></i> Pass Rates
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-container">
-      <div class="footer-col">
-        <h3>St. Mary's High School</h3>
-        <p>Providing excellence in education since 1952. Our mission is to develop the whole person - mind, body, and spirit.</p>
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-youtube"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-      </div>
-      
-      <div class="footer-col">
-        <h3>Quick Links</h3>
-        <ul class="footer-links">
-          <li><a href="/about"><i class="fas fa-info-circle"></i> About Us</a></li>
-          <li><a href="/academics"><i class="fas fa-book"></i> Academics</a></li>
-          <li><a href="/admissions"><i class="fas fa-user-graduate"></i> Admissions</a></li>
-          <li><a href="/news"><i class="fas fa-running"></i> News</a></li>
-          <li><a href="/schoolview"><i class="fas fa-paint-brush"></i> School View</a></li>
-          <li><a href="/staff"><i class="fas fa-chalkboard-teacher"></i> Our Staff</a></li>
-          <li><a href="/calendar"><i class="fas fa-calendar-alt"></i> School Calendar</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-col">
-        <h3>Contact Us</h3>
-        <div class="quick-contact">
-          <p><i class="fas fa-map-marker-alt"></i> Harare, Chitungwiza Zengeza 1</p>
-          <p><i class="fas fa-phone"></i> +263 719 647 303</p>
-          <p><i class="fas fa-envelope"></i> info@stmaryshs.edu</p>
-          <p><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 4:30 PM</p>
-        </div>
-      </div>
-    </div>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
     
-    <div class="copyright">
-      <p>&copy; 2025 St. Mary's High School. All rights reserved.</p>
-      <p class="mt-2">Made with <i class="fas fa-heart" style="color: #ff6b6b;"></i> by <a href="/credits" target="_blank" style="color: var(--accent);">Darrell Mucheri</a></p>
-    </div>
-  </div>
-</footer>
+    mobileMenuBtn.addEventListener('click', function() {
+      navLinks.classList.toggle('show');
+      mobileMenuBtn.innerHTML = navLinks.classList.contains('show') 
+        ? '<i class="fas fa-times"></i>' 
+        : '<i class="fas fa-bars"></i>';
+    });
 
-<!-- Theme Toggle -->
-<div class="theme-toggle" id="themeToggle">
-  <i class="fas fa-moon"></i>
-</div>
+    // Dropdown Menus
+    const dropdowns = document.querySelectorAll('.dropdown');
+    dropdowns.forEach(dropdown => {
+      const link = dropdown.querySelector('a');
+      link.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          dropdown.classList.toggle('active');
+        }
+      });
+    });
 
-<!-- Faculty Modal -->
-<div class="faculty-modal" id="facultyModal">
-  <div class="modal-content">
-    <span class="modal-close">&times;</span>
-    <div class="modal-body">
-      <div class="modal-header">
-        <img src="" alt="Faculty Member" class="modal-image" id="modalImage">
-        <div class="modal-title">
-          <h3 id="modalName">Dr. Sarah Johnson</h3>
-          <div class="modal-position" id="modalPosition">School Principal</div>
-          <span class="modal-department" id="modalDepartment">Administration</span>
-        </div>
-      </div>
-      
-      <div class="modal-bio">
-        <p id="modalBio">Dr. Johnson has over 20 years of experience in educational leadership. She holds a Ph.D in Educational Administration from Harvard University and has transformed St. Mary's into one of the top-ranked high schools in the region through her innovative leadership and commitment to excellence.</p>
-      </div>
-      
-      <div class="modal-details">
-        <div class="detail-item">
-          <div class="detail-icon">
-            <i class="fas fa-graduation-cap"></i>
-          </div>
-          <div class="detail-content">
-            <h4>Education</h4>
-            <p id="modalEducation">Ph.D in Educational Administration, Harvard University</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <div class="detail-icon">
-            <i class="fas fa-briefcase"></i>
-          </div>
-          <div class="detail-content">
-            <h4>Experience</h4>
-            <p id="modalExperience">20+ years in educational leadership</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <div class="detail-icon">
-            <i class="fas fa-envelope"></i>
-          </div>
-          <div class="detail-content">
-            <h4>Email</h4>
-            <p id="modalEmail">s.johnson@stmaryshs.edu</p>
-          </div>
-        </div>
-        
-        <div class="detail-item">
-          <div class="detail-icon">
-            <i class="fas fa-phone"></i>
-          </div>
-          <div class="detail-content">
-            <h4>Phone</h4>
-            <p id="modalPhone">(123) 456-7890</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="faculty-contact">
-        <a href="#" id="modalEmailLink"><i class="fas fa-envelope"></i></a>
-        <a href="#" id="modalPhoneLink"><i class="fas fa-phone"></i></a>
-        <a href="#" id="modalScheduleLink"><i class="fas fa-calendar-alt"></i></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Scripts -->
-<script>
-  // Preloader
-  window.addEventListener('load', function() {
-    const preloader = document.getElementById('preloader');
-    preloader.style.transition = 'opacity 0.5s ease';
-    preloader.style.opacity = '0';
-    setTimeout(() => {
-      preloader.style.display = 'none';
-    }, 500);
-  });
-
-  // Mobile Menu Toggle
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const navLinks = document.getElementById('navLinks');
-  
-  mobileMenuBtn.addEventListener('click', function() {
-    navLinks.classList.toggle('show');
-    mobileMenuBtn.innerHTML = navLinks.classList.contains('show') 
-      ? '<i class="fas fa-times"></i>' 
-      : '<i class="fas fa-bars"></i>';
-  });
-
-  // Dropdown Menus
-  const dropdowns = document.querySelectorAll('.dropdown');
-  dropdowns.forEach(dropdown => {
-    const link = dropdown.querySelector('a');
-    link.addEventListener('click', function(e) {
-      if (window.innerWidth <= 768) {
-        e.preventDefault();
-        dropdown.classList.toggle('active');
+    // Sticky Header
+    const header = document.querySelector('.header');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
       }
     });
-  });
 
-  // Sticky Header
-  const header = document.querySelector('.header');
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 100) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  });
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          window.scrollTo({
+            top: target.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // Close mobile menu if open
+          if (navLinks.classList.contains('show')) {
+            navLinks.classList.remove('show');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+          }
+        }
+      });
+    });
 
-  // Smooth Scrolling
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
+    // Hero Scroll Button
+    const heroScroll = document.getElementById('heroScroll');
+    if (heroScroll) {
+      heroScroll.addEventListener('click', function() {
         window.scrollTo({
-          top: target.offsetTop - 80,
+          top: document.querySelector('.about').offsetTop - 80,
           behavior: 'smooth'
         });
-        
-        // Close mobile menu if open
-        if (navLinks.classList.contains('show')) {
-          navLinks.classList.remove('show');
-          mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        }
-      }
-    });
-  });
-
-  // Hero Scroll Button
-  const heroScroll = document.getElementById('heroScroll');
-  if (heroScroll) {
-    heroScroll.addEventListener('click', function() {
-      window.scrollTo({
-        top: document.querySelector('.about').offsetTop - 80,
-        behavior: 'smooth'
       });
-    });
-  }
-
-  // Theme Toggle
-  const themeToggle = document.getElementById('themeToggle');
-  themeToggle.addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-    
-    // Save preference to localStorage
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDarkMode);
-    
-    // Update icon
-    themeToggle.innerHTML = isDarkMode 
-      ? '<i class="fas fa-sun"></i>' 
-      : '<i class="fas fa-moon"></i>';
-  });
-
-  // Check for saved theme preference
-  if (localStorage.getItem('darkMode') === 'true') {
-    document.body.classList.add('dark-mode');
-    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-  }
-
-  // Faculty Card Filtering
-  const categoryBtns = document.querySelectorAll('.category-btn');
-  const facultyCards = document.querySelectorAll('.faculty-card');
-  
-  categoryBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-      // Remove active class from all buttons
-      categoryBtns.forEach(btn => btn.classList.remove('active'));
-      // Add active class to clicked button
-      this.classList.add('active');
-      
-      const category = this.dataset.category;
-      
-      // Filter faculty cards
-      facultyCards.forEach(card => {
-        if (category === 'all' || card.dataset.category === category) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  });
-
-  // Faculty Modal
-  const facultyModal = document.getElementById('facultyModal');
-  const modalClose = facultyModal.querySelector('.modal-close');
-  const viewProfileBtns = document.querySelectorAll('.view-profile');
-  
-  // Sample faculty data
-  const facultyData = {
-    1: {
-      name: "Mr. Nyabako",
-      position: "Head Master",
-      department: "Administration",
-      image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-      bio: "Mr. Nyabako has been the Head Master of St. Mary's High School since 2010. With over 25 years of experience in education, he has transformed the school into one of the top-performing institutions in the region.",
-      education: "M.Ed in Educational Leadership, University of Zimbabwe",
-      experience: "25+ years in educational administration",
-      email: "principal@stmaryshs.edu",
-      phone: "+263 719 647 303"
-    },
-    2: {
-      name: "Mr. Gocha",
-      position: "Deputy Head",
-      department: "Administration",
-      image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-      bio: "Mr. Gocha serves as the Deputy Head of St. Mary's High School, overseeing daily operations and student affairs. He specializes in curriculum development and teacher training.",
-      education: "M.Sc in Educational Management, Midlands State University",
-      experience: "18 years in secondary education",
-      email: "deputy@stmaryshs.edu",
-      phone: "+263 772 123 456"
-    },
-    3: {
-      name: "Mrs. Chiweshe",
-      position: "Senior Teacher",
-      department: "Sciences",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-      bio: "Mrs. Chiweshe leads our Science Department and has been instrumental in developing our STEM program. Her students consistently achieve top marks in national examinations.",
-      education: "B.Sc Honors in Chemistry, University of Zimbabwe",
-      experience: "15 years teaching experience",
-      email: "sciences@stmaryshs.edu",
-      phone: "+263 773 987 654"
-    },
-    4: {
-      name: "Ms. Angela",
-      position: "English Teacher",
-      department: "Languages",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80",
-      bio: "Ms. Angela brings creativity and passion to our English Department. She has developed innovative literacy programs that have significantly improved student reading and writing skills.",
-      education: "B.A Honors in English Literature, University of Zimbabwe",
-      experience: "10 years teaching experience",
-      email: "english@stmaryshs.edu",
-      phone: "+263 772 555 123"
-    },
-    5: {
-      name: "Mr. Wilson",
-      position: "History Teacher",
-      department: "Humanities",
-      image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-      bio: "Mr. Wilson makes history come alive for our students. His engaging teaching methods have earned him multiple teaching awards at the provincial level.",
-      education: "M.A in African History, University of Zimbabwe",
-      experience: "12 years teaching experience",
-      email: "history@stmaryshs.edu",
-      phone: "+263 773 111 222"
-    },
-    6: {
-      name: "Mr. Chen",
-      position: "Mathematics Teacher",
-      department: "Mathematics",
-      image: "https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-      bio: "Mr. Chen has revolutionized how we teach mathematics at St. Mary's. His students regularly compete and win in national mathematics olympiads.",
-      education: "Ph.D in Mathematics Education, National University of Science and Technology",
-      experience: "20 years teaching experience",
-      email: "math@stmaryshs.edu",
-      phone: "+263 772 333 444"
     }
-  };
 
-  // Open modal with faculty data
-  viewProfileBtns.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      const facultyId = this.dataset.id;
-      const faculty = facultyData[facultyId];
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
       
-      if (faculty) {
-        document.getElementById('modalImage').src = faculty.image;
-        document.getElementById('modalName').textContent = faculty.name;
-        document.getElementById('modalPosition').textContent = faculty.position;
-        document.getElementById('modalDepartment').textContent = faculty.department;
-        document.getElementById('modalBio').textContent = faculty.bio;
-        document.getElementById('modalEducation').textContent = faculty.education;
-        document.getElementById('modalExperience').textContent = faculty.experience;
-        document.getElementById('modalEmail').textContent = faculty.email;
-        document.getElementById('modalPhone').textContent = faculty.phone;
-        document.getElementById('modalEmailLink').href = `mailto:${faculty.email}`;
-        document.getElementById('modalPhoneLink').href = `tel:${faculty.phone.replace(/\D/g, '')}`;
-        
-        facultyModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      }
+      // Save preference to localStorage
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode);
+      
+      // Update icon
+      themeToggle.innerHTML = isDarkMode 
+        ? '<i class="fas fa-sun"></i>' 
+        : '<i class="fas fa-moon"></i>';
     });
-  });
 
-  // Close modal
-  modalClose.addEventListener('click', function() {
-    facultyModal.classList.remove('active');
-    document.body.style.overflow = '';
-  });
+    // Check for saved theme preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
 
-  facultyModal.addEventListener('click', function(e) {
-    if (e.target === facultyModal) {
+    // Faculty Card Filtering
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    const facultyCards = document.querySelectorAll('.faculty-card');
+    
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Remove active class from all buttons
+        categoryBtns.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        const category = this.dataset.category;
+        
+        // Filter faculty cards
+        facultyCards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Faculty Modal
+    const facultyModal = document.getElementById('facultyModal');
+    const modalClose = facultyModal.querySelector('.modal-close');
+    const viewProfileBtns = document.querySelectorAll('.view-profile');
+    
+    // Sample faculty data
+    const facultyData = {
+      1: {
+        name: "Mr. Nyabako",
+        position: "Head Master",
+        department: "Administration",
+        image: "https://i.postimg.cc/VNWk6rfP/IMG-20250227-WA0003.jpg",
+        bio: "Mr. Nyabako has been the Head Master of St. Mary's High School since 2010. With over 25 years of experience in education, he has transformed the school into one of the top-performing institutions in the region.",
+        education: "M.Ed in Educational Leadership, University of Zimbabwe",
+        experience: "25+ years in educational administration",
+        email: "principal@stmaryshs.edu",
+        phone: "+263 719 647 303"
+      },
+      2: {
+        name: "Mr. Gocha",
+        position: "Deputy Head",
+        department: "Administration",
+        image: "https://i.postimg.cc/SxB9NwG9/20250129-113912.avif",
+        bio: "Mr. Gocha serves as the Deputy Head of St. Mary's High School, overseeing daily operations and student affairs. He specializes in curriculum development and teacher training.",
+        education: "M.Sc in Educational Management, Midlands State University",
+        experience: "18 years in secondary education",
+        email: "deputy@stmaryshs.edu",
+        phone: "+263 772 123 456"
+      },
+      3: {
+        name: "Mrs. Chiweshe",
+        position: "Senior Teacher",
+        department: "Sciences",
+        image: "https://i.postimg.cc/43kYnRpV/IMG-20250227-WA0007.jpg",
+        bio: "Mrs. Chiweshe leads our Science Department and has been instrumental in developing our STEM program. Her students consistently achieve top marks in national examinations.",
+        education: "B.Sc Honors in Chemistry, University of Zimbabwe",
+        experience: "15 years teaching experience",
+        email: "sciences@stmaryshs.edu",
+        phone: "+263 773 987 654"
+      }
+    };
+
+    // Open modal with faculty data
+    viewProfileBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const facultyId = this.dataset.id;
+        const faculty = facultyData[facultyId];
+        
+        if (faculty) {
+          document.getElementById('modalImage').src = faculty.image;
+          document.getElementById('modalName').textContent = faculty.name;
+          document.getElementById('modalPosition').textContent = faculty.position;
+          document.getElementById('modalDepartment').textContent = faculty.department;
+          document.getElementById('modalBio').textContent = faculty.bio;
+          document.getElementById('modalEducation').textContent = faculty.education;
+          document.getElementById('modalExperience').textContent = faculty.experience;
+          document.getElementById('modalEmail').textContent = faculty.email;
+          document.getElementById('modalPhone').textContent = faculty.phone;
+          document.getElementById('modalEmailLink').href = `mailto:${faculty.email}`;
+          document.getElementById('modalPhoneLink').href = `tel:${faculty.phone.replace(/\D/g, '')}`;
+          
+          facultyModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    // Close modal
+    modalClose.addEventListener('click', function() {
       facultyModal.classList.remove('active');
       document.body.style.overflow = '';
-    }
-  });
+    });
 
-  // Scroll Animations
-  const fadeElements = document.querySelectorAll('.fade-in');
-  const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = 1;
-        entry.target.style.transform = 'translateY(0)';
+    facultyModal.addEventListener('click', function(e) {
+      if (e.target === facultyModal) {
+        facultyModal.classList.remove('active');
+        document.body.style.overflow = '';
       }
     });
-  }, { threshold: 0.1 });
 
-  fadeElements.forEach(el => {
-    fadeObserver.observe(el);
-  });
-</script>
+    // Scroll Animations
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    fadeElements.forEach(el => {
+      fadeObserver.observe(el);
+    });
+  </script>
 </body>
 </html>
