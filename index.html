@@ -1330,6 +1330,32 @@
       .faculty-grid {
         grid-template-columns: 1fr;
       }
+      /* Portal Button Styles */
+.portal-desktop {
+  display: block;
+}
+.portal-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .portal-desktop {
+    display: none;
+  }
+  .portal-mobile {
+    display: block;
+    margin-top: var(--space-md);
+  }
+  .portal-mobile .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.btn-sm {
+  padding: var(--space-xs) var(--space-md);
+  font-size: 0.875rem;
+}
     }
   </style>
 </head>
@@ -1341,43 +1367,44 @@
 
   <!-- Header -->
   <header class="header">
-    <div class="container header-container">
-      <a href="/" class="logo">
-        <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="St. Mary's Logo" class="logo-img">
-        <span class="logo-text">St. Mary's <span>High School</span></span>
-      </a>
+  <div class="container header-container">
+    <a href="/" class="logo">
+      <img src="https://i.postimg.cc/mZ81jqGW/In-Shot-20250227-051117557.jpg" alt="St. Mary's Logo" class="logo-img">
+      <span class="logo-text">St. Mary's <span>High School</span></span>
+    </a>
+    
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
+    
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" class="active"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="/about"><i class="fas fa-info-circle"></i> About</a></li>
+      <li><a href="/admissions"><i class="fas fa-user-graduate"></i> Admissions</a></li>
+      <li><a href="/staff"><i class="fas fa-chalkboard-teacher"></i> Our Staff</a></li>
+      <li><a href="/schoolview"><i class="fas fa-school"></i> School View</a></li>
+      <li><a href="/news"><i class="fas fa-newspaper"></i> News & Events</a></li>
+      <li><a href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
       
-      <button class="mobile-menu-btn" id="mobileMenuBtn">
-        <i class="fas fa-bars"></i>
-      </button>
+      <!-- Mobile Portal Buttons -->
+      <li class="portal-mobile">
+        <a href="/dashboard" class="btn btn-outline btn-sm"><i class="fas fa-user-graduate"></i> Student Portal</a>
+      </li>
+      <li class="portal-mobile">
+        <a href="/teachersdashboard" class="btn btn-outline btn-sm"><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</a>
+      </li>
       
-      <ul class="nav-links" id="navLinks">
-        <li><a href="/" class="active"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="/about"><i class="fas fa-info-circle"></i> About</a></li>
-        <li><a href="/admissions"><i class="fas fa-user-graduate"></i> Admissions</a></li>
-        <li><a href="/staff"><i class="fas fa-chalkboard-teacher"></i> Our Staff</a></li>
-        <li><a href="/schoolview"><i class="fas fa-school"></i> School View</a></li>
-        <li><a href="/news"><i class="fas fa-newspaper"></i> News & Events</a></li>
-       <!-- <li><a href="/calendar"><i class="fas fa-calendar-alt"></i> School Calendar</a></li>-->
-        <li><a href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
-        
-        <!-- Portal Buttons for Desktop -->
-        <li class="portal-desktop">
-          <a href="/dashboard" class="btn btn-outline"><i class="fas fa-user-graduate"></i> Student Portal</a>
-        </li>
-        <li class="portal-desktop">
-          <a href="/teachersdashboard" class="btn btn-outline"><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</a>
-        </li>
-        
-        <!-- Portal Buttons for Mobile (will be shown in mobile menu) -->
-        <div class="portal-buttons-mobile">
-          <a href="/dashboard" class="btn btn-outline"><i class="fas fa-user-graduate"></i> Student Portal</a>
-          <a href="/teachersdashboard" class="btn btn-outline"><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</a>
-        </div>
-      </ul>
-    </div>
-  </header>
-
+      <!-- Desktop Portal Buttons -->
+      <li class="portal-desktop">
+        <a href="/dashboard" class="btn btn-outline"><i class="fas fa-user-graduate"></i> Student Portal</a>
+      </li>
+      <li class="portal-desktop">
+        <a href="/teachersdashboard" class="btn btn-outline"><i class="fas fa-chalkboard-teacher"></i> Teacher Portal</a>
+      </li>
+    </ul>
+  </div>
+</header>
+  
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
