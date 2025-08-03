@@ -808,16 +808,56 @@
       document.getElementById("spinner").style.display = show ? "block" : "none";
     }
 
-    // Format date
-    function formatDate(dateString) {
-      if (!dateString) return "N/A";
-      
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return dateString;
-      
-      return date.toLocaleString();
+// Format date - updated to handle Firestore timestamps
+function formatDate(dateValue) {
+  if (!dateValue) return "N/A";
+  
+  let date;
+  
+  // Check if it's a Firestore Timestamp object
+  if (dateValue.toDate && typeof dateValue.toDate === 'function') {
+    date = dateValue.toDate();
+  } 
+  // Check if it's already a Date object
+  else if (dateValue instanceof Date) {
+    date = dateValue;
+  }
+  // Check if it's a string that can be converted to Date
+  else if (typeof dateValue === 'string') {
+    date = new Date(dateValue);
+    if (isNaN(date.getTime())) {
+      // If string can't be parsed as date, return it as-is
+      return dateValue;
     }
+  }
+  // Check if it's in seconds (Unix timestamp)
+  else if (typeof dateValue === 'number') {
+    date = new Date(dateValue * 1000);
+  }
+  // Handle the case where it's an object with seconds and nanoseconds
+  else if (dateValue.seconds && typeof dateValue.seconds === 'number') {
+    date = new Date(dateValue.seconds * 1000 + Math.floor(dateValue.nanoseconds / 1000000));
+  }
+  else {
+    // If we can't determine the format, return as-is
+    return dateValue;
+  }
 
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
+
+  // Format the date as you prefer
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+}
     // Highlight search terms in text
     function highlightText(text, searchTerm) {
       if (!searchTerm || !text) return text;
@@ -840,6 +880,7 @@
           q = query(collection(db, "applications"), orderBy("timestamp", "desc"));
         } else {
           try {
+            // First try with the composite index query
             q = query(
               collection(db, "applications"), 
               where("status", "==", filter),
@@ -847,10 +888,14 @@
             );
           } catch (error) {
             if (error.code === 'failed-precondition') {
-              showToast("Setting up database indexes. Please try again in a moment.", "info", 5000);
-              console.error("Firestore index missing. Please create a composite index for status and timestamp fields.");
-              // Fall back to simpler query
-              q = query(collection(db, "applications"), where("status", "==", filter));
+              console.warn("Composite index missing. Falling back to simple query.");
+              showToast("Loading applications...", "info", 2000);
+              
+              // Fall back to a simpler query without the composite index
+              q = query(
+                collection(db, "applications"), 
+                where("status", "==", filter)
+              );
             } else {
               throw error; // Re-throw other errors
             }
@@ -865,11 +910,13 @@
           applicationsData.push(data);
         });
         
-        // Sort manually if we couldn't use orderBy
-        if (filter !== "all" && !q._query.orderBy.length) {
-          applicationsData.sort((a, b) => 
-            (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
-          );
+        // If we had to use the fallback query, sort manually
+        if (filter !== "all" && (!q._query.orderBy || q._query.orderBy.length === 0)) {
+          applicationsData.sort((a, b) => {
+            const dateA = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp || 0);
+            const dateB = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp || 0);
+            return dateB - dateA;
+          });
         }
         
         filteredData = applicationsData;
@@ -877,9 +924,26 @@
       } catch (error) {
         console.error("Error loading applications:", error);
         showToast("Failed to load applications. Please try again.", "error");
+        
+        // Show error details in the UI
+        document.getElementById("totalCount").textContent = 
+          `Error loading applications: ${error.message}`;
+        
+        // Show empty state
+        const applicationsGrid = document.getElementById("applicationsGrid");
+        applicationsGrid.innerHTML = `
+          <div class="application-card" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger); margin-bottom: 15px;"></i>
+            <h3>Error Loading Applications</h3>
+            <p>${error.message}</p>
+            <button class="btn btn-primary" onclick="window.location.reload()">
+              <i class="fas fa-sync-alt"></i> Try Again
+            </button>
+          </div>
+        `;
+      } finally {
+        showSpinner(false);
       }
-      
-      showSpinner(false);
     }
 
     // Filter applications based on search input
@@ -1014,6 +1078,7 @@
     // Update application status
     window.updateApplicationStatus = async (id, newStatus) => {
       try {
+        showSpinner(true);
         await updateDoc(doc(db, "applications", id), { 
           status: newStatus,
           updatedAt: serverTimestamp()
@@ -1024,6 +1089,8 @@
       } catch (error) {
         console.error("Error updating application status:", error);
         showToast("Failed to update application status", "error");
+      } finally {
+        showSpinner(false);
       }
     };
     
@@ -1047,6 +1114,7 @@
         });
         
         if (result.isConfirmed) {
+          showSpinner(true);
           await deleteDoc(doc(db, "applications", id));
           showToast("Application deleted successfully", "success");
           loadApplications(currentFilter);
@@ -1054,10 +1122,12 @@
       } catch (error) {
         console.error("Error deleting application:", error);
         showToast("Failed to delete application", "error");
+      } finally {
+        showSpinner(false);
       }
     };
 
-    // ========================
+        // ========================
     // Export Functions
     // ========================
     
@@ -1068,52 +1138,63 @@
         return;
       }
       
-      const headers = [
-        "ID", "Name", "Email", "Phone", "DOB", "ID/Birth Number", 
-        "Nationality", "Gender", "Level", "Form", "Previous School",
-        "Previous Results Text", "Previous Results Image", "Parent Name",
-        "Parent Phone", "Parent Email", "Status", "Submitted On", "Updated On"
-      ];
+      showSpinner(true);
       
-      const rows = [headers];
-      
-      filteredData.forEach(application => {
-        rows.push([
-          application.id,
-          application.name || "Anonymous",
-          application.email || "N/A",
-          application.phone || "N/A",
-          application.dob || "N/A",
-          application.idNumber || "N/A",
-          application.nationality || "N/A",
-          application.gender || "N/A",
-          application.level || "N/A",
-          application.form || "N/A",
-          application.previousSchool || "N/A",
-          application.previousResultsText || "N/A",
-          application.previousResultsImage || "N/A",
-          application.parentName || "N/A",
-          application.parentPhone || "N/A",
-          application.parentEmail || "N/A",
-          application.status || "N/A",
-          formatDate(application.timestamp),
-                    application.updatedAt ? formatDate(application.updatedAt) : "N/A"
-        ]);
-      });
-      
-      const csvContent = rows.map(row => 
-        row.map(field => `"${field.toString().replace(/"/g, '""')}"`).join(",")
-      ).join("\n");
-      
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `applications_${new Date().toISOString().slice(0,10)}.csv`);
-      link.style.visibility = "hidden";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      try {
+        const headers = [
+          "ID", "Name", "Email", "Phone", "DOB", "ID/Birth Number", 
+          "Nationality", "Gender", "Level", "Form", "Previous School",
+          "Previous Results Text", "Previous Results Image", "Parent Name",
+          "Parent Phone", "Parent Email", "Status", "Submitted On", "Updated On"
+        ];
+        
+        const rows = [headers];
+        
+        filteredData.forEach(application => {
+          rows.push([
+            application.id,
+            application.name || "Anonymous",
+            application.email || "N/A",
+            application.phone || "N/A",
+            application.dob || "N/A",
+            application.idNumber || "N/A",
+            application.nationality || "N/A",
+            application.gender || "N/A",
+            application.level || "N/A",
+            application.form || "N/A",
+            application.previousSchool || "N/A",
+            application.previousResultsText || "N/A",
+            application.previousResultsImage || "N/A",
+            application.parentName || "N/A",
+            application.parentPhone || "N/A",
+            application.parentEmail || "N/A",
+            application.status || "N/A",
+            formatDate(application.timestamp),
+            application.updatedAt ? formatDate(application.updatedAt) : "N/A"
+          ]);
+        });
+        
+        const csvContent = rows.map(row => 
+          row.map(field => `"${field.toString().replace(/"/g, '""')}"`).join(",")
+        ).join("\n");
+        
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `applications_${new Date().toISOString().slice(0,10)}.csv`);
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast("CSV exported successfully", "success");
+      } catch (error) {
+        console.error("Error exporting CSV:", error);
+        showToast("Failed to export CSV", "error");
+      } finally {
+        showSpinner(false);
+      }
     }
     
     // Export to PDF
@@ -1278,19 +1359,14 @@
           .from(element)
           .save()
           .then(() => {
-            showSpinner(false);
             showToast("PDF exported successfully", "success");
-          })
-          .catch(err => {
-            showSpinner(false);
-            console.error("PDF export error:", err);
-            showToast("Failed to export PDF", "error");
           });
         
       } catch (error) {
-        showSpinner(false);
         console.error("PDF generation error:", error);
         showToast("Error generating PDF", "error");
+      } finally {
+        showSpinner(false);
       }
     }
 
@@ -1416,6 +1492,20 @@
     
     // Load initial applications
     loadApplications(currentFilter);
+
+    // Add error handling for uncaught errors
+    window.addEventListener('error', (event) => {
+      console.error('Uncaught error:', event.error);
+      showToast('An unexpected error occurred', 'error');
+      showSpinner(false);
+    });
+
+    // Add error handling for unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('Unhandled rejection:', event.reason);
+      showToast('An unexpected error occurred', 'error');
+      showSpinner(false);
+    });
   </script>
 </body>
 </html>
