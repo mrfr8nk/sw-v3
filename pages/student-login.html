@@ -431,7 +431,17 @@
   </div>
 
   <!-- Firebase SDK v9 -->
-  
+  <script type="module">
+  import { db, auth, collection, getDocs } from "./db/firebase.js";
+
+  // Example: Fetch users
+  async function loadUsers() {
+    const snapshot = await getDocs(collection(db, "users"));
+    snapshot.forEach(doc => console.log(doc.id, doc.data()));
+  }
+
+  loadUsers();
+
     // DOM Elements
     const loginForm = document.getElementById("login-form");
     const errorMessage = document.getElementById("error-message");
