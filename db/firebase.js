@@ -1,24 +1,12 @@
-// File: /db/firebase.js
-// Global Firebase Initialization
-
-// Import Firebase core + services
+// firebase.js - Global Firebase Configuration
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  signOut, 
-  onAuthStateChanged, 
-  sendPasswordResetEmail,
-  GoogleAuthProvider,
-  signInWithPopup 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
   getFirestore, 
   collection, 
   getDocs, 
   getDoc, 
+  doc, 
   setDoc, 
   addDoc, 
   updateDoc, 
@@ -26,10 +14,11 @@ import {
   query, 
   where, 
   orderBy, 
-  serverTimestamp,
-  onSnapshot
+  serverTimestamp, 
+  onSnapshot,
+  limit,
+  arrayUnion 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
 import { 
   getStorage, 
   ref, 
@@ -37,8 +26,7 @@ import {
   getDownloadURL 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-
-// ✅ Firebase Config (your project)
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAR9J2Wz7Eu8dXRzDG8JNHcymLCUQUPJRo",
   authDomain: "deee-9ab53.firebaseapp.com",
@@ -49,31 +37,29 @@ const firebaseConfig = {
   measurementId: "G-524ZPBX42B"
 };
 
-// ✅ Initialize Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-const provider = new GoogleAuthProvider();
 
-// ✅ Export everything you’ll need globally
+// Create Google Auth Provider
+const googleProvider = new GoogleAuthProvider();
+
+// Export everything you might need
 export {
   app,
   auth,
   db,
   storage,
-  provider,
-  // Auth methods
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  signInWithPopup,
+  googleProvider,
   // Firestore methods
   collection,
   getDocs,
   getDoc,
+  doc,
   setDoc,
   addDoc,
   updateDoc,
@@ -83,8 +69,19 @@ export {
   orderBy,
   serverTimestamp,
   onSnapshot,
+  limit,
+  arrayUnion,
   // Storage methods
   ref,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  // Auth methods (add more as needed)
+  signOut,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updatePassword
 };
