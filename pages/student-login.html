@@ -432,15 +432,27 @@
 
   <!-- Firebase SDK v9 -->
   <script type="module">
-  import { db, auth, collection, getDocs } from "./db/firebase.js";
+    // Import from our global Firebase configuration
+    import { 
+      auth, 
+      db, 
+      googleProvider,
+      signInWithEmailAndPassword,
+      signInWithPopup,
+      sendPasswordResetEmail,
+      collection,
+      getDocs
+    } from "./db/firebase.js";
 
-  // Example: Fetch users
-  async function loadUsers() {
-    const snapshot = await getDocs(collection(db, "users"));
-    snapshot.forEach(doc => console.log(doc.id, doc.data()));
-  }
-
-  loadUsers();
+    // Example: Fetch users (optional - can be removed if not needed)
+    async function loadUsers() {
+      try {
+        const snapshot = await getDocs(collection(db, "users"));
+        snapshot.forEach(doc => console.log(doc.id, doc.data()));
+      } catch (error) {
+        console.error("Error loading users:", error);
+      }
+    }
 
     // DOM Elements
     const loginForm = document.getElementById("login-form");
@@ -576,7 +588,7 @@
     // Login with Google
     googleLoginBtn.addEventListener("click", async () => {
       try {
-        const result = await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
         
         // Store user email in localStorage
@@ -663,6 +675,9 @@
       this.classList.toggle("fa-eye");
       this.classList.toggle("fa-eye-slash");
     });
+
+    // Load users on page load (optional)
+    loadUsers();
   </script>
 </body>
 </html>
